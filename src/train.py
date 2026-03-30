@@ -204,7 +204,6 @@ def main() -> None:
         optim="paged_adamw_8bit",
         bf16=True,
         tf32=True,
-        attn_implementation="sdpa",
         dataloader_num_workers=4,
         remove_unused_columns=False,
         logging_steps=100,
