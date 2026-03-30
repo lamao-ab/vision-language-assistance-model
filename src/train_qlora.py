@@ -1,5 +1,5 @@
 """
-train.py
+train_qlora.py
 ========
 QLoRA fine-tuning of PaliGemma-3B — converted from the original Colab notebook.
 Output format, data collator, training arguments, and summaries are identical
@@ -7,13 +7,13 @@ to the notebook.
 
 Usage
 -----
-python src/train.py \
+python src/train_qlora.py \
     --train_dataset_path data/train_dataset \
     --val_dataset_path   data/val_dataset \
     --output_dir         outputs/run1
 
 Resume from latest checkpoint:
-    python src/train.py ... --resume
+    python src/train_qlora.py ... --resume
 """
 
 import argparse
