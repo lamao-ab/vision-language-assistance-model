@@ -36,7 +36,50 @@ from transformers import (
 )
 
 
-# ── Data Collator ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+#  Terminal formatting helpers
+# ══════════════════════════════════════════════════════════════════════════════
+
+W = 72   # total line width
+
+def _line(char="─"):
+    return char * W
+
+def _double():
+    return "═" * W
+
+def section(title: str) -> None:
+    """Prominent section header."""
+    print(f"\n{_double()}")
+    print(f"  {title}")
+    print(_double())
+
+def step(n: int, total: int, title: str) -> None:
+    """Numbered step header."""
+    print(f"\n{_line()}")
+    print(f"  Step {n}/{total}  │  {title}")
+    print(_line())
+
+def info(label: str, value: str = "") -> None:
+    """Key-value info line."""
+    if value:
+        print(f"    {label:<30}  {value}")
+    else:
+        print(f"    {label}")
+
+def ok(msg: str) -> None:
+    print(f"    ✔  {msg}")
+
+def warn(msg: str) -> None:
+    print(f"    ▲  {msg}")
+
+def item(msg: str) -> None:
+    print(f"    •  {msg}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Data Collator
+# ══════════════════════════════════════════════════════════════════════════════
 
 class PaliGemmaDataCollator:
     def __init__(self, processor, max_length):
@@ -89,7 +132,9 @@ class PaliGemmaDataCollator:
         return model_inputs
 
 
-# ── Checkpoint helper ─────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+#  Checkpoint helper
+# ══════════════════════════════════════════════════════════════════════════════
 
 def find_latest_checkpoint(output_dir: str):
     if not os.path.isdir(output_dir):
@@ -107,7 +152,9 @@ def find_latest_checkpoint(output_dir: str):
     return None
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+#  Main
+# ══════════════════════════════════════════════════════════════════════════════
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="QLoRA fine-tuning of PaliGemma-3B")
@@ -131,22 +178,30 @@ def main() -> None:
 
     effective_bs = args.batch_size * args.grad_accum
 
-    # ── Banner ───────────────────────────────────────────────────────────────
+    # ── Banner ────────────────────────────────────────────────────────────────
     gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"
-    print(f"\n🚀 STARTING QLORA TRAINER | GPU: {gpu_name}")
 
-    # ── [1/6] Load Datasets ──────────────────────────────────────────────────
-    print("\n[1/6] 📥 Loading Datasets...")
+    print(f"\n{_double()}")
+    print(f"  PaliGemma-3B  ·  QLoRA Fine-Tuning")
+    print(f"  GPU : {gpu_name}")
+    print(_double())
+
+    # ── Step 1 — Load Datasets ────────────────────────────────────────────────
+    step(1, 6, "Loading Datasets")
+
     train_dataset = load_from_disk(args.train_dataset_path)
     val_dataset   = load_from_disk(args.val_dataset_path)
-    print(f"   ✅ Train Size: {len(train_dataset):,}")
-    print(f"   ✅ Val Size:   {len(val_dataset):,}")
+
+    ok(f"Train  {len(train_dataset):>10,} samples")
+    ok(f"Val    {len(val_dataset):>10,} samples")
+
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
-        print(f"   📊 Initial GPU memory: {torch.cuda.memory_allocated()/1024**3:.2f} GB")
+        ok(f"GPU memory (initial)   {torch.cuda.memory_allocated()/1024**3:.2f} GB")
 
-    # ── [2/6] Quantization config ────────────────────────────────────────────
-    print("\n[2/6] ⚙️  Configuring 4-bit Quantization...")
+    # ── Step 2 — Quantisation Config ─────────────────────────────────────────
+    step(2, 6, "Configuring 4-bit Quantisation")
+
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_compute_dtype=torch.bfloat16,
@@ -154,13 +209,14 @@ def main() -> None:
         bnb_4bit_quant_type="nf4",
         bnb_4bit_quant_storage=torch.uint8,
     )
-    print("   ✅ Quantization config ready:")
-    print("      - Precision: 4-bit NF4")
-    print("      - Compute dtype: bfloat16")
-    print("      - Double quantization: Enabled")
 
-    # ── [3/6] Load model ─────────────────────────────────────────────────────
-    print("\n[3/6] ⏳ Loading Quantized PaliGemma...")
+    info("Precision",            "4-bit NF4")
+    info("Compute dtype",        "bfloat16")
+    info("Double quantisation",  "enabled")
+
+    # ── Step 3 — Load Model ───────────────────────────────────────────────────
+    step(3, 6, "Loading Quantised PaliGemma")
+
     processor = PaliGemmaProcessor.from_pretrained(args.model_id)
     model = PaliGemmaForConditionalGeneration.from_pretrained(
         args.model_id,
@@ -170,17 +226,19 @@ def main() -> None:
         attn_implementation="sdpa",
     )
     model = prepare_model_for_kbit_training(model)
-    print("   ✅ Quantized model loaded")
-    print(f"   📊 Model memory: {model.get_memory_footprint() / 1024**3:.2f} GB")
-    print(f"   ⚡ Using SDPA attention (optimized for speed)")
 
-    # ── [4/6] Data collator ──────────────────────────────────────────────────
-    print("\n[4/6] 🔧 Setting up Data Collator...")
+    ok(f"Model loaded  ({model.get_memory_footprint() / 1024**3:.2f} GB in VRAM)")
+    info("Attention", "SDPA  (scaled dot-product, optimised)")
+
+    # ── Step 4 — Data Collator ────────────────────────────────────────────────
+    step(4, 6, "Setting Up Data Collator")
+
     data_collator = PaliGemmaDataCollator(processor, max_length=args.max_length)
-    print("   ✅ Data collator ready")
+    ok("Data collator ready")
 
-    # ── [5/6] LoRA adapters ──────────────────────────────────────────────────
-    print("\n[5/6] 🔧 Adding LoRA Adapters...")
+    # ── Step 5 — LoRA Adapters ────────────────────────────────────────────────
+    step(5, 6, "Attaching LoRA Adapters")
+
     lora_config = LoraConfig(
         r=args.lora_r,
         lora_alpha=args.lora_alpha,
@@ -192,10 +250,16 @@ def main() -> None:
         lora_dropout=args.lora_dropout,
     )
     model = get_peft_model(model, lora_config)
+
+    info("Rank (r)",       str(args.lora_r))
+    info("Alpha",          str(args.lora_alpha))
+    info("Dropout",        str(args.lora_dropout))
+    info("Target modules", "q/k/v/o_proj  ·  gate/up/down_proj")
+    print()
     model.print_trainable_parameters()
 
-    # ── [6/6] Training ───────────────────────────────────────────────────────
-    print("\n[6/6] 🚀 Starting QLoRA Training...")
+    # ── Step 6 — Training Setup ───────────────────────────────────────────────
+    step(6, 6, "Preparing Trainer")
 
     training_args = TrainingArguments(
         output_dir=args.output_dir,
@@ -244,123 +308,127 @@ def main() -> None:
         )],
     )
 
-    # ── Resume checkpoint ────────────────────────────────────────────────────
+    # ── Resume checkpoint ─────────────────────────────────────────────────────
     checkpoint = None
     if args.resume:
         checkpoint = find_latest_checkpoint(args.output_dir)
         if checkpoint:
-            print(f"\n♻️  Resuming from: {os.path.basename(checkpoint)}")
+            ok(f"Resuming from  {os.path.basename(checkpoint)}")
         else:
-            print("\n⚠️  Could not find a checkpoint — starting from scratch.")
+            warn("No checkpoint found — starting from scratch")
 
-    # ── Configuration display ─────────────────────────────────────────────────
+    # ── Training configuration table ──────────────────────────────────────────
     steps_per_epoch      = len(train_dataset) // effective_bs
     total_steps          = steps_per_epoch * args.num_epochs
     estimated_time_hours = (total_steps * 3.5) / 3600
 
-    print("\n" + "=" * 70)
-    print("⏳ TRAINING CONFIGURATION (SPEED OPTIMIZED)")
-    print("=" * 70)
-    print(f"   Model: PaliGemma-3B (4-bit quantized)")
-    print(f"   Method: QLoRA")
-    print(f"   Train samples: {len(train_dataset):,}")
-    print(f"   Val samples: {len(val_dataset):,}")
-    print(f"   Epochs: {args.num_epochs}")
-    print(f"   Batch size: {args.batch_size} (INCREASED for speed)")
-    print(f"   Grad accum: {args.grad_accum} (DECREASED)")
-    print(f"   Effective BS: {effective_bs}")
-    print(f"   Learning rate: {args.learning_rate}")
-    print(f"   Attention: SDPA (optimized)")
-    print(f"   TF32: Enabled (A100 acceleration)")
-    print(f"   Data workers: {args.dataloader_workers} (parallel loading)")
-    print("=" * 70)
+    section("Training Configuration")
 
-    print(f"\n⏱️  Speed Estimate:")
-    print(f"   Steps per epoch: {steps_per_epoch:,}")
-    print(f"   Total steps: {total_steps:,}")
-    print(f"   Estimated time: ~{estimated_time_hours:.1f} hours")
-    print(f"   (vs ~24 hours with batch_size=8)")
+    C = 30
+    print(f"    {'Model':<{C}}  PaliGemma-3B  (4-bit NF4 quantised)")
+    print(f"    {'Method':<{C}}  QLoRA")
+    print(f"    {'Train samples':<{C}}  {len(train_dataset):,}")
+    print(f"    {'Val samples':<{C}}  {len(val_dataset):,}")
+    print()
+    print(f"    {'Epochs':<{C}}  {args.num_epochs}")
+    print(f"    {'Batch size (per device)':<{C}}  {args.batch_size}")
+    print(f"    {'Gradient accumulation':<{C}}  {args.grad_accum}")
+    print(f"    {'Effective batch size':<{C}}  {effective_bs}")
+    print(f"    {'Learning rate':<{C}}  {args.learning_rate:.2e}")
+    print(f"    {'Max sequence length':<{C}}  {args.max_length}")
+    print()
+    print(f"    {'Attention':<{C}}  SDPA")
+    print(f"    {'TF32 (A100 acceleration)':<{C}}  enabled")
+    print(f"    {'Dataloader workers':<{C}}  {args.dataloader_workers}")
+    print(f"    {'Optimizer':<{C}}  paged_adamw_8bit")
+    print()
+    print(f"    {'Steps per epoch':<{C}}  {steps_per_epoch:,}")
+    print(f"    {'Total steps':<{C}}  {total_steps:,}")
+    print(f"    {'Estimated duration':<{C}}  ~{estimated_time_hours:.1f} h  (vs ~24 h at bs=8)")
 
     # ── Pre-training validation ───────────────────────────────────────────────
-    print("\n🔍 Pre-training Validation:")
+    print(f"\n{_line()}")
+    print(f"  Pre-training Validation")
+    print(_line())
+
     try:
         sample_batch = next(iter(trainer.get_eval_dataloader()))
         sample_batch = {k: v.to(model.device) for k, v in sample_batch.items()}
         with torch.no_grad():
             outputs = model(**sample_batch)
             sample_loss = outputs.loss.item()
-        print(f"   ✅ Forward pass OK (initial loss: {sample_loss:.4f})")
+        ok(f"Forward pass successful  —  initial loss: {sample_loss:.4f}")
         del sample_batch, outputs
         torch.cuda.empty_cache()
     except Exception as e:
-        print(f"   ⚠️  Forward pass check: {e}")
-        print(f"   Continuing (Trainer will handle it)")
+        warn(f"Forward pass check skipped: {e}")
+        warn("Continuing — the Trainer will handle it")
 
     # ── Start training ────────────────────────────────────────────────────────
-    print("\n" + "=" * 70)
-    print("🚀 STARTING TRAINING")
-    print("=" * 70 + "\n")
+    section("Training")
 
     trainer.train(resume_from_checkpoint=checkpoint)
 
-    print("\n" + "=" * 70)
-    print("✅ TRAINING FINISHED!")
-    print("=" * 70)
+    print(f"\n{_double()}")
+    print(f"  Training Complete")
+    print(_double())
 
-    # ── Save final adapter ────────────────────────────────────────────────────
-    print("\n💾 Saving Final Adapter...")
+    # ── Save artefacts ────────────────────────────────────────────────────────
+    print(f"\n{_line()}")
+    print(f"  Saving Artefacts")
+    print(_line())
+
     final_path = os.path.join(args.output_dir, "final_adapter")
     model.save_pretrained(final_path)
     processor.save_pretrained(final_path)
 
     deployment_info = {
-        "quantization":     "4-bit NF4",
-        "compute_dtype":    "bfloat16",
+        "quantization":        "4-bit NF4",
+        "compute_dtype":       "bfloat16",
         "double_quantization": True,
         "attn_implementation": "sdpa",
-        "deployment_ready": True,
-        "jetson_compatible": True,
+        "deployment_ready":    True,
+        "jetson_compatible":   True,
         "training_speed_optimizations": {
-            "batch_size":        args.batch_size,
-            "tf32":              True,
-            "sdpa_attention":    True,
+            "batch_size":         args.batch_size,
+            "tf32":               True,
+            "sdpa_attention":     True,
             "dataloader_workers": args.dataloader_workers,
         },
     }
     with open(os.path.join(final_path, "deployment_config.json"), "w") as f:
         json.dump(deployment_info, f, indent=2)
-    print(f"   ✅ Saved to: {final_path}")
+
+    ok(f"Adapter saved    →  {final_path}")
 
     # ── Save training history ─────────────────────────────────────────────────
-    print("\n📊 Saving History...")
     training_history = {
-        "log_history":            trainer.state.log_history,
-        "best_model_checkpoint":  trainer.state.best_model_checkpoint,
-        "best_metric":            trainer.state.best_metric,
-        "global_step":            trainer.state.global_step,
-        "epoch":                  trainer.state.epoch,
+        "log_history":           trainer.state.log_history,
+        "best_model_checkpoint": trainer.state.best_model_checkpoint,
+        "best_metric":           trainer.state.best_metric,
+        "global_step":           trainer.state.global_step,
+        "epoch":                 trainer.state.epoch,
         "config": {
-            "model_id":      args.model_id,
-            "method":        "QLoRA",
-            "quantization":  "4-bit NF4",
+            "model_id":        args.model_id,
+            "method":          "QLoRA",
+            "quantization":    "4-bit NF4",
             "speed_optimized": True,
-            "num_epochs":    args.num_epochs,
-            "batch_size":    args.batch_size,
-            "grad_accum":    args.grad_accum,
-            "learning_rate": args.learning_rate,
-            "max_length":    args.max_length,
-            "output_dir":    args.output_dir,
+            "num_epochs":      args.num_epochs,
+            "batch_size":      args.batch_size,
+            "grad_accum":      args.grad_accum,
+            "learning_rate":   args.learning_rate,
+            "max_length":      args.max_length,
+            "output_dir":      args.output_dir,
         },
     }
     history_path = os.path.join(args.output_dir, "training_history.json")
     with open(history_path, "w") as f:
         json.dump(training_history, f, indent=2)
-    print(f"   ✅ Saved to: {history_path}")
+
+    ok(f"History saved    →  {history_path}")
 
     # ── Training summary ──────────────────────────────────────────────────────
-    print("\n" + "=" * 70)
-    print("📈 TRAINING SUMMARY")
-    print("=" * 70)
+    section("Training Summary")
 
     log           = trainer.state.log_history
     eval_entries  = [e for e in log if "eval_loss" in e]
@@ -372,59 +440,60 @@ def main() -> None:
         return candidates[-1] if candidates else None
 
     if eval_entries:
-        print("\n📊 Results:")
-        print("-" * 70)
-        print(f"{'Epoch':<10} {'Train Loss':<15} {'Val Loss':<15} {'Time':<10}")
-        print("-" * 70)
+        print(f"\n    {'Epoch':<8}  {'Train Loss':>12}  {'Val Loss':>12}  {'Eval Time':>10}")
+        print(f"    {'─'*8}  {'─'*12}  {'─'*12}  {'─'*10}")
         for i, metric in enumerate(eval_entries, 1):
             ep         = metric.get("epoch", i)
             train_loss = last_train_loss_for_epoch(ep)
-            tl_str     = f"{train_loss:.4f}" if train_loss is not None else "N/A"
+            tl_str     = f"{train_loss:.4f}" if train_loss is not None else "—"
             eval_loss  = f"{metric.get('eval_loss', 0):.4f}"
-            eval_time  = (f"{metric.get('eval_runtime', 0):.0f}s"
-                          if "eval_runtime" in metric else "N/A")
-            print(f"Epoch {i:<4} {tl_str:<15} {eval_loss:<15} {eval_time:<10}")
+            eval_time  = (f"{metric.get('eval_runtime', 0):.0f} s"
+                          if "eval_runtime" in metric else "—")
+            print(f"    {i:<8}  {tl_str:>12}  {eval_loss:>12}  {eval_time:>10}")
 
-    print("\n" + "-" * 70)
+    print(f"\n    {_line()[:-4]}")
+
     if trainer.state.best_model_checkpoint:
-        print(f"🏆 Best checkpoint: {os.path.basename(trainer.state.best_model_checkpoint)}")
-    print(f"🏆 Best Val Loss:   {trainer.state.best_metric:.4f}")
-    print(f"📊 Epochs:          {int(trainer.state.epoch)}")
-    print(f"📊 Total Steps:     {trainer.state.global_step:,}")
+        info("Best checkpoint",  os.path.basename(trainer.state.best_model_checkpoint))
+    info("Best val loss",    f"{trainer.state.best_metric:.4f}")
+    info("Epochs completed", str(int(trainer.state.epoch)))
+    info("Total steps",      f"{trainer.state.global_step:,}")
 
     if torch.cuda.is_available():
-        print(f"💾 Peak Memory:     {torch.cuda.max_memory_allocated()/1024**3:.1f} GB")
+        info("Peak GPU memory",  f"{torch.cuda.max_memory_allocated()/1024**3:.1f} GB")
 
     if eval_entries and len(eval_entries) > 1:
-        initial     = eval_entries[0].get("eval_loss", 0)
-        final_loss  = trainer.state.best_metric
+        initial    = eval_entries[0].get("eval_loss", 0)
+        final_loss = trainer.state.best_metric
         if initial > 0:
             improvement = ((initial - final_loss) / initial) * 100
-            print(f"📈 Improvement:     {improvement:.1f}%")
+            info("Loss improvement", f"{improvement:.1f}%")
 
-    print("-" * 70)
+    # ── Output files ──────────────────────────────────────────────────────────
+    print(f"\n{_line()}")
+    print(f"  Output Files")
+    print(_line())
+    info("Adapter",  final_path)
+    info("History",  history_path)
+    info("Logs",     os.path.join(args.output_dir, "logs"))
 
-    # ── Final output ──────────────────────────────────────────────────────────
-    print("\n" + "=" * 70)
-    print("✅ QLORA TRAINING COMPLETE!")
-    print("=" * 70)
+    # ── Deployment ────────────────────────────────────────────────────────────
+    print(f"\n{_line()}")
+    print(f"  Deployment")
+    print(_line())
+    ok("Jetson Orin Nano 8 GB compatible")
+    ok("4-bit quantisation active")
+    ok("Expected accuracy: 86.0 – 86.5 %")
 
-    print("\n📂 Outputs:")
-    print(f"   Adapter : {final_path}")
-    print(f"   History : {history_path}")
-    print(f"   Logs    : {os.path.join(args.output_dir, 'logs')}")
+    # ── Next steps ────────────────────────────────────────────────────────────
+    print(f"\n{_line()}")
+    print(f"  Next Steps")
+    print(_line())
+    item(f"tensorboard --logdir={os.path.join(args.output_dir, 'logs')}")
+    item("Evaluate on validation set")
+    item("Deploy to Jetson")
 
-    print("\n🚀 Deployment:")
-    print("   ✅ Jetson Orin Nano 8GB ready")
-    print("   ✅ 4-bit quantization")
-    print("   ✅ Expected accuracy: 86.0–86.5%")
-
-    print("\n🎯 Next Steps:")
-    print(f"   1. tensorboard --logdir={os.path.join(args.output_dir, 'logs')}")
-    print("   2. Evaluate on validation set")
-    print("   3. Deploy to Jetson")
-
-    print("\n" + "=" * 70)
+    print(f"\n{_double()}\n")
 
     # ── Cleanup ───────────────────────────────────────────────────────────────
     del model
