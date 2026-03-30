@@ -508,12 +508,13 @@ def main():
     parser.add_argument("--base_model_id",  default="google/paligemma-3b-mix-224",
                         help="Base model id (only used when model_id is a local adapter)")
     parser.add_argument("--output_dir",     default="outputs/predictions")
-    parser.add_argument("--max_tokens",     type=int, default=64)
-    parser.add_argument("--vqa_batch_size", type=int, default=128,
-                        help="Batch size for VQA v2 inference")
-    parser.add_argument("--caps_batch_size", type=int, default=128,
-                        help="Batch size for COCO captions inference")
+    parser.add_argument("--max_tokens",  type=int, default=64)
+    parser.add_argument("--batch_size",  type=int, default=128)
     args = parser.parse_args()
+
+    # map single batch_size to both tasks
+    args.vqa_batch_size  = args.batch_size
+    args.caps_batch_size = args.batch_size
 
     os.makedirs(args.output_dir, exist_ok=True)
 
