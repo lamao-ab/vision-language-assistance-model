@@ -97,7 +97,7 @@ class PaliGemmaDataCollator:
             # - our format:               "question" + "answer" fields
             if "text" in e:
                 clean_text = e["text"].replace("<image>", "").strip()
-                prompt = "<image>" + clean_text
+                prompt = "<image>" + clean_text "\n"
                 suffix = e["suffix"]
             else:
                 prompt = "<image>" + e["question"].strip()
