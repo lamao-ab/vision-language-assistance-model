@@ -3,25 +3,25 @@ evaluate_vizwiz.py
 ==================
 VizWiz VQA test predictions  +  VizWiz Captions test predictions.
 
+The --model_id argument accepts EITHER:
+  • A local adapter path  (e.g. outputs/run/final_adapter)
+  • A HuggingFace Hub ID  (e.g. lamao-ab/paligemma-blind-assist-jetson-ready)
+
+The script auto-detects which one you passed and loads accordingly.
+
 Usage
 -----
-# VQA predictions only
+# Option A: freshly trained local adapter
 python src/evaluate_vizwiz.py \
-    --task        vqa \
-    --adapter_path outputs/run1/final_adapter \
-    --output_dir   outputs/predictions
+    --model_id   outputs/run/final_adapter \
+    --task       both \
+    --output_dir outputs/predictions
 
-# Caption predictions only
+# Option B: pre-trained model from the Hub
 python src/evaluate_vizwiz.py \
-    --task        caps \
-    --adapter_path outputs/run1/final_adapter \
-    --output_dir   outputs/predictions
-
-# Both tasks back-to-back
-python src/evaluate_vizwiz.py \
-    --task        both \
-    --adapter_path outputs/run1/final_adapter \
-    --output_dir   outputs/predictions
+    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --task       both \
+    --output_dir outputs/predictions
 """
 
 import argparse
@@ -47,7 +47,17 @@ from peft import PeftModel
 
 # ── Model loader (shared) ─────────────────────────────────────────────────────
 
-def load_model(adapter_path: str, base_model_id: str):
+def is_local_adapter(model_id: str) -> bool:
+    """Return True if model_id points to a local adapter directory."""
+    return os.path.isdir(model_id)
+
+
+def load_model(model_id: str, base_model_id: str):
+    """
+    Load model from either:
+      - a local LoRA adapter directory  → base_model + PeftModel
+      - a HuggingFace Hub model ID      → full model directly
+    """
     print("\n📦 Loading Model...")
     start = time.time()
 
@@ -59,23 +69,42 @@ def load_model(adapter_path: str, base_model_id: str):
         bnb_4bit_quant_storage=torch.uint8,
     )
 
-    processor = PaliGemmaProcessor.from_pretrained(base_model_id)
-    # FIX THE PADDING SIDE - THIS IS CRITICAL!
-    processor.tokenizer.padding_side = "left"
-    print(f"✅ Tokenizer padding side set to: {processor.tokenizer.padding_side}")
+    if is_local_adapter(model_id):
+        # ── Local adapter: load base model then attach adapter ────────────────
+        print(f"🔌 Detected LOCAL adapter: {model_id}")
+        print(f"   Base model            : {base_model_id}")
 
-    base_model = PaliGemmaForConditionalGeneration.from_pretrained(
-        base_model_id,
-        quantization_config=quantization_config,
-        device_map="auto",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="sdpa",
-    )
+        processor = PaliGemmaProcessor.from_pretrained(base_model_id)
+        processor.tokenizer.padding_side = "left"
 
-    model = PeftModel.from_pretrained(base_model, adapter_path)
+        base_model = PaliGemmaForConditionalGeneration.from_pretrained(
+            base_model_id,
+            quantization_config=quantization_config,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            attn_implementation="sdpa",
+        )
+        model = PeftModel.from_pretrained(base_model, model_id)
+
+    else:
+        # ── HuggingFace Hub: load processor + full model directly ─────────────
+        print(f"🤗 Detected HUB model: {model_id}")
+
+        processor = PaliGemmaProcessor.from_pretrained(model_id)
+        processor.tokenizer.padding_side = "left"
+
+        model = PaliGemmaForConditionalGeneration.from_pretrained(
+            model_id,
+            quantization_config=quantization_config,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            attn_implementation="sdpa",
+        )
+
     model.eval()
 
     elapsed = time.time() - start
+    print(f"✅ Tokenizer padding side set to: {processor.tokenizer.padding_side}")
     print(f"✅ Model loaded in {elapsed:.1f}s")
     print(f"💾 Memory: {torch.cuda.memory_allocated()/1024**3:.2f} GB")
     return model, processor
@@ -124,7 +153,7 @@ def run_vqa(model, processor, args):
     print("\n" + "=" * 70)
     print("🚀 VQA PREDICTION — VizWiz Test Set")
     print("=" * 70)
-    print(f"📂 Adapter   : {args.adapter_path}")
+    print(f"📂 Model     : {args.model_id}")
     print(f"📊 Batch size: {args.batch_size}")
     print(f"📏 Max tokens: {args.max_tokens}")
 
@@ -136,14 +165,13 @@ def run_vqa(model, processor, args):
     download_and_extract(VQA_IMAGES_URL,      data_root)
     download_and_extract(VQA_ANNOTATIONS_URL, data_root)
 
-    images_dir    = os.path.join(data_root, "test")
+    images_dir     = os.path.join(data_root, "test")
     test_json_path = find_json(data_root, "test")
 
     print(f"\n📋 Loading official test list from {test_json_path}...")
     with open(test_json_path) as f:
         test_data = json.load(f)
 
-    # test.json may be a list or a dict with a 'data' key
     if isinstance(test_data, dict):
         test_data = test_data.get("data", test_data.get("annotations", []))
 
@@ -291,7 +319,7 @@ def run_caps(model, processor, args):
     print("\n" + "=" * 70)
     print("🚀 CAPTION TEST PREDICTIONS — VizWiz Caps")
     print("=" * 70)
-    print(f"📂 Adapter   : {args.adapter_path}")
+    print(f"📂 Model     : {args.model_id}")
     print(f"📊 Batch size: {args.batch_size}")
     print(f"📏 Max tokens: {args.max_tokens}")
 
@@ -395,7 +423,6 @@ def run_caps(model, processor, args):
                 except Exception:
                     pass
 
-        # Remove duplicates (keep last occurrence)
         seen: dict = {}
         for item in final_data:
             seen[item["image_id"]] = item
@@ -407,13 +434,11 @@ def run_caps(model, processor, args):
         print(f"   ✅ Saved: {final_output_file}")
         print(f"   Total captions: {len(final_data):,}")
 
-        # Sample captions
         print(f"\n📝 Sample captions:")
         for i, sample in enumerate(final_data[:3], 1):
             print(f"      {i}. Image ID : {sample['image_id']}")
             print(f"         Caption  : {sample['caption'][:80]}...")
 
-        # Statistics
         lengths = [len(item["caption"].split()) for item in final_data]
         print(f"\n📊 Caption statistics:")
         print(f"   Avg length : {sum(lengths)/len(lengths):.1f} words")
@@ -436,10 +461,16 @@ def main():
     parser = argparse.ArgumentParser(
         description="VizWiz VQA + Caption test predictions"
     )
+    parser.add_argument(
+        "--model_id", required=True,
+        help=(
+            "Local adapter path (e.g. outputs/run/final_adapter) "
+            "OR HuggingFace Hub model ID (e.g. lamao-ab/paligemma-blind-assist-jetson-ready)"
+        ),
+    )
     parser.add_argument("--task",          choices=["vqa", "caps", "both"], default="both")
-    parser.add_argument("--adapter_path",  required=True,
-                        help="Path to final_adapter/ directory")
-    parser.add_argument("--base_model_id", default="google/paligemma-3b-mix-224")
+    parser.add_argument("--base_model_id", default="google/paligemma-3b-mix-224",
+                        help="Base model ID — only used when --model_id is a local adapter")
     parser.add_argument("--output_dir",    default="outputs/predictions")
     parser.add_argument("--batch_size",    type=int, default=32)
     parser.add_argument("--max_tokens",    type=int, default=64)
@@ -448,7 +479,7 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
 
     # Load model once, reuse for both tasks
-    model, processor = load_model(args.adapter_path, args.base_model_id)
+    model, processor = load_model(args.model_id, args.base_model_id)
 
     if args.task in ("vqa", "both"):
         run_vqa(model, processor, args)
