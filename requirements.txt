@@ -1,0 +1,27 @@
+# Core — pin numpy first to avoid version conflicts
+numpy==1.26.4
+
+# Hugging Face stack
+huggingface_hub>=0.23.0
+transformers>=4.44.0
+accelerate>=0.34.0
+peft>=0.13.0
+datasets>=2.19.0
+
+# Quantization
+bitsandbytes>=0.43.0
+scipy>=1.11.0
+
+# Image handling
+pillow>=10.0.0
+
+# Evaluation
+evaluate
+rouge_score
+nltk
+pycocoevalcap
+
+# Utilities
+tensorboard>=2.14.0
+tqdm
+requests

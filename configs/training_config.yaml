@@ -1,0 +1,60 @@
+# ============================================================
+# PaliGemma QLoRA — Training Configuration
+# ============================================================
+
+model:
+  base_id: "google/paligemma-3b-mix-224"
+  image_size: 224
+
+quantization:
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_compute_dtype: "bfloat16"
+
+lora:
+  r: 8
+  lora_alpha: 16
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+training:
+  num_train_epochs: 3
+  per_device_train_batch_size: 16
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 8       # effective batch size = 128
+  learning_rate: 2.0e-5
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  optim: "paged_adamw_8bit"
+  attn_implementation: "sdpa"
+  tf32: true
+  bf16: true
+  dataloader_num_workers: 4
+  remove_unused_columns: false
+  logging_steps: 100
+  eval_strategy: "epoch"
+  save_strategy: "epoch"
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+  early_stopping_patience: 2
+  max_length: 256
+
+inference:
+  max_new_tokens: 64
+  batch_size: 32
+
+deployment:
+  hub_repo_id: "lamao-ab/paligemma-blind-assist-jetson-ready"
