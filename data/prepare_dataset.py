@@ -42,6 +42,9 @@ URLS = {
     "caption_annotations": "https://vizwiz.cs.colorado.edu/VizWiz_final/caption/annotations.zip",
 }
 
+# ── Sample limit (set to None to use the full dataset) ───────────────────────
+nb_samples = 1000
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -358,6 +361,13 @@ def build_and_save_dataset(
     samples: dict, split_name: str, output_path: str, captions_per_image: int
 ):
     """Build and save HuggingFace dataset with image/text/suffix/task schema."""
+
+    # ── Apply nb_samples limit if set ────────────────────────────────────────
+    if nb_samples is not None:
+        print(f"\n⚠️  nb_samples={nb_samples}: truncating to {nb_samples} samples.")
+        for key in samples:
+            samples[key] = samples[key][:nb_samples]
+
     total_count = len(samples["image"])
 
     print(f"\n{'='*70}")
@@ -490,30 +500,35 @@ def main() -> None:
     print(f"   Val:   {len(val_dataset):,} samples")
 
     print("\n📈 Composition:")
-    train_vqa = train_metadata["task_distribution"]["vizwiz_vqa"]
-    train_cap = train_metadata["task_distribution"]["vizwiz_caption"]
-    val_vqa   = val_metadata["task_distribution"]["vizwiz_vqa"]
-    val_cap   = val_metadata["task_distribution"]["vizwiz_caption"]
+    train_vqa = train_metadata["task_distribution"].get("vizwiz_vqa", 0)
+    train_cap = train_metadata["task_distribution"].get("vizwiz_caption", 0)
+    val_vqa   = val_metadata["task_distribution"].get("vizwiz_vqa", 0)
+    val_cap   = val_metadata["task_distribution"].get("vizwiz_caption", 0)
 
-    print(f"   Train VQA:     {train_vqa:,} ({train_vqa/(train_vqa+train_cap)*100:.1f}%)")
-    print(f"   Train Caption: {train_cap:,} ({train_cap/(train_vqa+train_cap)*100:.1f}%)")
-    print(f"   Train Ratio:   {train_cap/train_vqa:.1f}:1")
+    if train_vqa + train_cap > 0:
+        print(f"   Train VQA:     {train_vqa:,} ({train_vqa/(train_vqa+train_cap)*100:.1f}%)")
+        print(f"   Train Caption: {train_cap:,} ({train_cap/(train_vqa+train_cap)*100:.1f}%)")
+    if train_vqa > 0:
+        print(f"   Train Ratio:   {train_cap/train_vqa:.1f}:1")
     print()
-    print(f"   Val VQA:       {val_vqa:,} ({val_vqa/(val_vqa+val_cap)*100:.1f}%)")
-    print(f"   Val Caption:   {val_cap:,} ({val_cap/(val_vqa+val_cap)*100:.1f}%)")
-    print(f"   Val Ratio:     {val_cap/val_vqa:.1f}:1")
+    if val_vqa + val_cap > 0:
+        print(f"   Val VQA:       {val_vqa:,} ({val_vqa/(val_vqa+val_cap)*100:.1f}%)")
+        print(f"   Val Caption:   {val_cap:,} ({val_cap/(val_vqa+val_cap)*100:.1f}%)")
+    if val_vqa > 0:
+        print(f"   Val Ratio:     {val_cap/val_vqa:.1f}:1")
 
-    train_ratio = train_cap / train_vqa
-    val_ratio   = val_cap   / val_vqa
-    ratio_diff  = abs(train_ratio - val_ratio)
+    if train_vqa > 0 and val_vqa > 0:
+        train_ratio = train_cap / train_vqa
+        val_ratio   = val_cap   / val_vqa
+        ratio_diff  = abs(train_ratio - val_ratio)
 
-    print(f"\n✅ Ratio Match Check:")
-    if ratio_diff < 0.5:
-        print(f"   ✅ MATCHED! Train ({train_ratio:.1f}:1) ≈ Val ({val_ratio:.1f}:1)")
-        print(f"   Difference: {ratio_diff:.2f} (acceptable)")
-    else:
-        print(f"   ⚠️  Train ({train_ratio:.1f}:1) vs Val ({val_ratio:.1f}:1)")
-        print(f"   Difference: {ratio_diff:.2f}")
+        print(f"\n✅ Ratio Match Check:")
+        if ratio_diff < 0.5:
+            print(f"   ✅ MATCHED! Train ({train_ratio:.1f}:1) ≈ Val ({val_ratio:.1f}:1)")
+            print(f"   Difference: {ratio_diff:.2f} (acceptable)")
+        else:
+            print(f"   ⚠️  Train ({train_ratio:.1f}:1) vs Val ({val_ratio:.1f}:1)")
+            print(f"   Difference: {ratio_diff:.2f}")
 
     print("\n💾 Memory Efficiency:")
     print(f"   Expected peak RAM: 15-20 GB")
@@ -549,4 +564,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
