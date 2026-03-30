@@ -395,8 +395,8 @@ def main() -> None:
     if torch.cuda.is_available():
         print(f"💾 Peak Memory:     {torch.cuda.max_memory_allocated()/1024**3:.1f} GB")
 
-    if epoch_metrics and len(epoch_metrics) > 1:
-        initial     = epoch_metrics[0].get("eval_loss", 0)
+    if eval_entries and len(eval_entries) > 1:
+        initial     = eval_entries[0].get("eval_loss", 0)
         final_loss  = trainer.state.best_metric
         if initial > 0:
             improvement = ((initial - final_loss) / initial) * 100
