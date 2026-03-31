@@ -80,7 +80,7 @@ class PaliGemmaDataCollator:
 
         for e in examples:
             clean_text = e["text"].replace("<image>", "").strip()
-            prompt = "<image>" + clean_text + "\n"      
+            prompt = "<image>" + clean_text + "\n"      # ← LoRA adds \n
 
             texts.append(prompt)
             suffixes.append(e["suffix"])
@@ -143,7 +143,6 @@ def main() -> None:
                         choices=[4, 8, 16, 32, 64])
     parser.add_argument("--num_epochs",           type=int,   default=3)
     parser.add_argument("--batch_size",           type=int,   default=16)
-    parser.add_argument("--eval_batch_size",      type=int,   default=32)
     parser.add_argument("--grad_accum",           type=int,   default=8)
     parser.add_argument("--learning_rate",        type=float, default=2e-4)
     parser.add_argument("--max_length",           type=int,   default=512)
@@ -189,6 +188,7 @@ def main() -> None:
         torch_dtype=torch.bfloat16,
         revision="bfloat16",
     )
+    os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
     model.to("cuda")
 
     ok(f"Model loaded  ({model.get_memory_footprint() / 1024**3:.2f} GB in VRAM)")
@@ -228,7 +228,6 @@ def main() -> None:
     training_args = TrainingArguments(
         output_dir=output_dir,
         per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.eval_batch_size,
         gradient_accumulation_steps=args.grad_accum,
         num_train_epochs=args.num_epochs,
         learning_rate=args.learning_rate,
@@ -260,6 +259,7 @@ def main() -> None:
 
         # Data loading
         dataloader_num_workers=args.dataloader_workers,
+        dataloader_pin_memory=True,
         remove_unused_columns=False,
 
         report_to=["tensorboard"],
@@ -298,14 +298,16 @@ def main() -> None:
     print(f"    {'Alpha':<{C}}  {lora_alpha}  (rank × 2)")
     print()
     print(f"    {'Epochs':<{C}}  {args.num_epochs}")
-    print(f"    {'Batch size (train)':<{C}}  {args.batch_size}")
-    print(f"    {'Batch size (eval)':<{C}}  {args.eval_batch_size}")
+    print(f"    {'Batch size':<{C}}  {args.batch_size}")
     print(f"    {'Gradient accumulation':<{C}}  {args.grad_accum}")
     print(f"    {'Effective batch size':<{C}}  {effective_bs}")
     print(f"    {'Learning rate':<{C}}  {args.learning_rate:.2e}")
     print(f"    {'LR scheduler':<{C}}  cosine  (warmup=0.03)")
     print(f"    {'Max sequence length':<{C}}  {args.max_length}")
     print(f"    {'Dataloader workers':<{C}}  {args.dataloader_workers}")
+    print(f"    {'Gradient checkpointing':<{C}}  enabled")
+    print(f"    {'Optimizer':<{C}}  adamw_torch_fused")
+    print(f"    {'Gradient checkpointing':<{C}}  enabled")
     print()
     print(f"    {'Steps per epoch':<{C}}  {steps_per_epoch:,}")
     print(f"    {'Total steps':<{C}}  {total_steps:,}")
