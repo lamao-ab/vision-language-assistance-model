@@ -10,7 +10,10 @@ python src/train_lora.py \
     --train_dataset_path data/train_dataset \
     --val_dataset_path   data/val_dataset \
     --base_output_dir    outputs/lora \
-    --lora_rank          8
+    --lora_rank          8 \
+    --num_epochs         3 \
+    --batch_size         16 \
+    --grad_accum         8
 
 Supported ranks: 4, 8, 16, 32, 64
 Each run saves to:  <base_output_dir>_rank_<lora_rank>/
