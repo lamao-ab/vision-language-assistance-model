@@ -253,6 +253,11 @@ def main() -> None:
         # Precision
         bf16=True,
 
+        # Memory optimisations (full bfloat16 needs these on a 22 GB GPU)
+        gradient_checkpointing=True,
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        optim="adamw_torch_fused",
+
         # Data loading
         dataloader_num_workers=args.dataloader_workers,
         remove_unused_columns=False,
