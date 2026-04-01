@@ -189,19 +189,25 @@ python blind-assistance-system.py
 
 ### VQA Performance (VizWiz-VQA Test-Standard Server)
 
-| Model   | VQA Accuracy | Memory (GB) | Latency (s) |
-|---------------|--------------|-------------|-------------|
-| PaliGemma-3B Base | 73.89% | 5.65 | 1.0 |
-| PaliGemma-3B + LoRA | 75.89% | 5.65 | 1.2 |
-| **PaliGemma-3B + QLoRA** | **76.45%** | **2.78** | **1.5** |
+| Model         | VizWiz VQA |  VQAv2     | Memory (GB) | Latency (s) |
+|---------------|------------|------------|-------------|-------------|
+| PaliGemma-3B Base | 73.89% | 81.65| 5.65 | 1.0 |
+| PaliGemma-3B + LoRA | 75.89% | 81.19| 5.65 | 1.2 |
+| **PaliGemma-3B + QLoRA** | **76.45%** | **80.97** | **2.78** | **1.5** |
 
-### Captioning Performance (VizWiz-Captions Validation Set)
-
+### Captioning Performance 
+## (VizWiz-Captions Validation Set)
 | Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
 |-------|---------|--------|--------|---------|-------------|
 | PaliGemma-3B Base | 0.405 | 0.028 | 0.145 | 0.216 | 5.3 |
 | PaliGemma-3B + LoRA| 0.758 | 0.090 | 0.275 | 0.274 | 10.3 |
 | **PaliGemma-3B + QLoRA** | **0.737** | **0.072** | **0.274** | **0.294** | **10.3** |
+## (COCO-Captions Validation Set)
+| Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
+|-------|---------|--------|--------|---------|-------------|
+| PaliGemma-3B Base | 0.999 | 0.285 | 0.536 | 0.546  | 5.3 |
+| PaliGemma-3B + LoRA| 0.928 | 0.302 | 0.534 | 0.540  | 10.3 |
+| **PaliGemma-3B + QLoRA** | **0.310** | **0.536** | **0.543** | **10.3** |
 
 ### Deployment Metrics (Jetson Orin Nano 8GB)
 
