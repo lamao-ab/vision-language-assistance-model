@@ -1,5 +1,3 @@
-# PaliGemma + LoRA/QLoRA Blind Assist 
-
 # PaliGemma + LoRA/QLoRA Blind Assistance: Edge-Deployable Vision-Language Models
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
