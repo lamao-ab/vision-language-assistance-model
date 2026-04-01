@@ -76,48 +76,115 @@ This repository provides a complete pipeline for training and deploying vision-l
 
 ```bash
 # Clone repository
-git clone https://github.com/lamao-ab/paligemma-qlora-blind-assist.git
-cd paligemma-qlora-blind-assistance
+git clone https://github.com/lamao-ab/vision-language-assistance-model.git
 
 # Create conda environment
 conda create -n paligemma python=3.10
 conda activate paligemma
+
+# Install dependencies
+cd vision-language-assistance-model
+pip install -r requirements.txt
 ```
 
 ### Download Dataset
 
 ```bash
 # Download and prepare VizWiz dataset
-python data/download_vizwiz.py --output_dir ./datasets/vizwiz
-python data/prepare_dataset.py --data_dir ./datasets/vizwiz
+python data/prepare_dataset.py \
+    --workdir            data/vizwiz \
+    --train_output       data/train_dataset \
+    --val_output         data/val_dataset
 ```
 
 ### Training
 
+## HuggingFace authentication
+```bash
+import os
+from huggingface_hub import login
+if not os.path.exists(os.path.expanduser("~/.cache/huggingface/token")):
+    print("Login required...")
+    login()
+else:
+    print("✅ Already logged in")
+```
+
 **LoRA (Full Precision):**
 ```bash
-python scripts/train_lora.py \
-    --config configs/training_config.yaml \
-    --output_dir ./checkpoints/lora \
-    --epochs 2
+python src/train_lora.py \
+    --train_dataset_path data/train_dataset \
+    --val_dataset_path   data/val_dataset \
+    --base_output_dir    outputs/lora \
+    --lora_rank          8 \
+    --num_epochs         3 \
+    --batch_size         16 \
+    --grad_accum         8
 ```
 
 **QLoRA (4-bit Quantized):**
 ```bash
-python scripts/train_qlora.py \
-    --config configs/training_config.yaml \
-    --output_dir ./checkpoints/qlora \
-    --epochs 3
+python src/train_qlora.py \
+    --train_dataset_path data/train_dataset/ \
+    --val_dataset_path   data/val_dataset \
+    --output_dir         outputs/qlora \
+    --num_epochs         3 \
+    --batch_size         16 \
+    --grad_accum         8
 ```
-
-### Inference 
-
+### Evaluation on VizWiz & Benchmark Datasets
 ```bash
-# Single image inference
-python scripts/inference.py \
-    --model_path ./checkpoints/qlora/final \
-    --image_path ./examples/images/sample.jpg \
-    --question "What color is this object?"
+# Option A — local adapter
+python src/evaluate_vizwiz.py \
+    --model_id   outputs/run/final_adapter \
+    --task  vqa \    
+    --output_dir outputs/predictions
+    --batch_size 32 \
+    --max_tokens 64
+
+# Option B — Hub model 
+python src/evaluate_vizwiz.py \
+    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --task  caps \  
+    --output_dir outputs/predictions \
+    --batch_size 32 \
+    --max_tokens 64
+
+# Option A — local adapter
+python src/evaluate_benchmark.py \
+    --model_id   outputs/run/final_adapter \ 
+    --task  vqa \
+    --output_dir outputs/predictions \
+    --batch_size 32 \
+    --max_tokens 64
+
+# Option B — Hub model 
+python src/evaluate_benchmark.py \
+    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --task       caps \
+    --output_dir outputs/predictions \
+    --batch_size 32 \
+    --max_tokens 64
+``` 
+### Inference 
+```bash
+# Option A — local adapter
+python src/predict.py \
+    --model_id   outputs/run/final_adapter \
+    --task       vqa \
+    --image_dir  /content/paligemma-blind-assist/data/images \
+    --output     results/vqa_only.json
+    --batch_size 32 \
+    --max_tokens 64
+
+# Option B — Hub model 
+python src/predict.py \
+    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --task       caps \
+    --image_dir  /content/paligemma-blind-assist/data/images \
+    --output     results/caps_results.json \
+    --batch_size 32 \
+    --max_tokens 64
 ```
 
 ### Deployment on Jetson Nano Orin 8GB
@@ -126,7 +193,7 @@ python scripts/inference.py \
 # Interactive demo on Jetson Nano Orin 8GB
 cd paligemma-qlora-blind-assistance/deployment
 pip install -r requirements.txt
-python deployment/python3 blind-assistance-system.py 
+python blind-assistance-system.py 
 ```
 
 
