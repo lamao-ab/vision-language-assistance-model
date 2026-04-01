@@ -34,14 +34,9 @@ This repository provides a complete pipeline for training and deploying vision-l
 ---
 
 ## 🎥 Demo 
-### Video Demo
 https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
 
-### Demo with images
-
-    vqa_prompt = "Assist a blind person: List all the objects you see in this image."
-    cap_prompt = "Describe this scene for a blind person."
-    
+<p align="center">
   VQA: Building, House, Tree.
   CAP: A woman sitting on a bench in front of a building.
   ![demo1](https://github.com/user-attachments/assets/68443941-abf0-4278-93bd-c3d695eab8a7)
@@ -54,17 +49,15 @@ https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
   CAP: A stop sign with graffiti on it in a foreign language.
   ![demo3](https://github.com/user-attachments/assets/0d31a0f4-5994-4dfb-9ca9-f72b1ff75993)
 
-    vqa_prompt = "Assist a blind person: How many people in this image?"
-    cap_prompt = "Describe this scene for a blind person."
-
   VQA: 7
   CAP: A group of people are standing at a bus stop.
  ![demo4](https://github.com/user-attachments/assets/1aa621b8-a0ac-40ed-8dc1-29c686bf013c)
 
   VQA: 1.
   CAP: A bus is parked on the side of the street.
- ![fe54cc512921db99_jpg rf 30136ce3400f26a48da06f249a94878d](https://github.com/user-attachments/assets/f5f3989e-b6bd-4f3e-b7e6-f5466b3194a2)
+ ![demo5](https://github.com/user-attachments/assets/f5f3989e-b6bd-4f3e-b7e6-f5466b3194a2)
 
+</p>
 ---
 
 ## 🚀 Quick Start
