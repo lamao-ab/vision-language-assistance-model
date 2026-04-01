@@ -34,9 +34,7 @@ This repository provides a complete pipeline for training and deploying vision-l
 ---
 
 ## 🎥 Demo 
-  ### Video:
   https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
-  ### Images:
   **VQA:** Building, House, Tree. \
   **CAP:** A woman sitting on a bench in front of a building. \
   ![demo1](https://github.com/user-attachments/assets/68443941-abf0-4278-93bd-c3d695eab8a7)
