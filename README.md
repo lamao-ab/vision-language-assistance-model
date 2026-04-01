@@ -1,7 +1,22 @@
-# PaliGemma + LoRA/QLoRA Blind Assist (Optimized for Jetson Orin Nano).
+# PaliGemma + LoRA/QLoRA Blind Assist 
+Optimized for Jetson Orin Nano.
+
+# PaliGemma + LoRA/QLoRA Blind Assistance: Edge-Deployable Vision-Language Models
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2.0-red.svg)](https://pytorch.org/)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-yellow)](https://huggingface.co/lamao-ab)
+
+**Parameter-efficient fine-tuning of PaliGemma-3B for blind assistance using LoRA/QLoRA on VizWiz dataset, deployable on NVIDIA Jetson Orin Nano 8GB.**
+![demo](https://github.com/user-attachments/assets/5cc68256-1692-4c09-9d19-89f99bf1757c)
+
+📄 **Paper**: [Link to ArXiv/IEEE](YOUR_PAPER_LINK)  
+🤗 **Models**: [HuggingFace Hub](https://huggingface.co/lamao-ab)  
+
+---
 
 ## 🎯 Overview
-
 This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our approach achieves:
 
 - **75.65% VQA accuracy** on VizWiz-VQA (10-choose-9 metric)
@@ -21,22 +36,8 @@ This repository provides a complete pipeline for training and deploying vision-l
 
 ---
 
-# PaliGemma + LoRA/QLoRA Blind Assistance: Edge-Deployable Vision-Language Models
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.2.0-red.svg)](https://pytorch.org/)
-[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-yellow)](https://huggingface.co/lamao-ab)
-
-**Parameter-efficient fine-tuning of PaliGemma-3B for blind assistance using LoRA/QLoRA on VizWiz dataset, deployable on NVIDIA Jetson Orin Nano 8GB.**
-![demo](https://github.com/user-attachments/assets/5cc68256-1692-4c09-9d19-89f99bf1757c)
-
-📄 **Paper**: [Link to ArXiv/IEEE](YOUR_PAPER_LINK)  
-🤗 **Models**: [HuggingFace Hub](https://huggingface.co/lamao-ab)  
----
 ## 🎥 Demo 
 ### Video Demo
-
 https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
 
 ### Demo with images
