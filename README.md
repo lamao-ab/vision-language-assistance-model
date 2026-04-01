@@ -36,9 +36,8 @@ This repository provides a complete pipeline for training and deploying vision-l
 ## 🎥 Demo 
 https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
 
-<p align="center">
-  VQA: Building, House, Tree.
-  CAP: A woman sitting on a bench in front of a building.
+  VQA: Building, House, Tree. \
+  CAP: A woman sitting on a bench in front of a building. \
   ![demo1](https://github.com/user-attachments/assets/68443941-abf0-4278-93bd-c3d695eab8a7)
 
   VQA: Bench, Furniture, Plant, Tree.
@@ -57,7 +56,7 @@ https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
   CAP: A bus is parked on the side of the street.
  ![demo5](https://github.com/user-attachments/assets/f5f3989e-b6bd-4f3e-b7e6-f5466b3194a2)
 
-</p>
+
 ---
 
 ## 🚀 Quick Start
