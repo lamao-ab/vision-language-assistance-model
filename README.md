@@ -1,5 +1,25 @@
-# PaliGemma + LoRA/QLoRA Blind Assist
-Optimized for Jetson Orin Nano.
+# PaliGemma + LoRA/QLoRA Blind Assist (Optimized for Jetson Orin Nano).
+
+## 🎯 Overview
+
+This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our approach achieves:
+
+- **75.65% VQA accuracy** on VizWiz-VQA (10-choose-9 metric)
+- **0.737 CIDEr-D score** on VizWiz-Captions
+- **2.78 GB memory footprint** (QLoRA) enabling Jetson deployment
+- **1.3-2.2 seconds inference latency** for interactive assistance
+- **12.4+ hours battery life (Continuous)** with 100Wh battery pack
+
+### Key Features
+
+✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA  
+✅ **4-bit Quantization**: QLoRA reduces memory from ~12 GB to ~3.0 GB  
+✅ **Multi-Task Learning**: Joint training on VQA and image captioning  
+✅ **Edge Deployment**: Run on affordable hardware (Jetson Orin Nano 8GB)  
+✅ **Privacy-Preserving**: All processing on-device, no cloud required  
+✅ **Open Source**: All code, configs, and trained weights available  
+
+---
 
 # PaliGemma + LoRA/QLoRA Blind Assistance: Edge-Deployable Vision-Language Models
 
@@ -46,27 +66,6 @@ https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
   VQA: 1.
   CAP: A bus is parked on the side of the street.
  ![fe54cc512921db99_jpg rf 30136ce3400f26a48da06f249a94878d](https://github.com/user-attachments/assets/f5f3989e-b6bd-4f3e-b7e6-f5466b3194a2)
-
----
-
-## 🎯 Overview
-
-This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our approach achieves:
-
-- **75.65% VQA accuracy** on VizWiz-VQA (10-choose-9 metric)
-- **0.737 CIDEr-D score** on VizWiz-Captions
-- **2.78 GB memory footprint** (QLoRA) enabling Jetson deployment
-- **1.3-2.2 seconds inference latency** for interactive assistance
-- **12.4+ hours battery life (Continuous)** with 100Wh battery pack
-
-### Key Features
-
-✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA  
-✅ **4-bit Quantization**: QLoRA reduces memory from ~12 GB to ~3.0 GB  
-✅ **Multi-Task Learning**: Joint training on VQA and image captioning  
-✅ **Edge Deployment**: Run on affordable hardware (Jetson Orin Nano 8GB)  
-✅ **Privacy-Preserving**: All processing on-device, no cloud required  
-✅ **Open Source**: All code, configs, and trained weights available  
 
 ---
 
