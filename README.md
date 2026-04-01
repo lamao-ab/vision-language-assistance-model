@@ -1,5 +1,4 @@
 # PaliGemma + LoRA/QLoRA Blind Assist 
-Optimized for Jetson Orin Nano.
 
 # PaliGemma + LoRA/QLoRA Blind Assistance: Edge-Deployable Vision-Language Models
 
