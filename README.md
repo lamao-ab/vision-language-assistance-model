@@ -189,19 +189,19 @@ python blind-assistance-system.py
 
 ### VQA Performance (VizWiz-VQA Test-Standard Server)
 
-| Model | Method | VQA Accuracy | Memory (GB) | Latency (s) |
-|-------|--------|--------------|-------------|-------------|
-| PaliGemma-3B | Zero-shot | 73.89% | 5.65 | 1.0 |
-| PaliGemma-3B | LoRA | 75.89% | 5.65 | 1.2 |
-| **PaliGemma-3B** | **QLoRA** | **76.45%** | **2.78** | **1.5** |
+| Model   | VQA Accuracy | Memory (GB) | Latency (s) |
+|---------------|--------------|-------------|-------------|
+| PaliGemma-3B Base | 73.89% | 5.65 | 1.0 |
+| PaliGemma-3B + LoRA | 75.89% | 5.65 | 1.2 |
+| **PaliGemma-3B + QLoRA** | **76.45%** | **2.78** | **1.5** |
 
 ### Captioning Performance (VizWiz-Captions Validation Set)
 
 | Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
 |-------|---------|--------|--------|---------|-------------|
-| Zero-shot | 0.405 | 0.028 | 0.145 | 0.216 | 5.3 |
-| LoRA | 0.758 | 0.090 | 0.275 | 0.274 | 10.3 |
-| **QLoRA** | **0.737** | **0.072** | **0.274** | **0.294** | **10.3** |
+| PaliGemma-3B Base | 0.405 | 0.028 | 0.145 | 0.216 | 5.3 |
+| PaliGemma-3B + LoRA| 0.758 | 0.090 | 0.275 | 0.274 | 10.3 |
+| **PaliGemma-3B + QLoRA** | **0.737** | **0.072** | **0.274** | **0.294** | **10.3** |
 
 ### Deployment Metrics (Jetson Orin Nano 8GB)
 
