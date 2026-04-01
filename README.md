@@ -97,9 +97,9 @@ python data/prepare_dataset.py \
     --val_output         data/val_dataset
 ```
 
-### Training
+## Training
 
-## HuggingFace authentication
+### HuggingFace authentication
 ```bash
 import os
 from huggingface_hub import login
