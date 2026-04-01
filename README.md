@@ -195,15 +195,15 @@ python blind-assistance-system.py
 | PaliGemma-3B + LoRA | 75.89% | 81.19| 5.65 | 1.2 |
 | **PaliGemma-3B + QLoRA** | **76.45%** | **80.97** | **2.78** | **1.5** |
 
-### Captioning Performance 
-## (VizWiz-Captions on Validation Set)
+### Captioning Performance (VizWiz-Caps & COCO-Caps on Validation Set)
+
 | Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
 |-------|---------|--------|--------|---------|-------------|
 | PaliGemma-3B Base | 0.405 | 0.028 | 0.145 | 0.216 | 5.3 |
 | PaliGemma-3B + LoRA| 0.758 | 0.090 | 0.275 | 0.274 | 10.3 |
 | **PaliGemma-3B + QLoRA** | **0.737** | **0.072** | **0.274** | **0.294** | **10.3** |
 
-## (COCO-Captions on Validation Set)
+
 | Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
 |-------|---------|--------|--------|---------|-------------|
 | PaliGemma-3B Base | 0.999 | 0.285 | 0.536 | 0.546  | 12.3 |
