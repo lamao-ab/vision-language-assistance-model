@@ -85,9 +85,9 @@ python data/prepare_dataset.py \
     --val_output         data/val_dataset
 ```
 
-## Training
+### Training
 
-### HuggingFace authentication
+### HuggingFace Authentication
 ```bash
 import os
 from huggingface_hub import login
@@ -154,7 +154,7 @@ python src/evaluate_benchmark.py \
     --batch_size 32 \
     --max_tokens 64
 ``` 
-### Inference 
+## Inference 
 ```bash
 # Option A — local adapter
 python src/predict.py \
