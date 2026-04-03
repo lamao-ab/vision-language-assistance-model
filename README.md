@@ -153,7 +153,7 @@ python src/evaluate_benchmark.py \
     --batch_size 32 \
     --max_tokens 64
 ``` 
-## Inference 
+### Inference 
 ```bash
 # Option A — local adapter
 python src/predict.py \
