@@ -86,8 +86,7 @@ python data/prepare_dataset.py \
 ```
 
 ### Training
-
-### HuggingFace Authentication
+**HuggingFace Authentication**
 ```bash
 import os
 from huggingface_hub import login
@@ -98,7 +97,7 @@ else:
     print("✅ Already logged in")
 ```
 
-**LoRA (Full Precision):**
+**LoRA adapter training:**
 ```bash
 python src/train_lora.py \
     --train_dataset_path data/train_dataset \
@@ -110,7 +109,7 @@ python src/train_lora.py \
     --grad_accum         8
 ```
 
-**QLoRA (4-bit Quantized):**
+**QLoRA adapter training (4-bit Quantized) :**
 ```bash
 python src/train_qlora.py \
     --train_dataset_path data/train_dataset/ \
