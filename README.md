@@ -124,7 +124,7 @@ python src/train_qlora.py \
 # Option A — local adapter
 python src/evaluate_vizwiz.py \
     --model_id   outputs/run/final_adapter \
-    --task  vqa \    
+    --task  vqa \            # vqa, caps or both
     --output_dir outputs/predictions
     --batch_size 32 \
     --max_tokens 64
@@ -140,7 +140,7 @@ python src/evaluate_vizwiz.py \
 # Option A — local adapter
 python src/evaluate_benchmark.py \
     --model_id   outputs/run/final_adapter \ 
-    --task  vqa \
+    --task  both \
     --output_dir outputs/predictions \
     --batch_size 32 \
     --max_tokens 64
@@ -148,7 +148,7 @@ python src/evaluate_benchmark.py \
 # Option B — Hub model 
 python src/evaluate_benchmark.py \
     --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
-    --task       caps \
+    --task       both \
     --output_dir outputs/predictions \
     --batch_size 32 \
     --max_tokens 64
