@@ -48,7 +48,8 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
 
    **VQA (traffic light color?):** unanswerable \
    **CAP:** Quality issues are too severe to recognize visual content.
-  ![A man in a red hat is standing on the sidewalk](https://github.com/user-attachments/assets/39cca71c-f452-47b2-a32c-6a43d8c5a0eb)
+   ![last_view_22](https://github.com/user-attachments/assets/4d189a91-b759-4e8b-a785-5aea7a52a4ba)
+
 
   **VQA (screen color?):** green \
   **CAP:** A television screen with a soccer game on it. \
