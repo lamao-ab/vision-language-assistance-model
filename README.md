@@ -34,8 +34,26 @@ This repository provides a complete pipeline for training and deploying vision-l
 ---
 
 ## 🎥 Demo 
-  https://github.com/user-attachments/assets/ad495a73-14f1-4582-98b1-c1281f91f399
+
   
+  https://github.com/user-attachments/assets/d0d2bde8-841b-4bcd-924e-f2fc0b3a4ae2
+
+  
+
+  https://github.com/user-attachments/assets/4e47e2cb-3dba-44ba-9159-0a8f67409d79
+
+
+  # Real images captured by usb camera:
+  VQA (number of person?): 6
+  CAP: A group of people sitting at a table in a restaurant
+  ![A group of people sitting at a table in a restaurant](https://github.com/user-attachments/assets/b641e527-86c4-490e-a53d-df98fe0bac6b)
+
+  VQA (traffic light color?): unanswerable 
+  CAP: Quality issues are too severe to recognize visual 
+  ![A man in a red hat is standing on the sidewalk](https://github.com/user-attachments/assets/39cca71c-f452-47b2-a32c-6a43d8c5a0eb)
+
+
+  # Inference with clear images:
   **VQA:** Building, House, Tree. \
   **CAP:** A woman sitting on a bench in front of a building. \
   ![demo1](https://github.com/user-attachments/assets/68443941-abf0-4278-93bd-c3d695eab8a7)
@@ -52,10 +70,6 @@ This repository provides a complete pipeline for training and deploying vision-l
   **CAP:** A group of people are standing at a bus stop. \
   ![demo4](https://github.com/user-attachments/assets/1aa621b8-a0ac-40ed-8dc1-29c686bf013c)
   
-  **VQA:** 1. \
-  **CAP:** A bus is parked on the side of the street. \
-  ![demo5](https://github.com/user-attachments/assets/f5f3989e-b6bd-4f3e-b7e6-f5466b3194a2)
-
 ---
 
 ## 🚀 Quick Start
