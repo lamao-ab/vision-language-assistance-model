@@ -35,20 +35,18 @@ This repository provides a complete pipeline for training and deploying vision-l
 
 ## 🎥 Demo 
 
-  
-  https://github.com/user-attachments/assets/d0d2bde8-841b-4bcd-924e-f2fc0b3a4ae2
 
-  
+https://github.com/user-attachments/assets/5e2f2d8d-28ae-4121-8e7a-79bf5d7b91ee
 
-  https://github.com/user-attachments/assets/4e47e2cb-3dba-44ba-9159-0a8f67409d79
+https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
 
 
   # Real images captured by usb camera:
-  VQA (number of person?): 6
+  VQA (number of person?): 6 \
   CAP: A group of people sitting at a table in a restaurant
   ![A group of people sitting at a table in a restaurant](https://github.com/user-attachments/assets/b641e527-86c4-490e-a53d-df98fe0bac6b)
 
-  VQA (traffic light color?): unanswerable 
+  VQA (traffic light color?): unanswerable \
   CAP: Quality issues are too severe to recognize visual 
   ![A man in a red hat is standing on the sidewalk](https://github.com/user-attachments/assets/39cca71c-f452-47b2-a32c-6a43d8c5a0eb)
 
