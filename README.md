@@ -65,10 +65,6 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
   **CAP:** A group of people are standing at a bus stop. \
   ![demo4](https://github.com/user-attachments/assets/1aa621b8-a0ac-40ed-8dc1-29c686bf013c)
   
-  **VQA (identify objetcs?:** Bench, Furniture, Plant, Tree. \
-  **CAP:** Two park benches are in a park with a fire hydrant in the background. \
-  ![demo](https://github.com/user-attachments/assets/b7fec2f4-59f9-42aa-b7b6-f9c5af697c62)
-  
   **VQA (identify objetcs?):** Car, Sky, Stop sign, Vehicle. \
   **CAP:** A stop sign with graffiti on it in a foreign language. \
   ![demo3](https://github.com/user-attachments/assets/0d31a0f4-5994-4dfb-9ca9-f72b1ff75993)
