@@ -50,6 +50,7 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
    **CAP:** Quality issues are too severe to recognize visual content.
   ![A man in a red hat is standing on the sidewalk](https://github.com/user-attachments/assets/39cca71c-f452-47b2-a32c-6a43d8c5a0eb)
 
+  **VQA (screen color?):** green \
   **CAP:** A television screen with a soccer game on it. \
   ![A television screen with a soccer game on it](https://github.com/user-attachments/assets/2d4d3794-109b-42ba-aa9e-22a9d669c363)
 
