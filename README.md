@@ -42,36 +42,38 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
 
 
   # Real images captured by usb camera:
-  VQA (number of person?): 6 \
-  CAP: A group of people sitting at a table in a restaurant
+   **VQA (number of person?):** 6 \
+   **CAP:** A group of people sitting at a table in a restaurant
   ![A group of people sitting at a table in a restaurant](https://github.com/user-attachments/assets/b641e527-86c4-490e-a53d-df98fe0bac6b)
 
-  VQA (traffic light color?): unanswerable \
-  CAP: Quality issues are too severe to recognize visual content.
+   **VQA (traffic light color?):** unanswerable \
+   **CAP:** Quality issues are too severe to recognize visual content.
   ![A man in a red hat is standing on the sidewalk](https://github.com/user-attachments/assets/39cca71c-f452-47b2-a32c-6a43d8c5a0eb)
 
-  CAP: A television screen with a soccer game on it. \
+  **CAP:** A television screen with a soccer game on it. \
   ![A television screen with a soccer game on it](https://github.com/user-attachments/assets/2d4d3794-109b-42ba-aa9e-22a9d669c363)
 
-  CAP: A white air conditioner with a blue light on top. \
+  **CAP:** A white air conditioner with a blue light on top. \
   ![A white air conditioner with a blue light on top](https://github.com/user-attachments/assets/c83630bc-33e8-40f4-997e-3318cca42bcd)
 
   # Inference with clear images:
-  **VQA:** Building, House, Tree. \
+  **VQA(identify objetcs?:** Building, House, Tree. \
   **CAP:** A woman sitting on a bench in front of a building. \
   ![demo1](https://github.com/user-attachments/assets/68443941-abf0-4278-93bd-c3d695eab8a7)
+
+  **VQA(number of persons?):** 7 \
+  **CAP:** A group of people are standing at a bus stop. \
+  ![demo4](https://github.com/user-attachments/assets/1aa621b8-a0ac-40ed-8dc1-29c686bf013c)
   
-  **VQA:** Bench, Furniture, Plant, Tree. \
+  **VQA (identify objetcs?:** Bench, Furniture, Plant, Tree. \
   **CAP:** Two park benches are in a park with a fire hydrant in the background. \
   ![demo](https://github.com/user-attachments/assets/b7fec2f4-59f9-42aa-b7b6-f9c5af697c62)
   
-  **VQA:** Car, Sky, Stop sign, Vehicle. \
+  **VQA (identify objetcs?):** Car, Sky, Stop sign, Vehicle. \
   **CAP:** A stop sign with graffiti on it in a foreign language. \
   ![demo3](https://github.com/user-attachments/assets/0d31a0f4-5994-4dfb-9ca9-f72b1ff75993)
   
-  **VQA:** 7 \
-  **CAP:** A group of people are standing at a bus stop. \
-  ![demo4](https://github.com/user-attachments/assets/1aa621b8-a0ac-40ed-8dc1-29c686bf013c)
+
   
 ---
 
