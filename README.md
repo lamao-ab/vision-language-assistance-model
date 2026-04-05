@@ -54,7 +54,9 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
   **CAP:** A television screen with a soccer game on it. \
   ![A television screen with a soccer game on it](https://github.com/user-attachments/assets/2d4d3794-109b-42ba-aa9e-22a9d669c363)
 
-  **CAP:** A white air conditioner with a blue light on top. \
+  
+  **VQA(identify objetcs?:** Air purifier \
+  **CAP:** A white air conditioner with a blue light on top. 
   ![A white air conditioner with a blue light on top](https://github.com/user-attachments/assets/c83630bc-33e8-40f4-997e-3318cca42bcd)
 
   # Inference with clear images:
