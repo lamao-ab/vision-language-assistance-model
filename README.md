@@ -239,24 +239,6 @@ python blind-assistance-system.py
 
 ---
 
-## 🛠️ Repository Structure
-
-```
-├── configs/           # Training and deployment configurations
-├── data/              # Dataset download and preprocessing
-├── src/               # Core source code (model, trainer, metrics)
-├── scripts/           # Training and evaluation scripts
-├── deployment/        # Jetson deployment code
-├── notebooks/         # Jupyter notebooks for analysis
-├── docs/              # Detailed documentation
-└── examples/          # Sample inputs and outputs
-```
-
-<!-- See [TRAINING.md](docs/TRAINING.md) for detailed training instructions and [DEPLOYMENT.md](docs/DEPLOYMENT.md) for edge deployment guide.
- -->
-
----
-
 ## 🖥️ Hardware Requirements
 
 ### Training
@@ -282,6 +264,24 @@ python blind-assistance-system.py
 - **[API Reference](docs/API.md)**: Code documentation and examples
 
 ---  -->
+
+## 🛠️ Repository Structure
+
+```
+├── configs/           # Training and deployment configurations
+├── data/              # Dataset download and preprocessing
+├── src/               # Core source code (model, trainer, metrics)
+├── scripts/           # Training and evaluation scripts
+├── deployment/        # Jetson deployment code
+├── notebooks/         # Jupyter notebooks for analysis
+├── docs/              # Detailed documentation
+└── examples/          # Sample inputs and outputs
+```
+
+<!-- See [TRAINING.md](docs/TRAINING.md) for detailed training instructions and [DEPLOYMENT.md](docs/DEPLOYMENT.md) for edge deployment guide.
+ -->
+
+---
 
 ## 🎓 Citation
 
