@@ -245,7 +245,7 @@ python blind-assistance-system.py
 
 - **GPU**: NVIDIA A100 (40GB+) or V100 (32GB+)
 - **RAM**: 32 GB+
-- **Storage**: 50 GB (dataset + checkpoints)
+- **Storage**: 200 GB+ (dataset + checkpoints)
 
 ### Deployment
 
