@@ -252,7 +252,8 @@ python blind-assistance-system.py
 └── examples/          # Sample inputs and outputs
 ```
 
-See [TRAINING.md](docs/TRAINING.md) for detailed training instructions and [DEPLOYMENT.md](docs/DEPLOYMENT.md) for edge deployment guide.
+<!-- See [TRAINING.md](docs/TRAINING.md) for detailed training instructions and [DEPLOYMENT.md](docs/DEPLOYMENT.md) for edge deployment guide.
+ -->
 
 ---
 
