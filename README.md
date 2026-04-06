@@ -274,14 +274,14 @@ python blind-assistance-system.py
 
 ---
 
-## 📖 Documentation
+<!-- ## 📖 Documentation
 
 - **[Training Guide](docs/TRAINING.md)**: Detailed training instructions and hyperparameter tuning
 - **[Deployment Guide](docs/DEPLOYMENT.md)**: Step-by-step Jetson setup and deployment
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)**: Common issues and solutions
 - **[API Reference](docs/API.md)**: Code documentation and examples
 
----
+---  -->
 
 ## 🎓 Citation
 
