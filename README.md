@@ -6,6 +6,7 @@
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-yellow)](https://huggingface.co/lamao-ab)
 
 **Parameter-efficient fine-tuning of PaliGemma-3B for blind assistance using LoRA/QLoRA on VizWiz dataset (VQA & Captionning), deployable on NVIDIA Jetson Orin Nano 8GB.**
+
 ![demo](https://github.com/user-attachments/assets/5cc68256-1692-4c09-9d19-89f99bf1757c)
 
 📄 **Paper**: [Link to ArXiv/IEEE](YOUR_PAPER_LINK)  
