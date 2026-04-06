@@ -286,11 +286,11 @@ See [TRAINING.md](docs/TRAINING.md) for detailed training instructions and [DEPL
 If you use this work in your research, please cite:
 
 ```bibtex
-@article{yourname2024paligemma,
-  title={Parameter-Efficient Adaptation of Vision-Language Models for Edge-Based Blind Assistance},
-  author={Your Name and Co-authors},
+@article{,
+  title={},
+  author={},
   journal={IEEE Access},
-  year={2024},
+  year={2026},
   volume={XX},
   pages={XXX-XXX},
   doi={XX.XXXX/ACCESS.XXXX.XXXXXXX}
