@@ -60,7 +60,7 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
   **VQA(identify objetcs?:** Air purifier \
   **CAP:** A white air conditioner with a blue light on top. 
   ![A white air conditioner with a blue light on top](https://github.com/user-attachments/assets/c83630bc-33e8-40f4-997e-3318cca42bcd)  
----
+
 
 ## 🚀 Quick Start
 
