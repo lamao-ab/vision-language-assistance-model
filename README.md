@@ -59,23 +59,7 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
   
   **VQA(identify objetcs?:** Air purifier \
   **CAP:** A white air conditioner with a blue light on top. 
-  ![A white air conditioner with a blue light on top](https://github.com/user-attachments/assets/c83630bc-33e8-40f4-997e-3318cca42bcd)
-
-  # Inference with clear images:
-  **VQA(identify objetcs?:** Building, House, Tree. \
-  **CAP:** A woman sitting on a bench in front of a building. \
-  ![demo1](https://github.com/user-attachments/assets/68443941-abf0-4278-93bd-c3d695eab8a7)
-
-  **VQA(number of persons?):** 7 \
-  **CAP:** A group of people are standing at a bus stop. \
-  ![demo4](https://github.com/user-attachments/assets/1aa621b8-a0ac-40ed-8dc1-29c686bf013c)
-  
-  **VQA (identify objetcs?):** Car, Sky, Stop sign, Vehicle. \
-  **CAP:** A stop sign with graffiti on it in a foreign language. \
-  ![demo3](https://github.com/user-attachments/assets/0d31a0f4-5994-4dfb-9ca9-f72b1ff75993)
-  
-
-  
+  ![A white air conditioner with a blue light on top](https://github.com/user-attachments/assets/c83630bc-33e8-40f4-997e-3318cca42bcd)  
 ---
 
 ## 🚀 Quick Start
