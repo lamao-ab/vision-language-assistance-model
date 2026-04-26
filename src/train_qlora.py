@@ -268,6 +268,10 @@ def main() -> None:
         num_train_epochs=args.num_epochs,
         learning_rate=args.learning_rate,
 
+        # Cosine scheduler + warmup
+        lr_scheduler_type="cosine",
+        warmup_ratio=0.03,
+
         # Logging
         logging_steps=100,
         logging_first_step=True,
