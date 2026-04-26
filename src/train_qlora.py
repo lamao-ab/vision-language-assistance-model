@@ -269,8 +269,8 @@ def main() -> None:
         learning_rate=args.learning_rate,
 
         # Cosine scheduler + warmup
-        lr_scheduler_type="cosine",
-        warmup_ratio=0.03,
+        # lr_scheduler_type="cosine",
+        # warmup_ratio=0.03,
 
         # Logging
         logging_steps=100,
