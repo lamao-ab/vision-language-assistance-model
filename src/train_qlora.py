@@ -339,6 +339,7 @@ def main() -> None:
     print(f"    {'Gradient accumulation':<{C}}  {args.grad_accum}")
     print(f"    {'Effective batch size':<{C}}  {effective_bs}")
     print(f"    {'Learning rate':<{C}}  {args.learning_rate:.2e}")
+    #print(f"    {'LR scheduler':<{C}}  cosine  (warmup=0.03)")
     print(f"    {'Max sequence length':<{C}}  {args.max_length}")
     print()
     print(f"    {'Attention':<{C}}  SDPA")
