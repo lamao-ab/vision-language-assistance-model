@@ -1,19 +1,34 @@
-# Core — pin numpy first to avoid version conflicts
+# ──────────────────────────────────────────────────────────────────────────────
+# Reproducibility note:
+#   The published results were produced on an NVIDIA A100-SXM4-40GB (CUDA 12.8)
+#   with the EXACT versions pinned below (confirmed from the training session).
+#   numpy is pinned to 1.26.4 for compatibility with the ML stack; this will emit
+#   benign conflict warnings against unrelated Colab base packages (jax, opencv,
+#   cupy, rasterio, etc.) that require numpy>=2.0. Those packages are NOT used in
+#   training and the warnings can be safely ignored.
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Core
 numpy==1.26.4
 
-# Hugging Face stack
-huggingface_hub>=0.23.0
-transformers>=4.44.0
-accelerate>=0.34.0
-peft>=0.13.0
-datasets>=2.19.0
+# PyTorch (install the CUDA 12.8 build; confirmed training version)
+# NOTE: torch is typically installed via the official index, e.g.:
+#   pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cu128
+torch==2.10.0
 
-# Quantization
-bitsandbytes>=0.43.0
-scipy>=1.11.0
+# Hugging Face stack  (confirmed versions pinned; unconfirmed left as >=)
+transformers==5.0.0
+peft==0.18.1
+huggingface_hub>=0.23.0          # not captured from session — verify & pin
+accelerate>=0.34.0               # NOT captured from session — verify & pin (run: import accelerate; print(accelerate.__version__))
+datasets>=2.19.0                 # not captured from session — verify & pin
+
+# Quantization  (confirmed)
+bitsandbytes==0.49.2
+scipy>=1.11.0                    # not captured — verify & pin
 
 # Image handling
-pillow>=10.0.0
+pillow>=10.0.0                   # not captured — verify & pin
 
 # Evaluation
 evaluate
@@ -22,6 +37,6 @@ nltk
 pycocoevalcap
 
 # Utilities
-tensorboard>=2.14.0
+tensorboard>=2.14.0              # not captured — verify & pin
 tqdm
 requests
