@@ -33,6 +33,7 @@ from transformers import (
     PaliGemmaProcessor,
     Trainer,
     TrainingArguments,
+    set_seed,
 )
 
 
@@ -92,16 +93,9 @@ class PaliGemmaDataCollator:
         images   = []
 
         for e in examples:
-            # Support both dataset formats:
-            # - original notebook format: "text" + "suffix" fields
-            # - our format:               "question" + "answer" fields
-            if "text" in e:
-                clean_text = e["text"].replace("<image>", "").strip()
-                prompt = "<image>" + clean_text + "\n"
-                suffix = e["suffix"]
-            else:
-                prompt = "<image>" + e["question"].strip()
-                suffix = e["answer"]
+            clean_text = e["text"].replace("<image>", "").strip()
+            prompt = "<image>" + clean_text + "\n"
+            suffix = e["suffix"]
 
             texts.append(prompt)
             suffixes.append(suffix)
@@ -172,9 +166,15 @@ def main() -> None:
     parser.add_argument("--lora_dropout",            type=float, default=0.05)
     parser.add_argument("--early_stopping_patience", type=int,   default=2)
     parser.add_argument("--dataloader_workers",      type=int,   default=8)
+    parser.add_argument("--seed",                    type=int,   default=42,
+                        help="Random seed for reproducibility (model init, dropout, data shuffle)")
     parser.add_argument("--resume",                  action="store_true",
                         help="Resume from the latest checkpoint in output_dir")
     args = parser.parse_args()
+
+    # Seed everything (python, numpy, torch, cuda) BEFORE model load and
+    # get_peft_model so adapter initialization is reproducible.
+    set_seed(args.seed)
 
     effective_bs = args.batch_size * args.grad_accum
 
@@ -268,9 +268,13 @@ def main() -> None:
         num_train_epochs=args.num_epochs,
         learning_rate=args.learning_rate,
 
+        # Reproducibility
+        seed=args.seed,
+        data_seed=args.seed,
+
         # Cosine scheduler + warmup
-        # lr_scheduler_type="cosine",
-        # warmup_ratio=0.03,
+        lr_scheduler_type="cosine",
+        warmup_ratio=0.03,
 
         # Logging
         logging_steps=100,
@@ -488,7 +492,6 @@ def main() -> None:
     print(_line())
     ok("Jetson Orin Nano 8 GB compatible")
     ok("4-bit quantisation active")
-    ok("Expected accuracy: 86.0 – 86.5 %")
 
     # ── Next steps ────────────────────────────────────────────────────────────
     print(f"\n{_line()}")
