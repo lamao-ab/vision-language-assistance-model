@@ -1,42 +1,29 @@
-# ──────────────────────────────────────────────────────────────────────────────
-# Reproducibility note:
-#   The published results were produced on an NVIDIA A100-SXM4-40GB (CUDA 12.8)
-#   with the EXACT versions pinned below (confirmed from the training session).
-#   numpy is pinned to 1.26.4 for compatibility with the ML stack; this will emit
-#   benign conflict warnings against unrelated Colab base packages (jax, opencv,
-#   cupy, rasterio, etc.) that require numpy>=2.0. Those packages are NOT used in
-#   training and the warnings can be safely ignored.
-# ──────────────────────────────────────────────────────────────────────────────
-
-# Core
+# ════════════════════════════════════════════════════════════════════
+# TRAINING environment  —  NVIDIA A100-SXM4-80GB, CUDA 12.8
+# ════════════════════════════════════════════════════════════════════
 numpy==1.26.4
-
-# PyTorch (install the CUDA 12.8 build; confirmed training version)
-# NOTE: torch is typically installed via the official index, e.g.:
-#   pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cu128
-torch==2.10.0
-
-# Hugging Face stack  (confirmed versions pinned; unconfirmed left as >=)
+torch==2.10.0            # CUDA 12.8 build: --index-url https://download.pytorch.org/whl/cu128
 transformers==5.0.0
 peft==0.18.1
-huggingface_hub>=0.23.0          # not captured from session — verify & pin
-accelerate>=0.34.0               # NOT captured from session — verify & pin (run: import accelerate; print(accelerate.__version__))
-datasets>=2.19.0                 # not captured from session — verify & pin
-
-# Quantization  (confirmed)
 bitsandbytes==0.49.2
-scipy>=1.11.0                    # not captured — verify & pin
-
-# Image handling
-pillow>=10.0.0                   # not captured — verify & pin
-
-# Evaluation
-evaluate
-rouge_score
-nltk
-pycocoevalcap
-
-# Utilities
-tensorboard>=2.14.0              # not captured — verify & pin
+accelerate>=0.34.0       
+huggingface_hub>=0.23.0 
+datasets>=2.19.0         
+tensorboard>=2.14.0     
+scipy>=1.11.0          
+pillow>=10.0.0         
 tqdm
 requests
+
+# ════════════════════════════════════════════════════════════════════
+# EVALUATION environment  
+# ════════════════════════════════════════════════════════════════════
+numpy==1.26.4
+evaluate==0.4.6
+rouge_score==0.1.2
+nltk==3.9.1
+datasets==4.0.0
+huggingface_hub==1.4.0
+pycocoevalcap           
+tqdm==4.67.3
+requests==2.32.4
