@@ -110,7 +110,8 @@ python src/train_lora.py \
     --lora_rank          8 \
     --num_epochs         3 \
     --batch_size         16 \
-    --grad_accum         8
+    --grad_accum         8 \
+    --dataloader_workers 8
 ```
 
 **QLoRA adapter training (4-bit Quantized) :**
@@ -121,7 +122,8 @@ python src/train_qlora.py \
     --output_dir         outputs/qlora \
     --num_epochs         3 \
     --batch_size         16 \
-    --grad_accum         8
+    --grad_accum         8 \
+    --dataloader_workers 8
 ```
 ### Evaluation on VizWiz & Benchmark Datasets
 ```bash
