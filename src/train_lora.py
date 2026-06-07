@@ -34,6 +34,7 @@ from transformers import (
     PaliGemmaProcessor,
     Trainer,
     TrainingArguments,
+    set_seed,
 )
 
 
@@ -151,9 +152,15 @@ def main() -> None:
     parser.add_argument("--max_length",           type=int,   default=512)
     parser.add_argument("--lora_dropout",         type=float, default=0.05)
     parser.add_argument("--dataloader_workers",   type=int,   default=4)
+    parser.add_argument("--seed",                 type=int,   default=42,
+                        help="Random seed for reproducibility (model init, dropout, data shuffle)")
     parser.add_argument("--resume",               action="store_true",
                         help="Resume from the latest checkpoint in output_dir")
     args = parser.parse_args()
+
+    # Seed everything (python, numpy, torch, cuda) BEFORE model load and
+    # get_peft_model so adapter initialization is reproducible.
+    set_seed(args.seed)
 
     # One output folder per rank — matches Colab structure
     output_dir   = f"{args.base_output_dir}_rank_{args.lora_rank}"
@@ -234,6 +241,10 @@ def main() -> None:
         gradient_accumulation_steps=args.grad_accum,
         num_train_epochs=args.num_epochs,
         learning_rate=args.learning_rate,
+
+        # Reproducibility
+        seed=args.seed,
+        data_seed=args.seed,
 
         # Cosine scheduler + warmup
         lr_scheduler_type="cosine",
