@@ -2,8 +2,6 @@
 evaluate_benchmark.py
 =====================
 VQA v2 test predictions  +  COCO Captions test predictions.
-Converted from the original Colab notebooks — output format, prompts,
-batch logic, resume support, and file formats are identical.
 
 --model_id accepts EITHER:
   - A local adapter path  : outputs/run1/final_adapter
