@@ -1,29 +1,38 @@
 # ════════════════════════════════════════════════════════════════════
-# TRAINING environment  —  NVIDIA A100-SXM4-80GB, CUDA 12.8
+#  Unified environment — training, prediction generation, and scoring
+#  Platform: NVIDIA A100 (CUDA 12.8)
+#
+#  INSTALL (two steps — torch stack MUST come from the cu128 index):
+#    pip install torch==2.10.0 torchvision==0.25.0 \
+#        --index-url https://download.pytorch.org/whl/cu128
+#    pip install -r requirements.txt
+#
+#  SYSTEM DEPENDENCY (for caption scoring — PTBTokenizer & METEOR use Java):
+#    apt-get update && apt-get install -y default-jre
 # ════════════════════════════════════════════════════════════════════
-numpy==1.26.4
-torch==2.10.0            # CUDA 12.8 build: --index-url https://download.pytorch.org/whl/cu128
-transformers==5.0.0
-peft==0.18.1
-bitsandbytes==0.49.2
-accelerate>=0.34.0       
-huggingface_hub>=0.23.0 
-datasets>=2.19.0         
-tensorboard>=2.14.0     
-scipy>=1.11.0          
-pillow>=10.0.0         
-tqdm
-requests
 
-# ════════════════════════════════════════════════════════════════════
-# EVALUATION environment  
-# ════════════════════════════════════════════════════════════════════
+# ── Core numerics (pinned low for pycocoevalcap/pycocotools compatibility) ──
 numpy==1.26.4
-evaluate==0.4.6
-rouge_score==0.1.2
-nltk==3.9.1
+
+# ── Inference / training stack (run the model: train + generate predictions) ─
+# torch==2.10.0 and torchvision==0.25.0 are installed separately from cu128
+# (see header) — listed here as a reminder, not installed by this file:
+#   torch==2.10.0
+#   torchvision==0.25.0
+transformers==5.10.2
+peft==0.19.1
+bitsandbytes==0.49.2
+accelerate==1.13.0
 datasets==4.0.0
-huggingface_hub==1.4.0
-pycocoevalcap           
+huggingface_hub==1.18.0
+tensorboard==2.20.0
+scipy==1.16.2
+pillow==11.3.0
 tqdm==4.67.3
 requests==2.32.4
+
+# ── Scoring (predictions → official metrics) ────────────────────────────────
+# score_vizwiz_vqa.py uses only the standard library (no package needed).
+# score_captions.py uses pycocotools + pycocoevalcap (PTBTokenizer needs Java).
+pycocotools==2.0.10
+pycocoevalcap==1.2
