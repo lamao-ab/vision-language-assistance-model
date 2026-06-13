@@ -532,7 +532,7 @@ def main():
                         help="Base model id (only used when model_id is a local adapter)")
     parser.add_argument("--output_dir",     default="outputs/predictions")
     parser.add_argument("--max_tokens",  type=int, default=64)
-    parser.add_argument("--batch_size",  type=int, default=128)
+    parser.add_argument("--batch_size",  type=int, default=32)
     args = parser.parse_args()
 
     # map single batch_size to both tasks
