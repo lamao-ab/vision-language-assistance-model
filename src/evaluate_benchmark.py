@@ -526,7 +526,7 @@ def main():
         ),
     )
     parser.add_argument("--task",           choices=["vqa", "caps", "both"], default="both")
-    parser.add_argument("--prompt_style",   choices=["generic", "custom"], default="custom",
+    parser.add_argument("--prompt_style",   choices=["generic", "custom"], default="generic",
                         help="generic = bare PaliGemma prompts (standard benchmark); custom = accessibility prompts")
     parser.add_argument("--base_model_id",  default="google/paligemma-3b-mix-224",
                         help="Base model id (only used when model_id is a local adapter)")
