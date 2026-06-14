@@ -43,6 +43,21 @@ import json
 import sys
 
 
+def caption_length_stats(captions):
+    """Word-count statistics over a list of caption strings."""
+    lengths = sorted(len(c.split()) for c in captions)
+    n = len(lengths)
+    if n == 0:
+        return {}
+    return {
+        "n_captions":   n,
+        "avg_words":    round(sum(lengths) / n, 2),
+        "min_words":    lengths[0],
+        "max_words":    lengths[-1],
+        "median_words": lengths[n // 2],
+    }
+
+
 def score_coco(gt_path, pred_path):
     """Standard COCO caption scoring via pycocoevalcap (no SPICE)."""
     from pycocotools.coco import COCO
@@ -70,13 +85,14 @@ def score_coco(gt_path, pred_path):
         (Cider(), "CIDEr"),
     ]
     out = {}
-    for scorer, name in scorers:
+    for scorer, names in scorers:
         score, _ = scorer.compute_score(gts, res)
-        if isinstance(name, list):
-            for n, s in zip(name, score):
-                out[n] = round(s, 4)
+        if isinstance(names, list):
+            for nm, sc in zip(names, score):
+                out[nm] = round(sc, 4)
         else:
-            out[name] = round(score, 4)
+            out[names] = round(score, 4)
+    out["length_stats"] = caption_length_stats([p["caption"] for p in preds])
     return out
 
 
@@ -133,13 +149,15 @@ def score_vizwiz(gt_path, pred_path, repo_path=None):
         (Cider(), "CIDEr"),
     ]
     out = {"n_images_scored": len(common_ids)}
-    for scorer, name in scorers:
+    for scorer, names in scorers:
         score, _ = scorer.compute_score(gts, res)
-        if isinstance(name, list):
-            for n, sc in zip(name, score):
-                out[n] = round(sc, 4)
+        if isinstance(names, list):
+            for nm, sc in zip(names, score):
+                out[nm] = round(sc, 4)
         else:
-            out[name] = round(score, 4)
+            out[names] = round(score, 4)
+    out["length_stats"] = caption_length_stats(
+        [pred_by_id[i] for i in common_ids])
     return out
 
 
