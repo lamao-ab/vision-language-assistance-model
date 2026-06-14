@@ -395,8 +395,6 @@ def run_caps(model, processor, args):
     else:
         print(f"   🔮 Remaining: {len(images_to_process):,} images")
         print(f"\n🚀 Generating captions...")
-        print(f"   Expected time: ~{len(images_to_process) * 2 / 60:.0f} minutes")
-
         batch_images    = []
         batch_prompts   = []
         batch_image_ids = []
