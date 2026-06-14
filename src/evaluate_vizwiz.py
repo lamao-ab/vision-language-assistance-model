@@ -415,8 +415,6 @@ def run_caps(model, processor, args):
         caption_subset = [caption_val[i] for i in indices_to_process]
 
         print(f"\n🚀 Generating captions...")
-        print(f"   Expected time: ~{len(indices_to_process) * 2 / 60:.0f} minutes")
-
         batch_images    = []
         batch_prompts   = []
         batch_image_ids = []
