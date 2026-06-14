@@ -4,14 +4,21 @@ score_captions.py
 Score generated captions on the VALIDATION set using the official scorers.
 
 VizWiz-Captions (validation):
-    Uses the official VizWizEvalCap from github.com/Yinan-Zhao/vizwiz-caption,
-    on the official annotations/val.json (COCO format, public references).
+    Scored with the standard pycocoevalcap pipeline (PTBTokenizer + BLEU/METEOR/
+    ROUGE/CIDEr-D) on the official COCO-format annotations/val.json, applying the
+    official reference filtering: pre-canned ("is_precanned") and rejected/spam
+    ("is_rejected") captions are removed from the ground-truth pool. This matches
+    the official VizWiz metric (which itself adapts the COCO caption API) without
+    requiring the external vizwiz-caption repository.
     Test references are NOT released in an evaluable reference format (the 2019
     test.json contains images only; the only test captions exist in a raw
     image-quality CSV), so captioning is reported on validation.
 
 COCO-Captions (validation):
-    Standard pycocoevalcap on the COCO val references.
+    Standard pycocoevalcap (PTBTokenizer + BLEU/METEOR/ROUGE/CIDEr-D) on the COCO
+    val references.
+
+Both report BLEU-1..4, METEOR, ROUGE-L, CIDEr-D (no SPICE).
 
 Both report BLEU-1..4, METEOR, ROUGE-L, CIDEr-D (no SPICE, per paper).
 
