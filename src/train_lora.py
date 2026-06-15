@@ -250,6 +250,8 @@ def main() -> None:
         # Reproducibility
         seed=args.seed,
         data_seed=args.seed,
+        # max_steps=50,
+
 
         # Cosine scheduler + warmup
         lr_scheduler_type="cosine",
