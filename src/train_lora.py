@@ -285,7 +285,7 @@ def main() -> None:
         dataloader_pin_memory=True,
         remove_unused_columns=False,
 
-        report_to=["tensorboard"],
+        report_to=[],
     )
 
     trainer = Trainer(
