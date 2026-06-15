@@ -305,7 +305,7 @@ def main() -> None:
         dataloader_num_workers=args.dataloader_workers,
         dataloader_pin_memory=True,
         remove_unused_columns=False,
-        gradient_checkpointing=True,
+        gradient_checkpointing=False,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         optim="paged_adamw_8bit",
         max_grad_norm=1.0,
