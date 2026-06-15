@@ -510,7 +510,7 @@ def main() -> None:
     print(f"\n{_line()}")
     print(f"  Next Steps")
     print(_line())
-    item(f"tensorboard --logdir={os.path.join(output_dir, 'logs')}")
+    item(f"View metrics: {os.path.join(output_dir, 'training_history.json')}")
     item("Evaluate on validation set")
     item("Deploy to Jetson")
 
