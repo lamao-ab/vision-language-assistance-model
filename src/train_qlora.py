@@ -311,7 +311,7 @@ def main() -> None:
         max_grad_norm=1.0,
         skip_memory_metrics=True,
 
-        report_to=["tensorboard"],
+        report_to=[],
     )
 
     trainer = Trainer(
