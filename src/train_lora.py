@@ -275,7 +275,7 @@ def main() -> None:
         tf32=True,
 
         # Memory optimisations (full bfloat16 needs these on a 22 GB GPU)
-        gradient_checkpointing=True,
+        gradient_checkpointing=False,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         optim="adamw_torch_fused",
         max_grad_norm=1.0,
