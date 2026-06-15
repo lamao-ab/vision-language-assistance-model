@@ -348,6 +348,7 @@ def main() -> None:
     print(f"    {'Method':<{C}}  QLoRA")
     print(f"    {'Train samples':<{C}}  {len(train_dataset):,}")
     print(f"    {'Val samples':<{C}}  {len(val_dataset):,}")
+    print(f"    {'Seed':<{C}}  {args.seed}")
     print()
     print(f"    {'Epochs':<{C}}  {args.num_epochs}")
     print(f"    {'Batch size (per device)':<{C}}  {args.batch_size}")
@@ -432,6 +433,7 @@ def main() -> None:
             "model_id":        args.model_id,
             "method":          "QLoRA",
             "quantization":    "4-bit NF4",
+            "seed":            args.seed,
             "lora_rank":       args.lora_rank,
             "lora_alpha":      lora_alpha,
             "speed_optimized": True,
