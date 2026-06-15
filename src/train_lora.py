@@ -322,6 +322,7 @@ def main() -> None:
     print(f"    {'Method':<{C}}  LoRA")
     print(f"    {'Train samples':<{C}}  {len(train_dataset):,}")
     print(f"    {'Val samples':<{C}}  {len(val_dataset):,}")
+    print(f"    {'Seed':<{C}}  {args.seed}")
     print()
     print(f"    {'Rank (r)':<{C}}  {args.lora_rank}")
     print(f"    {'Alpha':<{C}}  {lora_alpha}  (rank × 2)")
@@ -372,6 +373,7 @@ def main() -> None:
             "model_id":      args.model_id,
             "method":        "LoRA (standard)",
             "precision":     "bfloat16",
+            "seed":          args.seed,
             "rank":          args.lora_rank,
             "alpha":         lora_alpha,
             "num_epochs":    args.num_epochs,
