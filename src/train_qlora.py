@@ -287,7 +287,7 @@ def main() -> None:
         warmup_ratio=0.03,
 
         # Logging
-        logging_steps=100,
+        logging_steps=1,
         logging_first_step=True,
         logging_dir=os.path.join(output_dir, "logs"),
 
