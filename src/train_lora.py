@@ -334,7 +334,7 @@ def main() -> None:
     print(f"    {'LR scheduler':<{C}}  cosine  (warmup=0.03)")
     print(f"    {'Max sequence length':<{C}}  {args.max_length}")
     print(f"    {'Dataloader workers':<{C}}  {args.dataloader_workers}")
-    print(f"    {'Gradient checkpointing':<{C}}  enabled")
+    # print(f"    {'Gradient checkpointing':<{C}}  enabled")
     print(f"    {'Optimizer':<{C}}  adamw_torch_fused")
     print()
     print(f"    {'Steps per epoch':<{C}}  {steps_per_epoch:,}")
