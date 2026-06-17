@@ -15,13 +15,17 @@ Usage
 python src/evaluate_vizwiz.py \
     --model_id   outputs/run/final_adapter \
     --task       both \
-    --output_dir outputs/predictions
+    --prompt_style custom \
+    --output_dir outputs/predictions \
+    --tag lora_seed42_custom
 
 # Option B: pre-trained model from the Hub
 python src/evaluate_vizwiz.py \
     --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
     --task       both \
-    --output_dir outputs/predictions
+    --prompt_style custom \
+    --output_dir outputs/predictions \
+    --tag lora_seed42_custom
 """
 
 import argparse
@@ -173,6 +177,21 @@ def find_json(folder: str, name: str) -> str:
     )
 
 
+
+def _pred_path(output_dir, base_name, tag):
+    """Build a prediction file path, inserting an optional tag before the
+    extension so different runs (seed / prompt) never overwrite each other.
+    Downloaded DATA is unaffected — only prediction filenames get the tag.
+    Example: base 'vizwiz_vqa_test_predictions.json' + tag 'lora_seed42_custom'
+             -> 'vizwiz_vqa_test_predictions_lora_seed42_custom.json'
+    """
+    import os as _os
+    if tag:
+        root, ext = _os.path.splitext(base_name)
+        base_name = f"{root}_{tag}{ext}"
+    return _os.path.join(output_dir, base_name)
+
+
 def run_vqa(model, processor, args):
     print("\n" + "=" * 70)
     print("🚀 VQA PREDICTION — VizWiz Test Set")
@@ -209,7 +228,7 @@ def run_vqa(model, processor, args):
         print(f"   Sample Item: {test_data[0]}")
 
     # ── Inference ─────────────────────────────────────────────────────────────
-    output_file = os.path.join(args.output_dir, "vizwiz_vqa_test_predictions.json")
+    output_file = _pred_path(args.output_dir, "vizwiz_vqa_test_predictions.json", args.tag)
     print(f"\n🚀 Starting Predictions on {len(test_data):,} images...")
 
     results       = []
@@ -358,8 +377,8 @@ def run_caps(model, processor, args):
     print(f"📊 Batch size: {args.batch_size}")
     print(f"📏 Max tokens: {args.max_tokens}")
 
-    temp_output_file  = os.path.join(args.output_dir, "vizwiz_caption_temp_results.jsonl")
-    final_output_file = os.path.join(args.output_dir, "vizwiz_caption_val_predictions.json")
+    temp_output_file  = _pred_path(args.output_dir, "vizwiz_caption_temp_results.jsonl", args.tag)
+    final_output_file = _pred_path(args.output_dir, "vizwiz_caption_val_predictions.json", args.tag)
 
     # ── Resume support ────────────────────────────────────────────────────────
     processed_image_ids: set = set()
@@ -533,7 +552,12 @@ def main():
                         help="official COCO-format val.json (image_id<->file_name + references)")
     parser.add_argument("--base_model_id", default="google/paligemma-3b-mix-224",
                         help="Base model ID — only used when --model_id is a local adapter")
-    parser.add_argument("--output_dir",    default="outputs/predictions")
+    parser.add_argument("--output_dir",    default="outputs/predictions",
+                        help="Shared root for downloaded data AND predictions")
+    parser.add_argument("--tag",           default="",
+                        help="Label inserted into prediction filenames to keep runs "
+                             "separate, e.g. lora_seed42_custom. Downloaded data is "
+                             "shared (unaffected by tag).")
     parser.add_argument("--batch_size",    type=int, default=32)
     parser.add_argument("--max_tokens",    type=int, default=64)
     args = parser.parse_args()
