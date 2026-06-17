@@ -582,7 +582,7 @@ def main():
                              "separate, e.g. lora_seed42_generic. Downloaded data is "
                              "shared (unaffected by tag).")
     parser.add_argument("--max_tokens",  type=int, default=64)
-    parser.add_argument("--batch_size",  type=int, default=32)
+    parser.add_argument("--batch_size",  type=int, default=64)
     args = parser.parse_args()
 
     # map single batch_size to both tasks
