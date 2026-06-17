@@ -239,7 +239,7 @@ def _pred_path(output_dir, base_name, tag):
 
 def run_vqa(model, processor, args):
     print("\n" + "=" * 70)
-    print("🚀 VQA v2 PREDICTION — QLORA (4-BIT QUANTIZATION)")
+    print("🚀 VQA v2 PREDICTION")
     print("=" * 70)
     print(f"📂 Model     : {args.model_id}")
     print(f"📊 Batch size: {args.vqa_batch_size}")
