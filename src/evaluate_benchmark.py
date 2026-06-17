@@ -13,25 +13,33 @@ Usage
 python src/evaluate_benchmark.py \
     --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
     --task       vqa \
-    --output_dir outputs/predictions
+    --prompt_style generic \
+    --output_dir outputs/predictions \
+    --tag lora_seed42_generic
 
 # COCO Captions only
 python src/evaluate_benchmark.py \
     --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
     --task       caps \
-    --output_dir outputs/predictions
+    --prompt_style generic \
+    --output_dir outputs/predictions \
+    --tag lora_seed42_generic
 
 # Both tasks back-to-back (model loaded only once)
 python src/evaluate_benchmark.py \
     --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
     --task       both \
-    --output_dir outputs/predictions
+    --prompt_style generic \
+    --output_dir outputs/predictions \
+    --tag lora_seed42_generic
 
 # Use a local adapter instead of a Hub model
 python src/evaluate_benchmark.py \
     --model_id   outputs/run1/final_adapter \
     --task       both \
-    --output_dir outputs/predictions
+    --prompt_style generic \
+    --output_dir outputs/predictions \
+    --tag lora_seed42_generic
 """
 
 import argparse
@@ -216,6 +224,19 @@ VQA_IMAGES_URL    = "http://images.cocodataset.org/zips/test2015.zip"
 VQA_QUESTIONS_URL = "https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Test_mscoco.zip"
 
 
+
+def _pred_path(output_dir, base_name, tag):
+    """Build a prediction file path, inserting an optional tag before the
+    extension so different runs (seed / prompt) never overwrite each other.
+    Downloaded DATA is unaffected — only prediction filenames get the tag.
+    """
+    import os as _os
+    if tag:
+        root, ext = _os.path.splitext(base_name)
+        base_name = f"{root}_{tag}{ext}"
+    return _os.path.join(output_dir, base_name)
+
+
 def run_vqa(model, processor, args):
     print("\n" + "=" * 70)
     print("🚀 VQA v2 PREDICTION — QLORA (4-BIT QUANTIZATION)")
@@ -253,7 +274,7 @@ def run_vqa(model, processor, args):
     print(f"   Sample Question: {questions_list[0]}")
 
     # ── Inference ─────────────────────────────────────────────────────────────
-    output_file = os.path.join(args.output_dir, "vqav2_test_predictions.json")
+    output_file = _pred_path(args.output_dir, "vqav2_test_predictions.json", args.tag)
     print(f"\n🚀 Starting Predictions on {len(questions_list):,} questions...")
 
     results             = []
@@ -368,8 +389,8 @@ def run_caps(model, processor, args):
     print(f"   Sample: {test_images[0]}")
 
     # ── Resume support ────────────────────────────────────────────────────────
-    temp_output_file  = os.path.join(args.output_dir, "coco_caption_temp_results.jsonl")
-    final_output_file = os.path.join(args.output_dir, "coco_caption_val_predictions.json")
+    temp_output_file  = _pred_path(args.output_dir, "coco_caption_temp_results.jsonl", args.tag)
+    final_output_file = _pred_path(args.output_dir, "coco_caption_val_predictions.json", args.tag)
 
     processed_image_ids: set = set()
     if os.path.exists(temp_output_file):
@@ -528,7 +549,12 @@ def main():
                         help="generic = bare PaliGemma prompts (standard benchmark); custom = accessibility prompts")
     parser.add_argument("--base_model_id",  default="google/paligemma-3b-mix-224",
                         help="Base model id (only used when model_id is a local adapter)")
-    parser.add_argument("--output_dir",     default="outputs/predictions")
+    parser.add_argument("--output_dir",     default="outputs/predictions",
+                        help="Shared root for downloaded data AND predictions")
+    parser.add_argument("--tag",            default="",
+                        help="Label inserted into prediction filenames to keep runs "
+                             "separate, e.g. lora_seed42_generic. Downloaded data is "
+                             "shared (unaffected by tag).")
     parser.add_argument("--max_tokens",  type=int, default=64)
     parser.add_argument("--batch_size",  type=int, default=32)
     args = parser.parse_args()
