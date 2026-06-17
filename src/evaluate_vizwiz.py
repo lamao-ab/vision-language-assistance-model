@@ -593,7 +593,7 @@ def main():
                         help="Label inserted into prediction filenames to keep runs "
                              "separate, e.g. lora_seed42_custom. Downloaded data is "
                              "shared (unaffected by tag).")
-    parser.add_argument("--batch_size",    type=int, default=32)
+    parser.add_argument("--batch_size",    type=int, default=64)
     parser.add_argument("--max_tokens",    type=int, default=64)
     args = parser.parse_args()
 
