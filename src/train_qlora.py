@@ -10,7 +10,7 @@ python src/train_qlora.py \
     --val_dataset_path   data/val_dataset \
     --base_output_dir    outputs/qlora \
     --seed              42 \
-    --learning_rate      2e-5 \
+    --learning_rate      2e-4 \
     --lora_rank          8 \
     --num_epochs         3 \
     --batch_size         16 \
@@ -165,7 +165,7 @@ def main() -> None:
     parser.add_argument("--eval_batch_size",         type=int,   default=32,
                         help="per-device eval batch size (eval is forward-only; larger = faster)")
     parser.add_argument("--grad_accum",              type=int,   default=8)
-    parser.add_argument("--learning_rate",           type=float, default=2e-5)
+    parser.add_argument("--learning_rate",           type=float, default=2e-4)
     parser.add_argument("--max_length",              type=int,   default=512)
     parser.add_argument("--lora_rank",               type=int,   default=8,
                         help="LoRA rank; alpha auto-scales to rank x 2")
