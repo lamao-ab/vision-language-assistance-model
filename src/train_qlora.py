@@ -234,7 +234,7 @@ def main() -> None:
         torch_dtype=torch.bfloat16,
         attn_implementation="sdpa",
     )
-    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False,)
+    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
 
 
     ok(f"Model loaded  ({model.get_memory_footprint() / 1024**3:.2f} GB in VRAM)")
