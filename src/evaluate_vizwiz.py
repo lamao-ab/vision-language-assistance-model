@@ -36,7 +36,7 @@ python src/evaluate_vizwiz.py \
 # B) QLoRA local adapter (4bit, custom prompt)
 python src/evaluate_vizwiz.py \
     --model_id     outputs/qlora_seed_42_rank_8/final_adapter \
-    --task         both \
+    --task         caps \
     --prompt_style custom \
     --precision    4bit \
     --workdir      outputs/eval_data \
@@ -46,7 +46,7 @@ python src/evaluate_vizwiz.py \
 # C) Base mix model (bf16) — for the base-vs-fine-tuned comparison
 python src/evaluate_vizwiz.py \
     --model_id     google/paligemma-3b-mix-224 \
-    --task         both \
+    --task         vqa \
     --prompt_style custom \
     --precision    bf16 \
     --workdir      outputs/eval_data \
