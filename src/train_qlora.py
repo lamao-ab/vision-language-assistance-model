@@ -26,7 +26,6 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import argparse
 import gc
 import json
-import os
 
 import torch
 from datasets import load_from_disk
