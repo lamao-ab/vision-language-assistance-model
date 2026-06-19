@@ -20,6 +20,9 @@ Resume from latest checkpoint:
     python src/train_qlora.py ... --resume
 """
 
+import os
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
 import argparse
 import gc
 import json
