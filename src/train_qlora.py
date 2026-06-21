@@ -236,7 +236,7 @@ def main() -> None:
         torch_dtype=torch.bfloat16,
         attn_implementation="sdpa",
     )
-    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
+    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
 
 
     ok(f"Model loaded  ({model.get_memory_footprint() / 1024**3:.2f} GB in VRAM)")
@@ -308,7 +308,7 @@ def main() -> None:
         dataloader_num_workers=args.dataloader_workers,
         dataloader_pin_memory=True,
         remove_unused_columns=False,
-        gradient_checkpointing=True,
+        gradient_checkpointing=False,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         optim="paged_adamw_8bit",
         max_grad_norm=1.0,
