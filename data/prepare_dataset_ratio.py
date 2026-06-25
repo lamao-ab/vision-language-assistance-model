@@ -14,14 +14,7 @@ full pool, deterministic under a fixed seed (42), so runs are reproducible.
 
 Usage (ablation points; anchor 5.7:1 stays in prepare_dataset.py, untouched)
 ---------------------------------------------------------------------------
-# 5.7:1 point  (train 5.7:1 / val 5.4:1)
-python data/prepare_dataset.py \
-    --workdir            data/vizwiz \
-    --train_output       data/train_dataset \
-    --val_output         data/val_dataset \
-    --train_captions_per_image 5 \
-    --val_captions_per_image   3
-    
+
 # 1:1 point  (train 20,523:20,523  /  val 4,319:4,319)
 python data/prepare_dataset_ratio.py \
     --workdir            data/vizwiz \
