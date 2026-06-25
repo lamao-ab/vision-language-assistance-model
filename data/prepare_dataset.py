@@ -1,24 +1,34 @@
 """
-prepare_dataset.py
-==================
-Download VizWiz images + annotations, build HuggingFace Datasets for training
-and validation, and save them to disk.
+prepare_dataset_ratio.py
+========================
+Variant of prepare_dataset.py for the caption:VQA mixing-ratio ABLATION.
 
-Data sources
-------------
-- Train images  : VizWiz_final/images/train.zip
-- Val images    : VizWiz_final/images/val.zip
-- VQA anns      : VizWiz_final/vqa_data/Annotations.zip  -> train.json / val.json
-- Caption anns  : VizWiz_final/caption/annotations.zip   -> train.json / val.json
+Identical to prepare_dataset.py, with one addition: two new arguments
+    --train_max_captions / --val_max_captions
+that cap the TOTAL number of caption samples to an exact target, so a precise
+caption:VQA ratio can be forced while the VQA set is held fixed.
 
-Usage
------
-python data/prepare_dataset.py \
+The VQA side is never touched by these arguments, so the ratio is the only
+variable across ablation points. Subsampling is at the caption level from the
+full pool, deterministic under a fixed seed (42), so runs are reproducible.
+
+Usage (ablation points; anchor 5.7:1 stays in prepare_dataset.py, untouched)
+---------------------------------------------------------------------------
+# 1:1 point  (train 20,523:20,523  /  val 4,319:4,319)
+python data/prepare_dataset_ratio.py \
     --workdir            data/vizwiz \
-    --train_output       data/train_dataset \
-    --val_output         data/val_dataset \
-    --train_captions_per_image 5 \
-    --val_captions_per_image   3
+    --train_output       data/train_dataset_ratio1 \
+    --val_output         data/val_dataset_ratio1 \
+    --train_captions_per_image 5 --train_max_captions 20523 \
+    --val_captions_per_image   5 --val_max_captions   4319
+
+# 3.4:1 point  (train 70,293:20,523  /  val 14,397:4,319)
+python data/prepare_dataset_ratio.py \
+    --workdir            data/vizwiz \
+    --train_output       data/train_dataset_ratio3 \
+    --val_output         data/val_dataset_ratio3 \
+    --train_captions_per_image 5 --train_max_captions 70293 \
+    --val_captions_per_image   5 --val_max_captions   14397
 """
 
 import argparse
@@ -218,14 +228,23 @@ def download_and_extract_all(workdir: str) -> str:
 #  Process one split
 # ══════════════════════════════════════════════════════════════════════════════
 
-def process_split(vw_dir: str, split_name: str, captions_per_image: int):
+def process_split(vw_dir: str, split_name: str, captions_per_image: int,
+                  max_captions: int = None):
     """
     Process a split ('train' or 'val') from extracted ZIP files.
     Returns (samples dict, vqa_stats dict, cap_stats dict).
     Dataset schema: image, text, suffix, task.
+
+    max_captions : if set, the total caption samples are capped to this exact
+                   count by deterministic (seed-42) subsampling from the full
+                   collected pool. The VQA side is never affected, so this caps
+                   the caption:VQA ratio to (max_captions / num_vqa). None = no
+                   cap (default; reproduces prepare_dataset.py behaviour).
     """
     section(f"Processing  {split_name.upper()}  Split")
     info("Captions per image", str(captions_per_image))
+    if max_captions is not None:
+        info("Max captions (cap)", f"{max_captions:,}")
 
     samples = {"image": [], "text": [], "suffix": [], "task": []}
     vw_imgs = find_images_dict(vw_dir)
@@ -332,6 +351,10 @@ def process_split(vw_dir: str, split_name: str, captions_per_image: int):
 
             random.seed(42)
 
+            # ── Collect caption samples into a local pool first ──────────────
+            # Collecting (rather than appending straight into `samples`) lets the
+            # optional cap below operate deterministically on the full pool.
+            cap_samples = []
             for img_id, captions in img_to_captions.items():
                 cap_stats["total_images"]      += 1
                 cap_stats["total_annotations"] += len(captions)
@@ -353,15 +376,41 @@ def process_split(vw_dir: str, split_name: str, captions_per_image: int):
                 )
 
                 for caption in sampled_captions:
-                    samples["image"].append(img_path)
-                    samples["text"].append("<image>Describe this scene for a blind person.")
-                    samples["suffix"].append(caption)
-                    samples["task"].append("vizwiz_caption")
-                    cap_stats["processed"] += 1
+                    cap_samples.append({
+                        "image":  img_path,
+                        "text":   "<image>Describe this scene for a blind person.",
+                        "suffix": caption,
+                        "task":   "vizwiz_caption",
+                    })
+
+            # ── Optional cap to an exact total caption count ─────────────────
+            # Forces a precise caption:VQA ratio (e.g. max_captions=20523 → 1:1
+            # against the fixed 20,523-question VQA set). Subsampling is at the
+            # caption level over the full pool, deterministic under seed 42.
+            if max_captions is not None:
+                if len(cap_samples) > max_captions:
+                    warn(f"Capping captions  {len(cap_samples):,}  ->  {max_captions:,}  "
+                         f"(deterministic, seed 42)")
+                    rng = random.Random(42)          # isolated RNG; leaves per-image seed undisturbed
+                    rng.shuffle(cap_samples)
+                    cap_samples = cap_samples[:max_captions]
+                elif len(cap_samples) < max_captions:
+                    warn(f"Requested cap {max_captions:,} exceeds available "
+                         f"{len(cap_samples):,} captions — using all available")
+
+            # ── Commit the (optionally capped) caption pool into samples ─────
+            for s in cap_samples:
+                samples["image"].append(s["image"])
+                samples["text"].append(s["text"])
+                samples["suffix"].append(s["suffix"])
+                samples["task"].append(s["task"])
+                cap_stats["processed"] += 1
 
             print()
             info("Images processed",   f"{cap_stats['total_images']:,}")
             info("Captions per image", str(captions_per_image))
+            if max_captions is not None:
+                info("Capped to",       f"{cap_stats['processed']:,}")
             info("Total processed",    f"{cap_stats['processed']:,}")
             info("Skipped",            f"{cap_stats['skipped']:,}")
             ok("Caption processing complete")
@@ -374,7 +423,8 @@ def process_split(vw_dir: str, split_name: str, captions_per_image: int):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def build_and_save_dataset(
-    samples: dict, split_name: str, output_path: str, captions_per_image: int
+    samples: dict, split_name: str, output_path: str, captions_per_image: int,
+    max_captions: int = None
 ):
     # ── Apply nb_samples limit if set ────────────────────────────────────────
     if nb_samples is not None:
@@ -438,6 +488,8 @@ def build_and_save_dataset(
         "task_distribution": dict(task_counts),
         "vqa_answer_method": "consensus_based_selection",
         "caption_method":    f"{captions_per_image}_captions_per_image",
+        "caption_cap":       max_captions,
+        "caption_vqa_ratio": (cap_count / vqa_count) if vqa_count > 0 else None,
         "source":            "Official VizWiz ZIP files",
     }
     with open(os.path.join(output_path, "metadata.json"), "w") as f:
@@ -452,13 +504,19 @@ def build_and_save_dataset(
 # ══════════════════════════════════════════════════════════════════════════════
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Prepare VizWiz datasets")
+    parser = argparse.ArgumentParser(description="Prepare VizWiz datasets (ratio-ablation variant)")
     parser.add_argument("--workdir",                  default="/tmp/blind_assist",
                         help="Temporary working directory")
     parser.add_argument("--train_output",             default="data/train_dataset")
     parser.add_argument("--val_output",               default="data/val_dataset")
     parser.add_argument("--train_captions_per_image", type=int, default=5)
     parser.add_argument("--val_captions_per_image",   type=int, default=3)
+    parser.add_argument("--train_max_captions",       type=int, default=None,
+                        help="Cap total TRAIN caption samples to this exact count "
+                             "(e.g. 20523 to force a 1:1 caption:VQA ratio). VQA is unaffected.")
+    parser.add_argument("--val_max_captions",         type=int, default=None,
+                        help="Cap total VAL caption samples to this exact count "
+                             "(e.g. 4319 to force a 1:1 caption:VQA ratio). VQA is unaffected.")
     args = parser.parse_args()
 
     # ── Safety: wipe previous outputs ────────────────────────────────────────
@@ -469,9 +527,11 @@ def main() -> None:
 
     # ── Banner ────────────────────────────────────────────────────────────────
     print(f"\n{_double()}")
-    print(f"  VizWiz Dataset Builder")
-    print(f"  Train  :  {args.train_captions_per_image} captions / image")
-    print(f"  Val    :  {args.val_captions_per_image} captions / image")
+    print(f"  VizWiz Dataset Builder  —  Ratio Ablation")
+    print(f"  Train  :  {args.train_captions_per_image} captions / image"
+          + (f"  (cap {args.train_max_captions:,})" if args.train_max_captions else ""))
+    print(f"  Val    :  {args.val_captions_per_image} captions / image"
+          + (f"  (cap {args.val_max_captions:,})" if args.val_max_captions else ""))
     print(_double())
 
     # ── Download ──────────────────────────────────────────────────────────────
@@ -479,16 +539,22 @@ def main() -> None:
 
     # ── Phase 1 — Train ───────────────────────────────────────────────────────
     section("Phase 1  —  Train Dataset")
-    train_samples, _, _ = process_split(vw_dir, "train", args.train_captions_per_image)
+    train_samples, _, _ = process_split(
+        vw_dir, "train", args.train_captions_per_image, args.train_max_captions
+    )
     train_dataset, train_metadata = build_and_save_dataset(
-        train_samples, "train", args.train_output, args.train_captions_per_image
+        train_samples, "train", args.train_output, args.train_captions_per_image,
+        args.train_max_captions
     )
 
     # ── Phase 2 — Val ─────────────────────────────────────────────────────────
     section("Phase 2  —  Validation Dataset")
-    val_samples, _, _ = process_split(vw_dir, "val", args.val_captions_per_image)
+    val_samples, _, _ = process_split(
+        vw_dir, "val", args.val_captions_per_image, args.val_max_captions
+    )
     val_dataset, val_metadata = build_and_save_dataset(
-        val_samples, "val", args.val_output, args.val_captions_per_image
+        val_samples, "val", args.val_output, args.val_captions_per_image,
+        args.val_max_captions
     )
 
     # ── Summary ───────────────────────────────────────────────────────────────
