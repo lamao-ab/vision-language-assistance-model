@@ -65,6 +65,8 @@ https://github.com/user-attachments/assets/1c8ed7b6-f0dd-49cd-87ef-601997330a3f
 ### Installation
 
 ```bash
+# Install torch
+pip install torch==2.10.0 torchvision==0.25.0 --index-url https://download.pytorch.org/whl/cu128
 # Clone repository
 git clone https://github.com/lamao-ab/vision-language-assistance-model.git
 
@@ -73,7 +75,6 @@ conda create -n paligemma python=3.10
 conda activate paligemma
 
 # Install dependencies
-cd vision-language-assistance-model
 pip install -r requirements.txt
 ```
 
@@ -110,8 +111,7 @@ python src/train_lora.py \
     --lora_rank          8 \
     --num_epochs         3 \
     --batch_size         16 \
-    --grad_accum         8 \
-    --dataloader_workers 8
+    --grad_accum         8 
 ```
 
 **QLoRA adapter training (4-bit Quantized) :**
@@ -125,8 +125,7 @@ python src/train_qlora.py \
     --lora_rank          8 \
     --num_epochs         3 \
     --batch_size         16 \
-    --grad_accum         8 \
-    --dataloader_workers 8
+    --grad_accum         8 
 ```
 
 ### Evaluation and Scoring on VizWiz & Benchmark Datasets
@@ -152,7 +151,9 @@ python src/score_captions.py --dataset vizwiz \
     --gt   eval_data/vizwiz_caps_data/annotations/val.json \
     --pred outputs/predictions/vizwiz_caption_val_predictions_base_custom.json \
     --out  outputs/predictions/score_vizwiz_caption_val_predictions_base_custom.json
+```
 
+```bash
 # Option B — Hub model 
 python src/evaluate_benchmark.py \
     --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
