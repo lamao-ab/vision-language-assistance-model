@@ -23,12 +23,12 @@ This repository provides a complete pipeline for training and deploying vision-l
 - **~24 hours realistic battery life** (10 queries/hour, 100 Wh pack); ~10.4 hours under continuous inference
 
 ### Key Features
-✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA
-✅ **4-bit Quantization**: QLoRA reduces the deployed footprint from 5.45 GB (bf16) to 2.13 GB — the bf16 model does not fit in the Jetson's available memory, making quantization a deployment requirement, not just an optimization
-✅ **Multi-Task Learning**: Joint training on VQA and image captioning, with both tasks improving over the base checkpoint
-✅ **Edge Deployment**: Runs on an NVIDIA Jetson Orin Nano 8GB (4-bit model only — see Hardware Requirements)
-✅ **Privacy-Aware**: All processing on-device, reducing (not eliminating) exposure of sensitive data to external services
-✅ **Open Source**: All code, configs, and trained weights available
+✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA \
+✅ **4-bit Quantization**: QLoRA reduces the deployed footprint from 5.45 GB (bf16) to 2.13 GB — the bf16 model does not fit in the Jetson's available memory, making quantization a deployment requirement, not just an optimization \
+✅ **Multi-Task Learning**: Joint training on VQA and image captioning, with both tasks improving over the base checkpoint \
+✅ **Edge Deployment**: Runs on an NVIDIA Jetson Orin Nano 8GB (4-bit model only — see Hardware Requirements) \
+✅ **Privacy-Aware**: All processing on-device, reducing (not eliminating) exposure of sensitive data to external services \
+✅ **Open Source**: All code, configs, and trained weights available \
 
 ---
 
