@@ -105,6 +105,8 @@ python src/train_lora.py \
     --train_dataset_path data/train_dataset \
     --val_dataset_path   data/val_dataset \
     --base_output_dir    outputs/lora \
+    --seed               123 \
+    --learning_rate      2e-4 \
     --lora_rank          8 \
     --num_epochs         3 \
     --batch_size         16 \
@@ -118,44 +120,51 @@ python src/train_qlora.py \
     --train_dataset_path data/train_dataset/ \
     --val_dataset_path   data/val_dataset \
     --output_dir         outputs/qlora \
+    --seed              123 \
+    --learning_rate      2e-4 \
+    --lora_rank          8 \
     --num_epochs         3 \
     --batch_size         16 \
     --grad_accum         8 \
     --dataloader_workers 8
 ```
-### Evaluation on VizWiz & Benchmark Datasets
+### Evaluation and Scoring on VizWiz & Benchmark Datasets
 ```bash
 # Option A — local adapter
 python src/evaluate_vizwiz.py \
-    --model_id   outputs/run/final_adapter \
-    --task  vqa \            # vqa, caps or both
-    --output_dir outputs/predictions
-    --batch_size 32 \
-    --max_tokens 64
-
-# Option B — Hub model 
-python src/evaluate_vizwiz.py \
-    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
-    --task  caps \  
+    --model_id   outputs/run/final_adapter \    
+    --task  both \                              # vqa, caps or both
+    --prompt_style custom \                     # or generic
+    --precision    4bit \                       # or bf16
+    --workdir      eval_data \
     --output_dir outputs/predictions \
     --batch_size 32 \
-    --max_tokens 64
+    --max_tokens 64 \
+    --tag  qlora_seed123_custom
 
-# Option A — local adapter
+python src/score_vizwiz_vqa.py \
+    --gt   eval_data/vizwiz_vqa_data/VQA_test.json  \
+    --pred outputs/predictions/vizwiz_vqa_test_predictions_base_custom.json \
+    --out outputs/predictions/score_vizwiz_vqa_test_predictions_base_custom.json
+
+# Option B — Hub model 
 python src/evaluate_benchmark.py \
-    --model_id   outputs/run/final_adapter \ 
+    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --task  both \
+    --prompt_style generic \
+    --precision    bf16 \
+    --workdir      eval_data \
+    --batch_size  32 \
     --output_dir outputs/predictions \
     --batch_size 32 \
-    --max_tokens 64
+    --max_tokens 64 \
+    --tag lora_seed123_generic
 
-# Option B — Hub model 
-python src/evaluate_benchmark.py \
-    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
-    --task       both \
-    --output_dir outputs/predictions \
-    --batch_size 32 \
-    --max_tokens 64
+python src/score_captions.py --dataset coco \
+    --gt    eval_data/coco_data/annotations/captions_val2014.json \
+    --pred  outputs/predictions/coco_caption_val_predictions_base_generic.json \
+    --out   outputs/predictions/score_coco_caption_val_predictions_base_generic.json
+
 ``` 
 ### Inference 
 ```bash
