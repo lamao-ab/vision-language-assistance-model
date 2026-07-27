@@ -128,6 +128,7 @@ python src/train_qlora.py \
     --grad_accum         8 \
     --dataloader_workers 8
 ```
+
 ### Evaluation and Scoring on VizWiz & Benchmark Datasets
 ```bash
 # Option A — local adapter
@@ -147,6 +148,11 @@ python src/score_vizwiz_vqa.py \
     --pred outputs/predictions/vizwiz_vqa_test_predictions_base_custom.json \
     --out outputs/predictions/score_vizwiz_vqa_test_predictions_base_custom.json
 
+python src/score_captions.py --dataset vizwiz \
+    --gt   eval_data/vizwiz_caps_data/annotations/val.json \
+    --pred outputs/predictions/vizwiz_caption_val_predictions_base_custom.json \
+    --out  outputs/predictions/score_vizwiz_caption_val_predictions_base_custom.json
+
 # Option B — Hub model 
 python src/evaluate_benchmark.py \
     --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
@@ -158,14 +164,14 @@ python src/evaluate_benchmark.py \
     --output_dir outputs/predictions \
     --batch_size 32 \
     --max_tokens 64 \
-    --tag lora_seed123_generic
+    --tag base_generic
 
-python src/score_captions.py --dataset coco \
+python src/score_captions.py --dataset coco \ 
     --gt    eval_data/coco_data/annotations/captions_val2014.json \
     --pred  outputs/predictions/coco_caption_val_predictions_base_generic.json \
     --out   outputs/predictions/score_coco_caption_val_predictions_base_generic.json
+```
 
-``` 
 ### Inference 
 ```bash
 # Option A — local adapter
