@@ -28,7 +28,7 @@ This repository provides a complete pipeline for training and deploying vision-l
 ✅ **Multi-Task Learning**: Joint training on VQA and image captioning, with both tasks improving over the base checkpoint \
 ✅ **Edge Deployment**: Runs on an NVIDIA Jetson Orin Nano 8GB (4-bit model only — see Hardware Requirements) \
 ✅ **Privacy-Aware**: All processing on-device, reducing (not eliminating) exposure of sensitive data to external services \
-✅ **Open Source**: All code, configs, and trained weights available \
+✅ **Open Source**: All code, configs, and trained weights available 
 
 ---
 
@@ -135,7 +135,7 @@ python src/evaluate_vizwiz.py \
 
 # Option B — Hub model 
 python src/evaluate_vizwiz.py \
-    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --task  caps \  
     --output_dir outputs/predictions \
     --batch_size 32 \
@@ -151,7 +151,7 @@ python src/evaluate_benchmark.py \
 
 # Option B — Hub model 
 python src/evaluate_benchmark.py \
-    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --task       both \
     --output_dir outputs/predictions \
     --batch_size 32 \
@@ -170,7 +170,7 @@ python src/predict.py \
 
 # Option B — Hub model 
 python src/predict.py \
-    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --task       caps \
     --image_dir  /content/paligemma-blind-assist/data/images \
     --output     results/caps_results.json \
