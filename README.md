@@ -15,22 +15,20 @@
 ---
 
 ## 🎯 Overview
-This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our approach achieves:
-
-- **75.65% VQA accuracy** on VizWiz-VQA (10-choose-9 metric)
-- **0.737 CIDEr-D score** on VizWiz-Captions
-- **2.78 GB memory footprint** (QLoRA) enabling Jetson deployment
-- **1.3-2.2 seconds inference latency** for interactive assistance
-- **12.4+ hours battery life (Continuous)** with 100Wh battery pack
+This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our deployed 4-bit (QLoRA) model achieves:
+- **75.71% VQA accuracy** on VizWiz-VQA (10-choose-9 metric), within 0.09 points of the full-precision LoRA model (75.80%)
+- **97.44 CIDEr-D** on VizWiz-Captions, within 0.6 points of full-precision LoRA (98.08)
+- **2.13 GB static memory footprint** (2.25 GB peak during inference), enabling deployment on an 8 GB Jetson Orin Nano
+- **0.93–1.97 s inference latency** (device-side compute) for interactive VQA and scene-description queries
+- **~24 hours realistic battery life** (10 queries/hour, 100 Wh pack); ~10.4 hours under continuous inference
 
 ### Key Features
-
-✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA  
-✅ **4-bit Quantization**: QLoRA reduces memory from ~12 GB to ~3.0 GB  
-✅ **Multi-Task Learning**: Joint training on VQA and image captioning  
-✅ **Edge Deployment**: Run on affordable hardware (Jetson Orin Nano 8GB)  
-✅ **Privacy-Preserving**: All processing on-device, no cloud required  
-✅ **Open Source**: All code, configs, and trained weights available  
+✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA
+✅ **4-bit Quantization**: QLoRA reduces the deployed footprint from 5.45 GB (bf16) to 2.13 GB — the bf16 model does not fit in the Jetson's available memory, making quantization a deployment requirement, not just an optimization
+✅ **Multi-Task Learning**: Joint training on VQA and image captioning, with both tasks improving over the base checkpoint
+✅ **Edge Deployment**: Runs on an NVIDIA Jetson Orin Nano 8GB (4-bit model only — see Hardware Requirements)
+✅ **Privacy-Aware**: All processing on-device, reducing (not eliminating) exposure of sensitive data to external services
+✅ **Open Source**: All code, configs, and trained weights available
 
 ---
 
@@ -192,54 +190,57 @@ python blind-assistance-system.py
 
 ## 📊 Results
 
-### VQA Performance (VizWiz-VQA & VQAv2 on Test-Standard Server)
+### VQA Performance (VizWiz-VQA test set, VQAv2 test-standard server)
+Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA. Base is the off-the-shelf PaliGemma `mix` checkpoint.
 
-| Model         | VizWiz VQA |  VQAv2     | Memory (GB) | Latency (s) |
-|---------------|------------|------------|-------------|-------------|
-| PaliGemma-3B Base | 73.89% | 81.65| 5.65 | 1.0 |
-| PaliGemma-3B + LoRA | 75.89% | 81.19| 5.65 | 1.2 |
-| **PaliGemma-3B + QLoRA** | **76.45%** | **80.97** | **2.78** | **1.5** |
+| Model                    | VizWiz-VQA        | VQAv2             | Memory Footprint (GB) |
+|--------------------------|--------------------|--------------------|------------------------|
+| PaliGemma-3B (`mix`)     | 73.95%             | 81.65%             | 5.45\*                 |
+| PaliGemma-3B + LoRA      | 75.80% ± 0.21      | 81.15% ± 0.04      | 5.45                   |
+| **PaliGemma-3B + QLoRA** | **75.71% ± 0.14**  | **80.72% ± 0.04**  | **2.13**               |
 
-### Captioning Performance (VizWiz-Caps on Validation Set)
+\*Base and LoRA share the same bf16 backbone footprint (LoRA freezes the base weights); only the adapter differs.
 
-| Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
-|-------|---------|--------|--------|---------|-------------|
-| PaliGemma-3B Base | 0.405 | 0.028 | 0.145 | 0.216 | 5.3 |
-| PaliGemma-3B + LoRA| 0.758 | 0.090 | 0.275 | 0.274 | 10.3 |
-| **PaliGemma-3B + QLoRA** | **0.737** | **0.072** | **0.274** | **0.294** | **10.3** |
+### Captioning Performance (VizWiz-Caps validation set)
+| Model                    | CIDEr-D            | BLEU-4             | METEOR             | ROUGE-L            | Avg. Length |
+|--------------------------|---------------------|--------------------|--------------------|---------------------|-------------|
+| PaliGemma-3B (`mix`)     | 55.31               | 12.07              | 14.08              | 28.76               | 5.03        |
+| PaliGemma-3B + LoRA      | 98.08 ± 1.51        | 30.77 ± 0.36       | 23.45 ± 0.31       | 49.54 ± 0.47        | 10.30       |
+| **PaliGemma-3B + QLoRA** | **97.44 ± 1.45**    | **30.63 ± 0.29**   | **23.30 ± 0.35**   | **49.33 ± 0.38**    | **10.24**   |
 
-### Captioning Performance (COCO-Caps on Validation Set)
+### Captioning Performance (COCO-Caps validation set — general-domain control)
+| Model                    | CIDEr-D             | BLEU-4             | METEOR             | ROUGE-L             | Avg. Length |
+|--------------------------|----------------------|--------------------|--------------------|----------------------|-------------|
+| PaliGemma-3B (`mix`)     | 131.21               | 31.96              | 30.62              | 59.17                | 12.4        |
+| PaliGemma-3B + LoRA      | 124.54 ± 1.36        | 34.58 ± 0.39       | 30.63 ± 0.06       | 58.62 ± 0.19         | 11.20       |
+| **PaliGemma-3B + QLoRA** | **123.34 ± 1.75**    | **34.26 ± 0.60**   | **30.44 ± 0.09**   | **58.39 ± 0.28**     | **11.22**   |
 
-| Model | CIDEr-D | BLEU-4 | METEOR | ROUGE-L | Avg. Length |
-|-------|---------|--------|--------|---------|-------------|
-| PaliGemma-3B Base | 0.999 | 0.285 | 0.536 | 0.546  | 12.3 |
-| PaliGemma-3B + LoRA| 0.928 | 0.302 | 0.534 | 0.540  | 11.2 |
-| **PaliGemma-3B + QLoRA** | **0.947** | **0.310** | **0.536** | **0.543** | **11.1** |
+General-domain performance declines only modestly (≤6% CIDEr-D) relative to the large VizWiz-domain gains, while BLEU-4 actually *improves* over the base model on COCO-Caps.
 
-### Deployment Metrics (Jetson Orin Nano 8GB)
+### Deployment Metrics (NVIDIA Jetson Orin Nano 8GB, 15W mode, clocks locked)
+Only the 4-bit QLoRA model is deployed on-device; the bf16 model (5.45 GB) does not reliably fit in the device's available memory and is not used for edge inference.
 
-- **Peak Memory**: ~3.6 GB (QLoRA) vs ~6.0 GB (LoRA)
-- **Inference Latency**: 1.3-2.3 seconds end-to-end
-- **Power Consumption**: 8.05W (active), 0.83W (idle)
-- **Battery Life**: 25.6+ hours (100Wh pack, 10 queries/hour)
+- **Static Memory Footprint**: 2.13 GB (2.25 GB peak during inference)
+- **System Memory Utilization**: 4.15 GB of 7.44 GB total, leaving ~3.0 GB headroom
+- **Inference Latency**: 0.93 s (VQA, 30 tokens) / 1.97 s (captioning, 64 tokens) — device-side compute; 1.36–2.41 s including camera capture and TTS synthesis
+- **Power Consumption**: 9.60W (active inference), 4.14W (idle, model loaded)
+- **Energy per Query**: 15.8 J (64-token caption query)
+- **Battery Life**: ~24 hours under realistic use (10 queries/hour, 100Wh pack); 10.4 hours under continuous inference
 
 ---
 
 ## 🖥️ Hardware Requirements
 
 ### Training
-
 - **GPU**: NVIDIA A100 (40GB+) or V100 (32GB+)
 - **RAM**: 32 GB+
 - **Storage**: 200 GB+ (dataset + checkpoints)
 
 ### Deployment
-
-- **Device**: NVIDIA Jetson Orin Nano 8GB
-- **Memory**: 8 GB unified (2.78 GB for model)
-- **Power**: 15W mode recommended
+- **Device**: NVIDIA Jetson Orin Nano 8GB (4-bit QLoRA model only)
+- **Memory**: 8 GB unified (2.13 GB static footprint; ~4.15 GB total system utilization during inference)
+- **Power**: 15W mode recommended, clocks locked (`jetson_clocks`)
 - **Accessories**: USB camera, microphone, speaker
-
 ---
 
 <!-- ## 📖 Documentation
