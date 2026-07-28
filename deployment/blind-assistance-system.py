@@ -1,19 +1,6 @@
 """
 blind-assist-jetson-demo.py  — CORRECTED, on-device build
 ==========================================================
-Changes vs. the original demo:
-  * LOCAL speech-to-text (faster-whisper OR vosk) — no cloud, no network
-    dependency, no recognize_google. Audio never leaves the device.
-  * SAFE command matching: whole-word/phrase only (no more "don't turn off the
-    stove" triggering a shutdown), with a negation guard and an explicit
-    multi-word phrase required for power-off.
-  * subprocess list-form TTS everywhere — the os.system fallback (shell
-    injection on quotes/$/backticks in model output) is gone.
-  * listen() distinguishes "heard nothing" from "couldn't understand" and gives
-    the user audible feedback instead of silent failure.
-  * Camera capture aligned with bench_latency.py (BUFFERSIZE=1, short flush,
-    no arbitrary sleep) so the deployed app matches the benchmarked pipeline.
-  * Camera auto-reconnect; clean serial loop with feedback at each step.
 
 Install (pick ONE backend):
     faster-whisper:  pip install faster-whisper
