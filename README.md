@@ -198,7 +198,7 @@ python src/predict.py \
 
 ```bash
 # Interactive demo on Jetson Nano Orin 8GB
-cd paligemma-qlora-blind-assistance/deployment
+cd vision-language-assistance-model/deployment
 pip install -r requirements.txt
 python blind-assistance-system.py 
 ```
