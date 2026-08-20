@@ -23,7 +23,7 @@ python src/predict.py \
     --max_tokens 64
 
 # Hub model, captioning only
-python src/inference.py \
+python src/predict.py \
     --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
     --task       caps \
     --image_dir  /path/to/images
