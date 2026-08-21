@@ -130,7 +130,7 @@ def vqa_instruction(question: str, style: str, brevity: bool) -> str:
 
 def caption_instruction(style: str) -> str:
     if style == "generic":
-        return "Describe this image in one short sentence."
+        return "caption en"
     return "Describe this scene for a blind person in one short sentence."
 
 
