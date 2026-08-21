@@ -117,7 +117,11 @@ class Qwen25VLRunner:
 
     def __init__(self, model_id, dtype=torch.bfloat16):
         from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
-        self.processor = AutoProcessor.from_pretrained(model_id)
+        self.processor = AutoProcessor.from_pretrained(
+            model_id,
+            min_pixels=256 * 28 * 28,     # ≈256 visual tokens floor
+            max_pixels=1280 * 28 * 28,    # ≈1280 visual tokens ceiling
+        )
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_id, torch_dtype=dtype, device_map="auto").eval()
 
