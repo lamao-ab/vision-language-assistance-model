@@ -26,20 +26,59 @@ zero-shot configuration.
 chat models answer in full sentences and score near zero under exact-match VQA
 accuracy, which measures output format rather than capability.
 
+Tasks
+-----
+  vqa       VizWiz-VQA (test)            -> {image, answer}
+  caps      VizWiz-Caps (validation)     -> {image_id, caption}
+  vqav2     VQAv2 (test-standard)        -> {question_id, answer}   [EvalAI submission]
+  coco      COCO-Caps (validation)       -> {image_id, caption}
+  vizwiz    = vqa + caps       (target domain)
+  benchmark = vqav2 + coco     (general domain)
+  all       = all four subsets
+
 Usage
 -----
+# 0) ALWAYS preview first: chat models may answer in full sentences, which
+#    scores near zero under exact-match VQA accuracy. Nothing is written.
+python src/evaluate_baselines.py --model smolvlm2 --task vqa --preview 20
+python src/evaluate_baselines.py --model smolvlm2 --task vqa --preview 20 --brevity
+
+# 1) Target domain (VizWiz VQA + captions)
 python src/evaluate_baselines.py \
     --model      smolvlm2 \
-    --task       both \
+    --task       vizwiz \
     --workdir    outputs/eval_data \
     --output_dir outputs/predictions \
     --tag        smolvlm2_zeroshot \
     --brevity
 
+# 2) General domain (VQAv2 test-std + COCO captions)
 python src/evaluate_baselines.py \
     --model      qwen2.5vl \
-    --task       vqa \
-    --preview    20            # inspect 20 outputs, write nothing
+    --task       benchmark \
+    --workdir    outputs/eval_data \
+    --output_dir outputs/predictions \
+    --tag        qwen25vl_zeroshot \
+    --brevity
+
+# 3) Quick sanity run on a small subset before a full evaluation
+python src/evaluate_baselines.py --model qwen2.5vl --task vqa --limit 200
+
+Scoring
+-------
+Outputs match the existing scorers, so no changes are needed:
+  VizWiz-VQA : python src/score_vizwiz_vqa.py --gt <workdir>/vizwiz_vqa_data/VQA_test.json \
+                   --pred outputs/predictions/vizwiz_vqa_test_predictions_<tag>.json
+  Captions   : your existing pycocoevalcap-based scorer
+  VQAv2      : submit vqav2_test_predictions_<tag>.json to the test-standard server
+
+Notes
+-----
+  * Requires: pip install num2words qwen_vl_utils
+  * VQAv2 test2015 is ~447k questions (12 GB of images) and COCO val2014 is 40k
+    images (6 GB); budget compute accordingly, and use --limit to rehearse.
+  * Both models are evaluated at bf16. Qwen2.5-VL uses aspect-preserving native
+    resolution bounded to 256-1280 visual tokens; PaliGemma uses a fixed 256.
 """
 
 import argparse
@@ -65,6 +104,11 @@ VQA_IMAGES_URL    = "https://vizwiz.cs.colorado.edu/VizWiz_final/images/test.zip
 VQA_TEST_JSON_URL = "https://vizwiz.cs.colorado.edu/VizWiz_all_answers/VQA_test.json"
 CAPS_VAL_IMAGES_URL = "https://vizwiz.cs.colorado.edu/VizWiz_final/images/val.zip"
 CAPS_ANNOT_URL      = "https://vizwiz.cs.colorado.edu/VizWiz_final/caption/annotations.zip"
+
+VQAV2_IMAGES_URL    = "http://images.cocodataset.org/zips/test2015.zip"
+VQAV2_QUESTIONS_URL = "https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Test_mscoco.zip"
+COCO_IMAGES_URL     = "http://images.cocodataset.org/zips/val2014.zip"
+COCO_ANNOT_URL      = "http://images.cocodataset.org/annotations/annotations_trainval2014.zip"
 
 BREVITY = " Answer in one or two words."
 
@@ -117,10 +161,12 @@ class Qwen25VLRunner:
 
     def __init__(self, model_id, dtype=torch.bfloat16):
         from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+        # native (aspect-preserving) resolution, bounded for reproducibility:
+        # 256 visual tokens floor (matches PaliGemma's fixed count), 1280 ceiling
         self.processor = AutoProcessor.from_pretrained(
             model_id,
-            min_pixels=256 * 28 * 28,     # ≈256 visual tokens floor
-            max_pixels=1280 * 28 * 28,    # ≈1280 visual tokens ceiling
+            min_pixels=256 * 28 * 28,
+            max_pixels=1280 * 28 * 28,
         )
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_id, torch_dtype=dtype, device_map="auto").eval()
@@ -305,12 +351,137 @@ def run_caps(runner, args):
     return out_file
 
 
+# ── TASK 3: VQAv2 (test-standard) ─────────────────────────────────────────────
+
+def run_vqav2(runner, args):
+    print("\n" + "=" * 70)
+    print("VQAv2 (test-standard) — zero-shot")
+    print("=" * 70)
+
+    data_root = os.path.join(args.workdir, "vqav2_data")
+    download_and_extract(VQAV2_IMAGES_URL, data_root)
+    download_and_extract(VQAV2_QUESTIONS_URL, data_root)
+
+    images_dir = os.path.join(data_root, "test2015")
+    q_path = os.path.join(data_root, "v2_OpenEnded_mscoco_test2015_questions.json")
+    questions = json.load(open(q_path))["questions"]
+    if args.limit:
+        questions = questions[:args.limit]
+    print(f"{len(questions):,} questions")
+
+    out_file = _pred_path(args.output_dir, "vqav2_test_predictions.json", args.tag)
+    results = []
+    if os.path.exists(out_file) and not args.preview:
+        results = json.load(open(out_file))
+        done = {r["question_id"] for r in results}
+        questions = [q for q in questions if q["question_id"] not in done]
+        print(f"resuming — {len(results):,} already done, {len(questions):,} remaining")
+
+    for i in tqdm(range(0, len(questions), args.batch_size)):
+        chunk = questions[i:i + args.batch_size]
+        imgs, instrs, keep = [], [], []
+        for q in chunk:
+            fname = f"COCO_test2015_{q['image_id']:012d}.jpg"
+            try:
+                imgs.append(Image.open(os.path.join(images_dir, fname)).convert("RGB"))
+            except Exception as e:
+                print(f"skip {fname}: {e}")
+                continue
+            instrs.append(vqa_instruction(q["question"], args.prompt_style, args.brevity))
+            keep.append(q)
+        if not imgs:
+            continue
+
+        preds = runner.generate(imgs, instrs, args.max_tokens)
+        for q, p in zip(keep, preds):
+            results.append({"question_id": q["question_id"], "answer": p})
+
+        if args.preview and len(results) >= args.preview:
+            print("\n--- PREVIEW (nothing written) ---")
+            for r, q in zip(results[:args.preview], questions[:args.preview]):
+                print(f"  Q: {q['question']}\n  A: {r['answer']}\n")
+            return None
+
+        if len(results) % (args.batch_size * 10) < args.batch_size:
+            json.dump(results, open(out_file, "w"), indent=2)
+
+    results.sort(key=lambda x: x["question_id"])
+    json.dump(results, open(out_file, "w"), indent=2)
+    print(f"saved {len(results):,} -> {out_file}")
+    print("Submit to the VQAv2 test-standard server:")
+    print("  https://eval.ai/web/challenges/challenge-page/830/overview")
+    return out_file
+
+
+# ── TASK 4: COCO-Caps (validation) ────────────────────────────────────────────
+
+def run_coco_caps(runner, args):
+    print("\n" + "=" * 70)
+    print("COCO-Caps (validation) — zero-shot")
+    print("=" * 70)
+
+    data_root = os.path.join(args.workdir, "coco_data")
+    download_and_extract(COCO_IMAGES_URL, data_root)
+    download_and_extract(COCO_ANNOT_URL, data_root)
+
+    images_dir = os.path.join(data_root, "val2014")
+    caps_path = os.path.join(data_root, "annotations", "captions_val2014.json")
+    items = json.load(open(caps_path))["images"]
+    if args.limit:
+        items = items[:args.limit]
+    print(f"{len(items):,} images")
+
+    out_file = _pred_path(args.output_dir, "coco_caption_val_predictions.json", args.tag)
+    results = []
+    if os.path.exists(out_file) and not args.preview:
+        results = json.load(open(out_file))
+        done = {r["image_id"] for r in results}
+        items = [it for it in items if it["id"] not in done]
+        print(f"resuming — {len(results):,} already done, {len(items):,} remaining")
+
+    instr = caption_instruction(args.prompt_style)
+
+    for i in tqdm(range(0, len(items), args.batch_size)):
+        chunk = items[i:i + args.batch_size]
+        imgs, keep = [], []
+        for it in chunk:
+            try:
+                imgs.append(Image.open(os.path.join(images_dir, it["file_name"])).convert("RGB"))
+                keep.append(it)
+            except Exception as e:
+                print(f"skip {it['file_name']}: {e}")
+        if not imgs:
+            continue
+
+        preds = runner.generate(imgs, [instr] * len(imgs), args.max_tokens)
+        for it, p in zip(keep, preds):
+            results.append({"image_id": it["id"], "caption": p})
+
+        if args.preview and len(results) >= args.preview:
+            print("\n--- PREVIEW (nothing written) ---")
+            for r in results[:args.preview]:
+                print(f"  {r['image_id']}: {r['caption']}")
+            return None
+
+        if len(results) % (args.batch_size * 10) < args.batch_size:
+            json.dump(results, open(out_file, "w"), indent=2)
+
+    json.dump(results, open(out_file, "w"), indent=2)
+    lengths = [len(r["caption"].split()) for r in results]
+    print(f"saved {len(results):,} -> {out_file}")
+    print(f"avg caption length: {sum(lengths)/max(len(lengths),1):.1f} words")
+    return out_file
+
+
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
 def main():
     ap = argparse.ArgumentParser(description="Zero-shot baseline evaluation")
     ap.add_argument("--model", required=True, choices=list(MODELS))
-    ap.add_argument("--task", choices=["vqa", "caps", "both"], default="both")
+    ap.add_argument("--task",
+                    choices=["vqa", "caps", "vqav2", "coco", "vizwiz", "benchmark", "all"],
+                    default="vizwiz",
+                    help="vizwiz = vqa+caps (target domain); benchmark = vqav2+coco; all = four subsets")
     ap.add_argument("--prompt_style", choices=["generic", "custom"], default="generic",
                     help="generic = each model's natural phrasing (fair zero-shot)")
     ap.add_argument("--brevity", action="store_true",
@@ -332,11 +503,17 @@ def main():
 
     runner = load_runner(args.model)
 
-    if args.task in ("vqa", "both"):
+    if args.task in ("vqa", "vizwiz", "all"):
         run_vqa(runner, args)
         gc.collect(); torch.cuda.empty_cache()
-    if args.task in ("caps", "both"):
+    if args.task in ("caps", "vizwiz", "all"):
         run_caps(runner, args)
+        gc.collect(); torch.cuda.empty_cache()
+    if args.task in ("vqav2", "benchmark", "all"):
+        run_vqav2(runner, args)
+        gc.collect(); torch.cuda.empty_cache()
+    if args.task in ("coco", "benchmark", "all"):
+        run_coco_caps(runner, args)
 
     print("\nDone. Score with your existing scripts:")
     print(f"  python src/score_vizwiz_vqa.py --gt {args.workdir}/vizwiz_vqa_data/VQA_test.json "
