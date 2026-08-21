@@ -49,6 +49,7 @@ python src/evaluate_baselines.py \
     --task       vizwiz \
     --workdir    outputs/eval_data \
     --output_dir outputs/predictions \
+    --batch_size 32 \
     --tag        smolvlm2_zeroshot \
     --brevity
 
@@ -58,6 +59,7 @@ python src/evaluate_baselines.py \
     --task       benchmark \
     --workdir    outputs/eval_data \
     --output_dir outputs/predictions \
+    --batch_size 8 \
     --tag        qwen25vl_zeroshot \
     --brevity
 
@@ -263,6 +265,9 @@ def run_vqa(runner, args):
     print("\n" + "=" * 70)
     print("VizWiz-VQA (test) — zero-shot")
     print("=" * 70)
+    print(f"Model      : {args.model}")
+    print(f"Batch size : {args.batch_size}")
+    print(f"Max tokens : {args.max_tokens}")
 
     data_root = os.path.join(args.workdir, "vizwiz_vqa_data")
     download_and_extract(VQA_IMAGES_URL, data_root)
@@ -322,6 +327,9 @@ def run_caps(runner, args):
     print("\n" + "=" * 70)
     print("VizWiz-Caps (validation) — zero-shot")
     print("=" * 70)
+    print(f"Model      : {args.model}")
+    print(f"Batch size : {args.batch_size}")
+    print(f"Max tokens : {args.max_tokens}")
 
     caps_root = os.path.join(args.workdir, "vizwiz_caps_data")
     download_and_extract(CAPS_VAL_IMAGES_URL, caps_root)
@@ -383,6 +391,9 @@ def run_vqav2(runner, args):
     print("\n" + "=" * 70)
     print("VQAv2 (test-standard) — zero-shot")
     print("=" * 70)
+    print(f"Model      : {args.model}")
+    print(f"Batch size : {args.batch_size}")
+    print(f"Max tokens : {args.max_tokens}")
 
     data_root = os.path.join(args.workdir, "vqav2_data")
     download_and_extract(VQAV2_IMAGES_URL, data_root)
@@ -445,6 +456,9 @@ def run_coco_caps(runner, args):
     print("\n" + "=" * 70)
     print("COCO-Caps (validation) — zero-shot")
     print("=" * 70)
+    print(f"Model      : {args.model}")
+    print(f"Batch size : {args.batch_size}")
+    print(f"Max tokens : {args.max_tokens}")
 
     data_root = os.path.join(args.workdir, "coco_data")
     download_and_extract(COCO_IMAGES_URL, data_root)
@@ -516,7 +530,10 @@ def main():
     ap.add_argument("--output_dir", default="outputs/predictions")
     ap.add_argument("--tag", default="")
     ap.add_argument("--max_tokens", type=int, default=64)
-    ap.add_argument("--batch_size", type=int, default=8)
+    ap.add_argument("--batch_size", type=int, default=64,
+                    help="as in the PaliGemma scripts. SmolVLM2 handles 32-64; "
+                         "reduce for Qwen2.5-VL (8-16) since its dynamic "
+                         "resolution makes peak memory less predictable")
     ap.add_argument("--limit", type=int, default=0, help="evaluate only the first N items")
     ap.add_argument("--preview", type=int, default=0,
                     help="print the first N outputs and exit without writing")
