@@ -133,6 +133,11 @@ def caption_instruction(style: str) -> str:
         return "caption en"
     return "Describe this scene for a blind person in one short sentence."
 
+# def caption_instruction(style: str) -> str:
+#     if style == "generic":
+#         return "Describe this image in one short sentence."
+#     return "Describe this scene for a blind person in one short sentence."
+
 
 # ── Model wrappers ────────────────────────────────────────────────────────────
 
