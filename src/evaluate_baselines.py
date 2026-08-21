@@ -77,6 +77,12 @@ Notes
   * Requires: pip install num2words qwen_vl_utils
   * VQAv2 test2015 is ~447k questions (12 GB of images) and COCO val2014 is 40k
     images (6 GB); budget compute accordingly, and use --limit to rehearse.
+  * Both runners generate in true batches with left padding. Qwen2.5-VL's
+    dynamic resolution makes its peak memory depend on the images in a batch,
+    so use a smaller --batch_size for Qwen (8-16) than for SmolVLM2 (32+).
+  * VALIDATE BATCHING before a full run: evaluate the same --limit N twice with
+    --batch_size 1 and --batch_size 8 under different --tag values and confirm
+    the answers are identical.
   * Both models are evaluated at bf16. Qwen2.5-VL uses aspect-preserving native
     resolution bounded to 256-1280 visual tokens; PaliGemma uses a fixed 256.
 """
@@ -129,35 +135,49 @@ def caption_instruction(style: str) -> str:
 # ── Model wrappers ────────────────────────────────────────────────────────────
 
 class SmolVLM2Runner:
-    """HuggingFaceTB/SmolVLM2-2.2B-Instruct via AutoModelForImageTextToText."""
+    """HuggingFaceTB/SmolVLM2-2.2B-Instruct via AutoModelForImageTextToText.
+
+    Batched generation with left padding, mirroring the PaliGemma scripts.
+    """
 
     def __init__(self, model_id, dtype=torch.bfloat16):
         from transformers import AutoProcessor, AutoModelForImageTextToText
         self.processor = AutoProcessor.from_pretrained(model_id)
+        self.processor.tokenizer.padding_side = "left"
         self.model = AutoModelForImageTextToText.from_pretrained(
             model_id, torch_dtype=dtype, device_map="auto").eval()
 
+    def _prompt(self, instr):
+        messages = [{"role": "user", "content": [
+            {"type": "image"}, {"type": "text", "text": instr}]}]
+        return self.processor.apply_chat_template(messages, add_generation_prompt=True)
+
     @torch.inference_mode()
     def generate(self, images, instructions, max_tokens):
-        outs = []
-        for img, instr in zip(images, instructions):          # per-item: safest
-            messages = [{"role": "user", "content": [
-                {"type": "image"}, {"type": "text", "text": instr}]}]
-            prompt = self.processor.apply_chat_template(
-                messages, add_generation_prompt=True)
-            inputs = self.processor(text=prompt, images=[img],
-                                    return_tensors="pt").to(self.model.device)
-            gen = self.model.generate(**inputs, max_new_tokens=max_tokens,
-                                      do_sample=False)
-            text = self.processor.batch_decode(
-                gen[:, inputs["input_ids"].shape[-1]:],
-                skip_special_tokens=True)[0]
-            outs.append(text.strip())
-        return outs
+        prompts = [self._prompt(i) for i in instructions]
+        inputs = self.processor(
+            text=prompts,
+            images=[[img] for img in images],   # one image per sample
+            padding=True,
+            return_tensors="pt",
+        ).to(self.model.device)
+
+        in_len = inputs["input_ids"].shape[-1]
+        gen = self.model.generate(**inputs, max_new_tokens=max_tokens,
+                                  do_sample=False)
+        texts = self.processor.batch_decode(gen[:, in_len:],
+                                            skip_special_tokens=True)
+        return [t.strip() for t in texts]
 
 
 class Qwen25VLRunner:
-    """Qwen/Qwen2.5-VL-3B-Instruct via Qwen2_5_VLForConditionalGeneration."""
+    """Qwen/Qwen2.5-VL-3B-Instruct via Qwen2_5_VLForConditionalGeneration.
+
+    Batched generation with left padding. Qwen uses aspect-preserving dynamic
+    resolution, so visual token counts vary per image; the pixel bounds below
+    keep this reproducible and memory predictable. Use a smaller batch size than
+    for SmolVLM2, since peak memory depends on the images in the batch.
+    """
 
     def __init__(self, model_id, dtype=torch.bfloat16):
         from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
@@ -168,30 +188,36 @@ class Qwen25VLRunner:
             min_pixels=256 * 28 * 28,
             max_pixels=1280 * 28 * 28,
         )
+        self.processor.tokenizer.padding_side = "left"
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_id, torch_dtype=dtype, device_map="auto").eval()
 
     @torch.inference_mode()
     def generate(self, images, instructions, max_tokens):
         from qwen_vl_utils import process_vision_info
-        outs = []
-        for img, instr in zip(images, instructions):
-            messages = [{"role": "user", "content": [
-                {"type": "image", "image": img}, {"type": "text", "text": instr}]}]
-            prompt = self.processor.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True)
-            image_inputs, video_inputs = process_vision_info(messages)
-            inputs = self.processor(text=[prompt], images=image_inputs,
-                                    videos=video_inputs, padding=True,
-                                    return_tensors="pt").to(self.model.device)
-            gen = self.model.generate(**inputs, max_new_tokens=max_tokens,
-                                      do_sample=False)
-            trimmed = [o[len(i):] for i, o in zip(inputs.input_ids, gen)]
-            text = self.processor.batch_decode(
-                trimmed, skip_special_tokens=True,
-                clean_up_tokenization_spaces=False)[0]
-            outs.append(text.strip())
-        return outs
+
+        messages_list = [
+            [{"role": "user", "content": [
+                {"type": "image", "image": img},
+                {"type": "text", "text": instr}]}]
+            for img, instr in zip(images, instructions)
+        ]
+        prompts = [
+            self.processor.apply_chat_template(m, tokenize=False,
+                                               add_generation_prompt=True)
+            for m in messages_list
+        ]
+        image_inputs, video_inputs = process_vision_info(messages_list)
+
+        inputs = self.processor(text=prompts, images=image_inputs,
+                                videos=video_inputs, padding=True,
+                                return_tensors="pt").to(self.model.device)
+        gen = self.model.generate(**inputs, max_new_tokens=max_tokens,
+                                  do_sample=False)
+        trimmed = [o[len(i):] for i, o in zip(inputs.input_ids, gen)]
+        texts = self.processor.batch_decode(trimmed, skip_special_tokens=True,
+                                            clean_up_tokenization_spaces=False)
+        return [t.strip() for t in texts]
 
 
 def load_runner(name):
