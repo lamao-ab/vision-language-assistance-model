@@ -18,7 +18,7 @@
 This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our deployed 4-bit (QLoRA) model achieves:
 - **75.71% VQA accuracy** on VizWiz-VQA (10-choose-9 metric), within 0.09 points of the full-precision LoRA model (75.80%)
 - **97.44 CIDEr-D** on VizWiz-Captions, within 0.6 points of full-precision LoRA (98.08)
-- **2.13 GB static memory footprint** (2.25 GB peak during inference), enabling deployment on an 8 GB Jetson Orin Nano
+- **2.10 GB static memory footprint** (2.25 GB peak during inference), enabling deployment on an 8 GB Jetson Orin Nano
 - **0.93–1.97 s inference latency** (device-side compute) for interactive VQA and scene-description queries
 - **~24 hours realistic battery life** (10 queries/hour, 100 Wh pack); ~10.4 hours under continuous inference
 
