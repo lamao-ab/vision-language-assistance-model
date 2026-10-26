@@ -1,0 +1,22 @@
+{
+ "vqa_train": {
+  "annotations": "/content/vw_audit/vizwiz/train.json",
+  "images": "/content/vw_audit/vizwiz/train"
+ },
+ "vqa_val": {
+  "annotations": "/content/vw_audit/vizwiz/val.json",
+  "images": "/content/vw_audit/vizwiz/val"
+ },
+ "cap_train": {
+  "annotations": "/content/vw_audit/vizwiz/annotations/train.json",
+  "images": "/content/vw_audit/vizwiz/train"
+ },
+ "cap_val": {
+  "annotations": "/content/vw_audit/vizwiz/annotations/val.json",
+  "images": "/content/vw_audit/vizwiz/val"
+ },
+ "vqa_test": {
+  "annotations": "/content/eval_data/vizwiz_vqa_data/VQA_test.json",
+  "images": "/content/eval_data/vizwiz_vqa_data/test"
+ }
+}
