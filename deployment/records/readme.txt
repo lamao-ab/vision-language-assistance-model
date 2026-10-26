@@ -74,14 +74,15 @@ Table 14  Cloud column (A100)
 ---------------------------------
 Device         Jetson Orin Nano 8 GB, nvpmodel -m 0 (15 W), jetson_clocks
 Model          lamao-ab/paligemma-blind-assist-qlora-merged-v1 (4-bit NF4 through the checkpoint config)
-Software       torch 2.10.0, CUDA 12.6 (printed by the benchmark); other versions were not recorded
+Software       JetPack 6.2.1 (L4T R36.4.7), PyTorch 2.10.0, CUDA 12.6 (stated in the paper; torch and CUDA are
+               also printed by the benchmark); transformers and bitsandbytes versions were not recorded
 Environment    PYTORCH_CUDA_ALLOC_CONF=backend:native,expandable_segments:True
 Latency        bench_latency.py: live camera frames at 640x480, predefined text prompts, 30 queries
                per task per run, 5 warm-up runs; VQA cap 30 new tokens, caption cap 64
 Energy         energy_run.py: one fixed frame, caption prompt, 64-token cap, 30 isolated queries
                followed by 1 s rest; 25 s idle windows with and without the model; tegrastats at 100 ms
 A100           NVIDIA A100-SXM4-40GB, 400 W power limit, Colab runtime, clocks not locked; merged
-               4-bit checkpoint, batch size 1, greedy decoding, one fixed image, one warm-up and
+               4-bit checkpoint, batch size 1, greedy decoding, one fixed image (file not retained), one warm-up and
                30 timed runs per profile, one NVML power reading after each run
 
 
@@ -95,6 +96,9 @@ A100           NVIDIA A100-SXM4-40GB, 400 W power limit, Colab runtime, clocks n
 - The A100 power values are single instantaneous card-power readings, not integrals, and exclude the host.
   They support a power-draw comparison only, not an energy comparison.
 - The Jetson clock was not verified against a time server; dates in logs are the device's own clock.
+- The image used in the A100 measurement was not retained, and generated lengths were not recorded. The latency
+  ratio of the two profiles (0.572 / 0.266 s = 2.15) is close to the ratio of the caps (64 / 30 = 2.13), which
+  is consistent with generation running to the cap, but this is an inference.
 
 
 6. SCRIPTS (deployment/)
@@ -112,7 +116,7 @@ Written for the revision:
 
 7. STILL TO FILL IN (cannot be recovered from the records)
 ----------------------------------------------------------
-[ ] Image used in the A100 measurement and the date of the run
-[ ] Boot target of the Jetson during the measurements (the paper says headless):
-    save the output of `systemctl get-default`
-[ ] transformers and bitsandbytes versions on the Jetson
+[ ] Date of the A100 run (Colab)
+[ ] Boot target of the Jetson: the paper's measurement paragraph does not say headless, only the Table 11
+    caption did; the word is removed. Restore it only after saving `systemctl get-default`.
+[ ] transformers and bitsandbytes versions on the Jetson (`pip list | grep -E "transformers|bitsandbytes"`)
