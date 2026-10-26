@@ -1,0 +1,30 @@
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+GPU: NVIDIA A100-SXM4-40GB
+Power limit: 400.0 W
+
+Loading model...
+model.safetensors: 100% 2.29G/2.29G [00:17<00:00, 135MB/s]
+Loading weights: 100% 603/603 [00:01<00:00, 514.81it/s, Materializing param=model.vision_tower.vision_model.post_layernorm.weight]
+generation_config.json: 100% 131/131 [00:00<00:00, 605kB/s]
+processor_config.json: 100% 508/508 [00:00<00:00, 1.90MB/s]
+tokenizer_config.json: 100% 480/480 [00:00<00:00, 2.35MB/s]
+tokenizer.json: 100% 34.6M/34.6M [00:01<00:00, 34.5MB/s]
+Static footprint (memory_allocated): 2.14 GB
+
+--- VQA (30 tok) ---
+You are passing both `text` and `images` to `PaliGemmaProcessor`. The processor expects special image tokens in the text, as many tokens as there are images per each text. It is recommended to add `<image>` tokens in the very beginning of your text. For this call, we will infer how many images each text has and add special tokens.
+  latency  : 0.266 ± 0.039 s  [0.252-0.478]
+  power    : 76.7 W (sampled)
+
+--- Caption (64 tok) ---
+You are passing both `text` and `images` to `PaliGemmaProcessor`. The processor expects special image tokens in the text, as many tokens as there are images per each text. It is recommended to add `<image>` tokens in the very beginning of your text. For this call, we will infer how many images each text has and add special tokens.
+  latency  : 0.572 ± 0.007 s  [0.563-0.586]
+  power    : 64.7 W (sampled)
+
+============================================================
+TABLE CELLS
+============================================================
+Inference Latency : 0.27--0.57 s
+Power Draw (mean across profiles) : 70.7 W
+Static Footprint : 2.14 GB

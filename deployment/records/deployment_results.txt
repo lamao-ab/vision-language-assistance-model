@@ -1,0 +1,525 @@
+====================================================================================================
+DEPLOYMENT RESULTS - Jetson Orin Nano 8 GB, PaliGemma-3B QLoRA (merged, 4-bit NF4)
+Organized companion to the raw console record (deployment_results_console_raw.txt)
+====================================================================================================
+
+WHAT THIS FILE IS
+  Every numeric block below is a verbatim excerpt of the raw console record, with its raw line
+  numbers in brackets. Nothing was retyped or edited. Section headers, the "USED FOR" tags and the
+  two tables marked DERIVED were added; the raw file is kept unchanged and is the evidence.
+  Password prompts were left out of the excerpts.
+
+USED FOR (paper table -> section of this file)
+  Table 11  memory and footprint ........... section 1.3 (system rows) and 1.4 (footprint rows)
+  Table 12  latency ........................ section 2.3 (run 3 of three consecutive runs)
+  Table 13  power and energy ............... section 3.2 (analyze_energy.py, fixed version, Windows)
+  Table 13  exact-window re-analysis ....... section 3.3 (DERIVED, analyze_energy_v3.py)
+  NOT used: 1.1, 1.2 (earlier script versions), 2.1, 2.2 (runs 1-2, reported as a range), 3.1 (older analyzer)
+
+CONDITIONS COMMON TO ALL MEASUREMENTS
+  Device: Jetson Orin Nano 8 GB, power mode 15 W, clocks locked with jetson_clocks.
+  PYTORCH_CUDA_ALLOC_CONF=backend:native,expandable_segments:True
+  Model: lamao-ab/paligemma-blind-assist-qlora-merged-v1 (4-bit NF4 via the checkpoint's bitsandbytes config)
+  Software printed by the latency benchmark: torch 2.10.0, CUDA 12.6 (other package versions were not recorded)
+  Camera as set in bench_latency.py: 640x480. Latency prompts are predefined text; no speech recognition.
+  Generated-token counts were NOT recorded in any run.
+  Jetson clock: not verified against a time server; dates inside logs are the device's own clock.
+
+====================================================================================================
+0. COMMANDS ISSUED BEFORE EVERY MEASUREMENT
+====================================================================================================
+jetson@jetson-desktop:~$ export PYTORCH_CUDA_ALLOC_CONF=backend:native,expandable_segments:True
+jetson@jetson-desktop:~$ sudo nvpmodel -m 0 && sudo jetson_clocks && nvpmodel -q
+NV Power Mode: 15W
+0
+   [raw lines 7-11, password prompt omitted]
+
+====================================================================================================
+1. MEMORY
+====================================================================================================
+1.1  Measurement A - older measure_memory.py (prints 'Model footprint (CUDA)'; this is the version in the repo folder)
+  NOT USED for Table 11.
+----------------------------------------------------------------------------------------------------
+1.1 measure_memory.py, version A   [raw lines 12-39]
+----------------------------------------------------------------------------------------------------
+jetson@jetson-desktop:~$ python3 measure_memory.py
+=======================================================
+STAGE 1 — OS BASELINE (model + app NOT running)
+=======================================================
+Total     : 7.44 GB
+Used (OS) : 1.10 GB
+Available : 6.09 GB
+
+[Enter] to load the model and measure the full footprint...
+
+=======================================================
+STAGE 2 — MODEL LOADED
+=======================================================
+Loading weights: 100%|█| 603/603 [00:26<00:00, 22.93it/s, Materializing param=model.vision_tower.vision_model.post_layer
+Total     : 7.44 GB
+Used      : 4.24 GB
+Available : 2.93 GB
+
+=======================================================
+SUMMARY
+=======================================================
+Total memory             : 7.44 GB
+Model footprint (CUDA)   : 2.14 GB   <- direct, reproducible
+CUDA reserved            : 2.22 GB
+-------------------------------------------------------
+System used after load   : 4.24 GB   <- device utilization (model + libs + OS)
+OS baseline (context)    : 1.10 GB
+Available after load     : 2.93 GB
+
+----------------------------------------------------------------------------------------------------
+1.2 model_breakdown.py, version A (first run)   [raw lines 62-92]  older version: quantization constants 35.7 MB
+----------------------------------------------------------------------------------------------------
+============================================================
+DTYPE HISTOGRAM
+============================================================
+dtype                           params          MB
+4bit(NF4)                1,197,619,200      1142.1
+torch.bfloat16             528,228,080      1007.5
+buffer/torch.int64                 256         0.0
+buffer/torch.float32               256         0.0
+
+============================================================
+MODEL MEMORY BREAKDOWN
+============================================================
+Base weights (4-bit NF4)   :    1142.1 MB  (1.115 GB)
+Quantization constants     :      35.7 MB
+LoRA adapters              :       0.0 MB
+Other non-quant (bf16 embed+vision) :    1007.5 MB  (0.984 GB)
+------------------------------------------------------------
+Static model footprint     : 2.134 GB
+
+Measuring peak activation + KV cache (corrected method)...
+
+============================================================
+FINAL SUMMARY FOR PAPER
+============================================================
+Base model weights (4-bit)    : 1.115 GB
+Quantization constants        : 35.7 MB
+LoRA adapters                 : 0.0 MB
+Other non-quant (bf16 embed+vis) : 0.984 GB
+Static footprint              : 2.134 GB
+Activation + KV cache (PEAK)  : 0.098 GB  (100 MB, measured)
+Peak CUDA reserved            : 2.254 GB
+
+----------------------------------------------------------------------------------------------------
+1.2 model_breakdown.py, version A (second run, labelled 'run 2' in the raw file)   [raw lines 118-148]  identical numbers
+----------------------------------------------------------------------------------------------------
+============================================================
+DTYPE HISTOGRAM
+============================================================
+dtype                           params          MB
+4bit(NF4)                1,197,619,200      1142.1
+torch.bfloat16             528,228,080      1007.5
+buffer/torch.int64                 256         0.0
+buffer/torch.float32               256         0.0
+
+============================================================
+MODEL MEMORY BREAKDOWN
+============================================================
+Base weights (4-bit NF4)   :    1142.1 MB  (1.115 GB)
+Quantization constants     :      35.7 MB
+LoRA adapters              :       0.0 MB
+Other non-quant (bf16 embed+vision) :    1007.5 MB  (0.984 GB)
+------------------------------------------------------------
+Static model footprint     : 2.134 GB
+
+Measuring peak activation + KV cache (corrected method)...
+
+============================================================
+FINAL SUMMARY FOR PAPER
+============================================================
+Base model weights (4-bit)    : 1.115 GB
+Quantization constants        : 35.7 MB
+LoRA adapters                 : 0.0 MB
+Other non-quant (bf16 embed+vis) : 0.984 GB
+Static footprint              : 2.134 GB
+Activation + KV cache (PEAK)  : 0.098 GB  (100 MB, measured)
+Peak CUDA reserved            : 2.254 GB
+
+1.3  Measurement B - FINAL measure_memory.py (prints free, buffers/cache and an identity check)
+  USED FOR Table 11 system rows. This script version is not in the repo folder; copy it from the Jetson.
+----------------------------------------------------------------------------------------------------
+1.3 measure_memory.py, final version   [raw lines 556-594]
+----------------------------------------------------------------------------------------------------
+jetson@jetson-desktop:~$ python3 measure_memory.py
+============================================================
+STAGE 1 — OS BASELINE (model NOT loaded)
+============================================================
+Total       : 7.44 GB
+Used (OS)   : 1.00 GB
+Free        : 5.04 GB
+Buff/cache  : 1.40 GB
+Available   : 6.19 GB
+
+[Enter] to load the model and measure the full footprint...
+
+============================================================
+STAGE 2 — MODEL LOADED
+============================================================
+Loading weights: 100%|█████████████████████████| 603/603 [00:26<00:00, 23.17it/s, Materializing param=model.vision_tower.vision_model.post_layernorm.weight]
+Total       : 7.44 GB
+Used        : 4.10 GB
+Free        : 0.11 GB
+Buff/cache  : 3.23 GB
+Available   : 3.09 GB
+
+============================================================
+SUMMARY (for paper)
+============================================================
+Total system memory         : 7.44 GB
+OS + kernel baseline (used) : 1.00 GB
+System used after load      : 4.10 GB
+Free after load             : 0.11 GB
+Buff/cache after load       : 3.23 GB
+Available after load        : 3.09 GB
+------------------------------------------------------------
+Model footprint (CUDA alloc): 2.14 GB   <- direct, reproducible anchor
+CUDA reserved               : 2.22 GB
+------------------------------------------------------------
+Identity check:  total == used + free + buff/cache
+   4.10 + 0.11 + 3.23 = 7.44   (total 7.44)
+Available (3.09) <= free+buff/cache (3.34); non-reclaimable/reserved = 0.25 GB
+jetson@jetson-desktop:~$
+
+1.4  FINAL model_breakdown.py (anchor check against torch.cuda.memory_allocated)
+  USED FOR Table 11 footprint rows. This script version is not in the repo folder; copy it from the Jetson.
+----------------------------------------------------------------------------------------------------
+1.4 model_breakdown.py, final version (quantization_config echo omitted, raw lines 605-619)   [raw lines 622-660]
+----------------------------------------------------------------------------------------------------
+============================================================
+ANCHOR CHECK
+============================================================
+Per-tensor static total   : 2.135 GB
+torch.cuda.memory_allocated : 2.135 GB
+agreement                 : OK
+
+============================================================
+DTYPE HISTOGRAM
+============================================================
+dtype                           params          MB
+4bit(NF4)                1,197,619,200      1142.1
+torch.bfloat16             528,228,080      1007.5
+buffer/torch.int64                 256         0.0
+buffer/torch.float32               256         0.0
+
+============================================================
+MODEL MEMORY BREAKDOWN
+============================================================
+Base weights (4-bit NF4)            :    1142.1 MB  (1.115 GB)
+Quantization constants             :      36.5 MB
+LoRA adapters (merged)             :       0.0 MB
+Other non-quant (bf16 embed+vision):    1007.5 MB  (0.984 GB)
+------------------------------------------------------------
+Static model footprint             : 2.135 GB
+
+Measuring peak activation + KV cache (64 new tokens)...
+You are passing both `text` and `images` to `PaliGemmaProcessor`. The processor expects special image tokens in the text, as many tokens as there are images per each text. It is recommended to add `<image>` tokens in the very beginning of your text. For this call, we will infer how many images each text has and add special tokens.
+
+============================================================
+FINAL SUMMARY FOR PAPER
+============================================================
+Base model weights (4-bit)         : 1.115 GB
+Quantization constants             : 36.5 MB
+LoRA adapters (merged)             : 0.0 MB
+Other non-quant (bf16 embed+vis)   : 0.984 GB
+Static footprint                   : 2.135 GB
+Activation + KV cache (peak, 64 tok): 0.098 GB  (100 MB)
+Peak CUDA reserved                 : 2.254 GB
+
+DERIVED (computed from the two measurement blocks above)
+  quantity                    A (older script)    B (final script)
+  OS + kernel baseline (GB)   1.10                1.00
+  System used after load      4.24                4.10
+  Available after load        2.93                3.09
+  Model + runtime (used-OS)   3.14                3.10
+  Identity used+free+cache    not printed         4.10 + 0.11 + 3.23 = 7.44 (printed)
+
+====================================================================================================
+2. LATENCY - bench_latency.py, three consecutive runs (30 queries per task per run)
+====================================================================================================
+
+2.1  Run 1  - NOT used for Table 12 (reported as a range)
+----------------------------------------------------------------------------------------------------
+2.1 run conditions   [raw lines 161-167]
+----------------------------------------------------------------------------------------------------
+============================================================
+RUN CONDITIONS
+============================================================
+nvpmodel        : NV Power Mode: 15W 0
+model_id        : lamao-ab/paligemma-blind-assist-qlora-merged-v1
+torch / cuda    : 2.10.0 / 12.6
+============================================================
+
+----------------------------------------------------------------------------------------------------
+2.1 summary printed by the benchmark   [raw lines 235-265]
+----------------------------------------------------------------------------------------------------
+========================================================================
+LATENCY BREAKDOWN  (ms, mean ± std)
+========================================================================
+
+--- VQA (max_new_tokens=30) ---
+  1. Camera acquisition (flush+read)     407.1 ± 18.7    [347-437]
+  2. Preprocess / tokenize                12.7 ± 1.2     [11-15]
+  3. Model inference                     876.6 ± 104.5   [786-1053]
+  4. Token decode                          0.3 ± 0.0     [0-0]
+  5. TTS synthesis (espeak)               13.7 ± 16.1    [10-100]
+  6. TTS playback (paplay)               888.5 ± 189.7   [702-1181]
+  COMPUTE (pre+inf+dec)                  889.6 ± 104.8
+  END-TO-END system (+cam +synth)       1310.4 ± 98.3
+  -> Inference latency to cite : 0.88 ± 0.10 s
+  -> Throughput (system E2E)   : 0.763 queries/s
+  -> User-perceived E2E        : 2.20 s  (incl. audio playback)
+
+--- Caption (max_new_tokens=64) ---
+  1. Camera acquisition (flush+read)     399.2 ± 20.9    [348-433]
+  2. Preprocess / tokenize                13.9 ± 1.6     [12-17]
+  3. Model inference                    2066.7 ± 294.5   [1789-3077]
+  4. Token decode                          0.4 ± 0.0     [0-1]
+  5. TTS synthesis (espeak)               14.6 ± 1.3     [13-19]
+  6. TTS playback (paplay)              3207.6 ± 609.7   [2374-4724]
+  COMPUTE (pre+inf+dec)                 2080.9 ± 294.9
+  END-TO-END system (+cam +synth)       2494.8 ± 295.3
+  -> Inference latency to cite : 2.07 ± 0.29 s
+  -> Throughput (system E2E)   : 0.401 queries/s
+  -> User-perceived E2E        : 5.70 s  (incl. audio playback)
+
+Note: throughput is 1 / END-TO-END (system). It now matches the latency rows.
+
+2.2  Run 2  - NOT used for Table 12 (reported as a range)
+----------------------------------------------------------------------------------------------------
+2.2 run conditions   [raw lines 275-281]
+----------------------------------------------------------------------------------------------------
+============================================================
+RUN CONDITIONS
+============================================================
+nvpmodel        : NV Power Mode: 15W 0
+model_id        : lamao-ab/paligemma-blind-assist-qlora-merged-v1
+torch / cuda    : 2.10.0 / 12.6
+============================================================
+
+----------------------------------------------------------------------------------------------------
+2.2 summary printed by the benchmark   [raw lines 349-379]
+----------------------------------------------------------------------------------------------------
+========================================================================
+LATENCY BREAKDOWN  (ms, mean ± std)
+========================================================================
+
+--- VQA (max_new_tokens=30) ---
+  1. Camera acquisition (flush+read)     405.0 ± 23.0    [356-434]
+  2. Preprocess / tokenize                12.0 ± 1.4     [11-16]
+  3. Model inference                     868.6 ± 102.2   [780-1060]
+  4. Token decode                          0.3 ± 0.0     [0-0]
+  5. TTS synthesis (espeak)               14.2 ± 18.3    [10-112]
+  6. TTS playback (paplay)               875.9 ± 207.0   [704-1571]
+  COMPUTE (pre+inf+dec)                  880.9 ± 101.7
+  END-TO-END system (+cam +synth)       1300.1 ± 111.8
+  -> Inference latency to cite : 0.87 ± 0.10 s
+  -> Throughput (system E2E)   : 0.769 queries/s
+  -> User-perceived E2E        : 2.18 s  (incl. audio playback)
+
+--- Caption (max_new_tokens=64) ---
+  1. Camera acquisition (flush+read)     399.6 ± 22.9    [352-432]
+  2. Preprocess / tokenize                12.0 ± 0.9     [11-15]
+  3. Model inference                    2106.4 ± 273.4   [1856-2724]
+  4. Token decode                          0.4 ± 0.0     [0-0]
+  5. TTS synthesis (espeak)               14.9 ± 0.9     [13-17]
+  6. TTS playback (paplay)              3383.3 ± 515.9   [2249-4516]
+  COMPUTE (pre+inf+dec)                 2118.8 ± 273.1
+  END-TO-END system (+cam +synth)       2533.3 ± 273.7
+  -> Inference latency to cite : 2.11 ± 0.27 s
+  -> Throughput (system E2E)   : 0.395 queries/s
+  -> User-perceived E2E        : 5.92 s  (incl. audio playback)
+
+Note: throughput is 1 / END-TO-END (system). It now matches the latency rows.
+
+2.3  Run 3  - USED FOR Table 12
+----------------------------------------------------------------------------------------------------
+2.3 run conditions   [raw lines 383-389]
+----------------------------------------------------------------------------------------------------
+============================================================
+RUN CONDITIONS
+============================================================
+nvpmodel        : NV Power Mode: 15W 0
+model_id        : lamao-ab/paligemma-blind-assist-qlora-merged-v1
+torch / cuda    : 2.10.0 / 12.6
+============================================================
+
+----------------------------------------------------------------------------------------------------
+2.3 summary printed by the benchmark   [raw lines 457-487]
+----------------------------------------------------------------------------------------------------
+========================================================================
+LATENCY BREAKDOWN  (ms, mean ± std)
+========================================================================
+
+--- VQA (max_new_tokens=30) ---
+  1. Camera acquisition (flush+read)     403.6 ± 18.6    [346-431]
+  2. Preprocess / tokenize                12.3 ± 1.6     [11-17]
+  3. Model inference                     927.8 ± 112.3   [775-1052]
+  4. Token decode                          0.3 ± 0.0     [0-0]
+  5. TTS synthesis (espeak)               14.9 ± 19.2    [10-118]
+  6. TTS playback (paplay)              1006.4 ± 190.0   [712-1209]
+  COMPUTE (pre+inf+dec)                  940.5 ± 112.3
+  END-TO-END system (+cam +synth)       1359.0 ± 119.3
+  -> Inference latency to cite : 0.93 ± 0.11 s
+  -> Throughput (system E2E)   : 0.736 queries/s
+  -> User-perceived E2E        : 2.37 s  (incl. audio playback)
+
+--- Caption (max_new_tokens=64) ---
+  1. Camera acquisition (flush+read)     408.5 ± 31.2    [356-496]
+  2. Preprocess / tokenize                13.0 ± 1.6     [11-16]
+  3. Model inference                    1974.6 ± 257.4   [1829-2779]
+  4. Token decode                          0.4 ± 0.0     [0-0]
+  5. TTS synthesis (espeak)               15.0 ± 0.9     [13-17]
+  6. TTS playback (paplay)              3466.7 ± 513.7   [2346-4583]
+  COMPUTE (pre+inf+dec)                 1988.0 ± 257.1
+  END-TO-END system (+cam +synth)       2411.5 ± 258.9
+  -> Inference latency to cite : 1.97 ± 0.26 s
+  -> Throughput (system E2E)   : 0.415 queries/s
+  -> User-perceived E2E        : 5.88 s  (incl. audio playback)
+
+Note: throughput is 1 / END-TO-END (system). It now matches the latency rows.
+
+The 180 per-run lines (inference and camera time of every query) are in the raw file and in latency_runs_new.csv (with raw line numbers).
+DERIVED - the three runs side by side (values as printed above; milliseconds mean +- SD)
+  stage / measure                       run 1              run 2              run 3 (Table 12)
+  VQA
+    camera acquisition               407.1 +- 18.7      405.0 +- 23.0      403.6 +- 18.6   
+    model inference                  876.6 +- 104.5     868.6 +- 102.2     927.8 +- 112.3  
+    TTS playback                     888.5 +- 189.7     875.9 +- 207.0    1006.4 +- 190.0  
+    system E2E (no playback)        1310.4 +- 98.3     1300.1 +- 111.8    1359.0 +- 119.3  
+    user-perceived E2E (s)                      2.20              2.18              2.37
+    throughput (queries/s)                     0.763             0.769             0.736
+  Caption
+    camera acquisition               399.2 +- 20.9      399.6 +- 22.9      408.5 +- 31.2   
+    model inference                 2066.7 +- 294.5    2106.4 +- 273.4    1974.6 +- 257.4  
+    TTS playback                    3207.6 +- 609.7    3383.3 +- 515.9    3466.7 +- 513.7  
+    system E2E (no playback)        2494.8 +- 295.3    2533.3 +- 273.7    2411.5 +- 258.9  
+    user-perceived E2E (s)                      5.70              5.92              5.88
+    throughput (queries/s)                     0.401             0.395             0.415
+
+====================================================================================================
+3. POWER AND ENERGY - energy_run.py capture, 30 isolated caption inferences (fixed frame, 64-token cap)
+====================================================================================================
+3.1  Printouts of the OLDER analyzer (whole-second timestamps; under-integrates the energy). NOT USED.
+  Two consecutive printouts, labelled 'Run 1:' in the raw file.
+----------------------------------------------------------------------------------------------------
+3.1 analyze_energy.py, older version (two printouts)   [raw lines 493-543]
+----------------------------------------------------------------------------------------------------
+jetson@jetson-desktop:~$ python3 analyze_energy.py
+============================================================
+POWER (W)
+============================================================
+P_sys   (system idle, no model)   : 4.07
+P_idle  (model loaded, idle)      : 4.09
+P_active(during inference)        : 9.21
+------------------------------------------------------------
+Model static overhead (P_idle-P_sys)   : 0.02 W
+Dynamic inference cost(P_active-P_idle): 5.11 W
+
+============================================================
+ENERGY PER QUERY (Joules)
+============================================================
+Total (incl. idle floor) : 7.92 ± 3.54 J   (n=30)
+Net of idle (dynamic)    : 4.51 ± 2.02 J
+
+============================================================
+DUTY CYCLE & BATTERY (100.0 Wh pack)
+============================================================
+Assumption: 10 queries/hr, 1.83s each
+Average power (realistic) : 4.12 W
+Battery — continuous      : 10.9 h   (always inferring @P_active)
+Battery — realistic       : 24.3 h
+jetson@jetson-desktop:~$
+
+jetson@jetson-desktop:~$ python3 analyze_energy.py
+============================================================
+POWER (W)
+============================================================
+P_sys   (system idle, no model)   : 4.11
+P_idle  (model loaded, idle)      : 4.17
+P_active(during inference)        : 9.17
+------------------------------------------------------------
+Model static overhead (P_idle-P_sys)   : 0.07 W
+Dynamic inference cost(P_active-P_idle): 4.99 W
+
+============================================================
+ENERGY PER QUERY (Joules)
+============================================================
+Total (incl. idle floor) : 7.95 ± 3.56 J   (n=30)
+Net of idle (dynamic)    : 4.48 ± 2.01 J
+
+============================================================
+DUTY CYCLE & BATTERY (100.0 Wh pack)
+============================================================
+Assumption: 10 queries/hr, 1.84s each
+Average power (realistic) : 4.20 W
+Battery — continuous      : 10.9 h   (always inferring @P_active)
+Battery — realistic       : 23.8 h
+jetson@jetson-desktop:~$
+
+3.2  Printout of the FIXED analyzer, run on a Windows PC with the same capture files that are in the repo folder (power_log.txt, markers.csv)
+  USED FOR Table 13. Note the analyzer's own self-check lines at the end of the energy block.
+----------------------------------------------------------------------------------------------------
+3.2 analyze_energy.py, fixed version   [raw lines 664-692]
+----------------------------------------------------------------------------------------------------
+C:\Users\21266\Desktop\jetson>python analyze_energy.py
+============================================================
+POWER (W)
+============================================================
+P_sys   (system idle, no model)   : 4.11
+P_idle  (model loaded, idle)      : 4.14
+P_active(during inference, mean)  : 9.60
+------------------------------------------------------------
+Model static overhead (P_idle-P_sys)   : 0.03 W
+Dynamic inference cost(P_active-P_idle): 5.46 W
+
+============================================================
+ENERGY PER QUERY (Joules)
+============================================================
+Total (incl. idle floor) : 15.80 ± 0.41 J   (n=30)
+Net of idle (dynamic)    : 8.67 ± 0.22 J
+------------------------------------------------------------
+Self-check (should agree to ~5%):
+  mean inference duration        : 1.84 s
+  E_total  vs  P_active*t        : 15.80  vs  17.62 J
+  E_net    vs  (P_act-P_idle)*t  : 8.67  vs  10.02 J
+
+============================================================
+DUTY CYCLE & BATTERY (100.0 Wh pack)
+============================================================
+Assumption: 10 queries/hr, 1.84s each
+Average power (realistic) : 4.17 W
+Battery — continuous      : 10.4 h   (always inferring @P_active)
+Battery — realistic       : 24.0 h
+
+3.3  DERIVED - exact-window re-analysis of power_log.txt + markers.csv with analyze_energy_v3.py v3.1
+     (not part of the raw console; reproduce with: python analyze_energy_v3.py --log power_log.txt --markers markers.csv)
+  clock alignment             : log is -1.00 h from epoch time (residual 0.72 s)
+  query window                : 1.836 +- 0.0074 s (n=30), followed by 1.0 s rest
+  power (W)                   : P_sys 4.11 | P_idle 4.14 | P_active 9.60     (matches section 3.2)
+  total energy, exact window  : 16.62 +- 0.16 J   (idle floor included)
+  net above idle, window      : 9.02 +- 0.15 J
+  net above idle, next second : 2.02 +- 0.08 J
+  net above idle, window+rest : 11.04 +- 0.16 J
+  net above idle, complete    : 11.29 J   (extrapolated with a 0.42 s decay; an estimate)
+  illustrative battery        : 24.0 h at 10 queries/h; 10.4 h continuous (100 Wh pack)
+  input checksums (sha256)    : power_log.txt 3d4a55cf83977ced...  markers.csv 1cbd761936d075dc...
+
+  How 3.2 and 3.3 relate: the fixed analyzer's total (15.80 J) and net (8.67 J) are lower than the exact-window
+  values (16.62 J, 9.02 J) because it sums only the samples inside each window (about 1.72 s of the 1.84 s marked
+  window); its own self-check at the end of section 3.2 reports the same shortfall (15.80 vs 17.62 J = P_active x t).
+  Power also stays above idle for more than a second after each window, so the net energy of a complete query is larger still.
+
+====================================================================================================
+4. KNOWN LIMITS OF THIS RECORD
+====================================================================================================
+  - Output token counts were not recorded; max_new_tokens (30, 64) is a limit, not the generated length.
+  - Latency (live camera frames, both tasks) and energy (one fixed frame, caption task) are separate protocols.
+  - Energy rests on one capture of 30 queries. The memory and latency measurements are repeated (2 and 3 runs).
+  - The script versions that produced sections 1.3 and 1.4 are not yet in the repository.
+  - tegrastats timestamps have one-second resolution; sub-second times are reconstructed by spreading samples evenly.
