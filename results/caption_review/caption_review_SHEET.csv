@@ -1,0 +1,101 @@
+row,image_file,image_id,stratum,batch,caption_A,A_hallucination,A_missed_safety_detail,A_relevant,caption_B,B_hallucination,B_missed_safety_detail,B_relevant,notes
+1,VizWiz_val_00005633.jpg,29064,short,1,A green bottle of Fairy original dish soap.,0,0,1,a bottle of fairy original dishwashing liquid,0,0,1,
+2,VizWiz_val_00003910.jpg,27341,random,1,A small white plastic cup with a lid on it.,0,0,1,small white cup,0,0,1,A gives more details
+3,VizWiz_val_00002235.jpg,25666,random,1,Quality issues are too severe to recognize visual content.,0,NA,0,unanswerable,0,NA,0,
+4,VizWiz_val_00003407.jpg,26838,random,1,A cat sitting on a couch next to a keyboard.,0,NA,1,A cat is sitting on a person's lap and looking up.,0,NA,1,"no legible text, identifier, or hazard in the image"
+5,VizWiz_val_00004996.jpg,28427,text,1,a side dish of creamy mashed potatoes,0,0,1,A package of frozen food is on a black table.,1,1,0,
+6,VizWiz_val_00004014.jpg,27445,short,1,A hand holding a package of ramen noodles.,0,0,1,unanswerable,0,1,0,
+7,VizWiz_val_00005344.jpg,28775,random,1,a can of coca cola 0 is being held in a hand.,0,0,1,A can of Coca-Cola zero is held in someone's hand.,0,0,1,
+8,VizWiz_val_00005973.jpg,29404,random,1,black purse on floor,0,NA,1,A black purse is on the floor next to a walker.,0,NA,1,
+9,VizWiz_val_00004513.jpg,27944,random,1,computer screen,0,1,1,A computer screen with a message about startup repair.,0,0,1,
+10,VizWiz_val_00000427.jpg,23858,random,1,computer screen showing installing windows,0,0,1,A computer screen is showing a window with a message.,0,1,1,
+11,VizWiz_val_00004850.jpg,28281,short,1,yogurt,0,1,1,A person is holding a cup of yogurt.,0,1,1,
+12,VizWiz_val_00006070.jpg,29501,short,1,A computer screen with a captcha on it.,0,1,1,a computer screen with the words road less travelled on it,0,0,1,
+13,VizWiz_val_00003005.jpg,26436,short,1,unanswerable,0,NA,0,A white truck is parked in a driveway.,0,NA,1,no legible text/identifier/hazard present
+14,VizWiz_val_00005399.jpg,28830,random,1,an empty bottle of apple cider flower juice,1,1,1,A glass bottle of apple cider is on a white surface.,1,1,1,
+15,VizWiz_val_00001823.jpg,25254,random,1,A pink water bottle with a blue top is sitting on a white table.,0,NA,1,pink water bottle,0,NA,1,
+16,VizWiz_val_00007459.jpg,30890,random,1,A lighted Halloween decoration is next to a bag of pretzels.,1,1,1,witch light up decoration,0,1,1,
+17,VizWiz_val_00004816.jpg,28247,random,1,a blue screen with a reflection of a building,1,NA,1,Quality issues are too severe to recognize visual content.,0,NA,0,
+18,VizWiz_val_00002810.jpg,26241,text,1,unanswerable,0,NA,0,A hand holding a bag of banana chips in a hotel room.,1,NA,1,
+19,VizWiz_val_00003050.jpg,26481,text,1,A computer screen is displaying a Microsoft logo.,0,0,1,computer screen,0,1,1,
+20,VizWiz_val_00006374.jpg,29805,random,1,a person standing on a scale that reads 101.0,1,0,1,A person is standing on a scale in the bathroom.,0,1,1,"A: attempts to capture the legible number, even if inaccurately"
+21,VizWiz_val_00002448.jpg,25879,random,1,A black and gold shirt with a blue purse next to it.,1,1,1,unanswerable,0,1,0,
+22,VizWiz_val_00002460.jpg,25891,random,1,A green bottle of soda is on a table.,0,1,1,mountain dew bottle on a table,0,0,1,
+23,VizWiz_val_00006094.jpg,29525,text,1,A bottle of Pepsi is on top of a table.,1,1,1,empty bottle pepsi,0,1,1,
+24,VizWiz_val_00003235.jpg,26666,random,1,A row of brick houses with a blue sky and white clouds above them.,0,NA,1,A row of brick houses with a blue trash can in front of one of them.,0,NA,1,
+25,VizWiz_val_00001572.jpg,25003,random,1,A black and red lighter is on a black counter.,1,1,1,unanswerable,0,1,0,
+26,VizWiz_val_00003548.jpg,26979,random,1,green plastic,0,NA,1,A green object is on a black table.,0,NA,1,
+27,VizWiz_val_00005186.jpg,28617,random,1,salt shaker,0,NA,1,A glass salt shaker with a silver top and a picture of a man in a cowboy hat on the side.,1,NA,1,
+28,VizWiz_val_00000132.jpg,23563,text,1,computer screen showing a message that says restoration complete.,0,1,1,"A computer screen with a message that says ""restoration complete"".",0,1,1,
+29,VizWiz_val_00005420.jpg,28851,text,1,A round label with the words donut shop on it.,0,1,1,donut shop coffee k cup on wooden table,0,0,1,
+30,VizWiz_val_00002324.jpg,25755,text,1,can,0,1,1,A can of food is on top of a table.,1,1,1,
+31,VizWiz_val_00006595.jpg,30026,random,1,A tile floor with a white wall in the background.,0,NA,1,this picture is clicked outside. In the foreground we can see the floor and the wall. In the background we can see the sky.,0,NA,1,
+32,VizWiz_val_00005437.jpg,28868,text,1,vanilla jello,0,0,1,A person is holding a box of vanilla Jello.,0,0,1,
+33,VizWiz_val_00001971.jpg,25402,random,1,Quality issues are too severe to recognize visual content.,0,NA,0,unanswerable,0,NA,0,
+34,VizWiz_val_00007249.jpg,30680,short,1,A white background with red text on it.,0,1,1,unanswerable,0,1,0,
+35,VizWiz_val_00005325.jpg,28756,random,1,Quality issues are too severe to recognize visual content.,0,NA,0,unanswerable,0,NA,0,
+36,VizWiz_val_00001716.jpg,25147,random,1,A Samsung phone is on a wooden table.,0,0,1,black samsung phone on wooden table,0,0,1,
+37,VizWiz_val_00000201.jpg,23632,random,1,a weather forecast for the next seven days.,0,1,1,A TV screen showing the seven day forecast.,0,1,1,
+38,VizWiz_val_00004472.jpg,27903,short,1,thermostat that reads 68 degrees on it,0,0,1,A white Luxpro thermostat with a digital display.,0,1,1,
+39,VizWiz_val_00003341.jpg,26772,random,1,A drawing of a wheel with a light shining on it.,1,NA,1,A drawing of a mechanical device with a light shining on it.,0,NA,1,
+40,VizWiz_val_00001199.jpg,24630,random,1,honeywell thermostat set to 72 degrees,0,0,1,A white thermostat on a white wall set to 72 degrees.,0,1,1,"technically omits the brand, though the more critical reading is captured (72)"
+41,VizWiz_val_00002885.jpg,26316,random,1,Quality issues are too severe to recognize visual content.,0,NA,0,yellow fabric,0,NA,1,
+42,VizWiz_val_00005979.jpg,29410,random,1,A package of yogurt with strawberries on it.,0,1,1,a person is holding a package of con fruta.,0,1,1,omits the expiration date and storage temperature
+43,VizWiz_val_00005514.jpg,28945,random,1,keyboard,0,NA,1,A silver and white keyboard on a wooden table.,0,NA,1,
+44,VizWiz_val_00001511.jpg,24942,text,1,unanswerable,1,1,1,A person is holding a bottle of lotion in a kitchen.,0,1,0,
+45,VizWiz_val_00006448.jpg,29879,short,1,black shoes on wooden floor,0,1,1,A person wearing black shorts and black shoes.,0,1,1,
+46,VizWiz_val_00005575.jpg,29006,random,1,unanswerable,0,1,0,A can of food is on top of a table.,1,1,1,
+47,VizWiz_val_00003803.jpg,27234,short,1,black white striped fabric,1,NA,1,A black and yellow striped fabric is shown.,0,NA,1,
+48,VizWiz_val_00002243.jpg,25674,text,1,A dog is curled up on a purple pillow.,0,NA,1,A dog is laying on a pillow on the floor.,0,NA,1,
+49,VizWiz_val_00001465.jpg,24896,short,1,A red jersey with black lettering on it.,0,1,1,a red jersey with the word heat on it,0,0,1,
+50,VizWiz_val_00001032.jpg,24463,random,1,A computer screen with a window open with a picture of a man on it.,1,1,1,computer screen,0,1,1,
+51,VizWiz_val_00005335.jpg,28766,short,2,unanswerable,0,1,0,A box of pasta is on the counter.,1,1,1,
+52,VizWiz_val_00002308.jpg,25739,random,2,A green leaf is laying on a brown surface.,0,NA,1,A green leaf on a brown surface.,0,NA,1,
+53,VizWiz_val_00003675.jpg,27106,random,2,"A close up of a frozen dinner with mashed potatoes, peas and turkey.",0,NA,1,"A box of food with mashed potatoes, peas and meat.",0,NA,1,
+54,VizWiz_val_00002344.jpg,25775,short,2,cd,0,1,1,A CD case of the music Jukebox Blues.,0,0,1,"A: omits the legible album title ""Jukebox Blues"""
+55,VizWiz_val_00001615.jpg,25046,random,2,unanswerable,0,NA,0,Quality issues are too severe to recognize visual content.,0,NA,0,
+56,VizWiz_val_00006756.jpg,30187,random,2,A person is holding a box of food in their hand.,0,1,1,unanswerable,0,1,0,both omits a legible text Fresh Box for Baking
+57,VizWiz_val_00006351.jpg,29782,random,2,A person wearing a blue shirt with a logo on it.,1,NA,1,blue shirt,0,NA,1,
+58,VizWiz_val_00000481.jpg,23912,random,2,a laptop computer with a screen that says oyster.com,1,0,1,A laptop computer with a white screen and black keyboard.,0,1,1,
+59,VizWiz_val_00004712.jpg,28143,random,2,Quality issues are too severe to recognize visual content.,0,NA,0,unanswerable,0,NA,0,
+60,VizWiz_val_00007737.jpg,31168,random,2,a book with a pink object on the cover is on a wooden table.,0,1,1,A book with a black and white cover and pink text.,0,1,1,
+61,VizWiz_val_00002824.jpg,26255,text,2,A computer screen is displaying a blue screen.,0,NA,1,blue,0,NA,0,
+62,VizWiz_val_00007438.jpg,30869,random,2,unanswerable,0,1,0,A can of sweet corn is on a counter.,0,0,1,"B: captures the key legible content — ""sweet corn"""
+63,VizWiz_val_00000278.jpg,23709,text,2,a computer screen is open to a startup repair window.,0,1,1,A computer screen with a startup repair window open.,0,1,1,"Both omits additional legible details like ""No changes will be made to your personal files"" and the secondary popup text"
+64,VizWiz_val_00002512.jpg,25943,random,2,A tarot card is laying on a wooden table.,0,1,1,unanswerable,0,1,0,"Both omits the legible card label ""NINE"""
+65,VizWiz_val_00005654.jpg,29085,short,2,a canon scanner is on a table.,0,0,1,A Canon scanner is sitting on a counter.,0,0,1,"both captures the legible brand ""Canon"""
+66,VizWiz_val_00005082.jpg,28513,random,2,A black leather office chair with a black armrest.,0,NA,1,A black chair with a torn seat.,0,NA,1,
+67,VizWiz_val_00005012.jpg,28443,text,2,A bottle of hand soap is on the counter.,1,NA,1,unanswerable,0,NA,0,
+68,VizWiz_val_00000702.jpg,24133,text,2,A person is holding a white card with black text.,0,NA,1,unanswerable,0,NA,0,
+69,VizWiz_val_00005623.jpg,29054,random,2,A can of Campbell's cream of mushroom soup.,0,0,1,a can of campbells cream mushroom soup.,0,0,1,
+70,VizWiz_val_00000892.jpg,24323,random,2,computer screen,0,1,1,A computer screen with a blue background and a white box with a red x in the middle of it.,0,1,1,
+71,VizWiz_val_00000144.jpg,23575,text,2,a computer screen with a warning that the computer is at risk.,0,0,1,A computer screen with a warning message on it.,0,1,1,"A captures the legible warning content — ""computer is at risk"""
+72,VizWiz_val_00000456.jpg,23887,text,2,a blurry receipt with numbers on it,0,NA,1,A receipt is on a wooden table and is white in color.,0,NA,1,
+73,VizWiz_val_00005740.jpg,29171,random,2,Quality issues are too severe to recognize visual content.,0,NA,0,unanswerable,0,NA,0,
+74,VizWiz_val_00000487.jpg,23918,random,2,unanswerable,0,1,0,A can of potato chips is next to a laptop.,0,0,1,
+75,VizWiz_val_00002002.jpg,25433,random,2,A person is holding a black piece of fabric with the word SPORT on it.,0,0,1,sport,0,0,1,
+76,VizWiz_val_00006358.jpg,29789,random,2,Quality issues are too severe to recognize visual content.,0,NA,0,unanswerable,0,NA,0,
+77,VizWiz_val_00001294.jpg,24725,text,2,A magazine with a cartoon of Santa and a woman on the cover.,0,1,1,a magazine with a cartoon of santa on it says merry christmas.,0,0,1,"B captures the legible ""Merry Christmas"" text"
+78,VizWiz_val_00001631.jpg,25062,text,2,A can of soda is on top of a table.,1,NA,1,unanswerable,0,NA,0,"A claims ""can of soda"" — this is inaccurate; the object is a cane, not a beverage can"
+79,VizWiz_val_00003555.jpg,26986,random,2,A bottle of some sort of liquid is on a table.,0,NA,1,unanswerable,0,NA,0,
+80,VizWiz_val_00000808.jpg,24239,random,2,A computer screen with a blue background and various icons.,0,NA,1,unanswerable,0,NA,0,
+81,VizWiz_val_00004923.jpg,28354,text,2,Two cans of Campbell's Select Harvest soup on a white counter.,0,0,1,canned soup on top white counter,0,1,1,"B omits the legible brand ""Campbell's"" and product name ""Select Harvest,"" just says ""canned soup"" generically"
+82,VizWiz_val_00004017.jpg,27448,short,2,A can of extra dry extra sweet Aspartame.,1,1,1,unanswerable,0,1,0,
+83,VizWiz_val_00004933.jpg,28364,random,2,coffee table,0,1,1,A living room with a coffee table with a box of cookies on it.,1,1,1,"B claims ""box of cookies"" — this specific identification isn't clearly supported; the box appears more likely to be a household/cleaning product based on its packaging style"
+84,VizWiz_val_00001655.jpg,25086,random,2,Quality issues are too severe to recognize visual content.,0,NA,0,blue,1,NA,0,"B  the image is a blue-to-teal/green gradient, not uniformly blue"
+85,VizWiz_val_00000399.jpg,23830,random,2,A computer monitor is displaying a message on the screen.,0,1,1,computer screen,0,1,1,"both omits the legible brand ""Dell"" and the specific message content"
+86,VizWiz_val_00004108.jpg,27539,random,2,bottle,0,1,1,A bottle of heart health supplement is on a counter.,0,0,1,"A omits all legible text — ""Oil,"" ""Heart Health"""
+87,VizWiz_val_00006764.jpg,30195,text,2,unanswerable,0,NA,0,A box of medicine is on a wooden table.,0,NA,1,
+88,VizWiz_val_00005015.jpg,28446,random,2,a box of betty crocker bowl garlic crackers,1,0,1,A box of Betty Crocker brand bowl mix.,1,0,1,
+89,VizWiz_val_00001044.jpg,24475,random,2,A piece of paper is on a placemat.,0,NA,1,unanswerable,0,NA,0,
+90,VizWiz_val_00007687.jpg,31118,short,2,zebra print,0,NA,1,A zebra print blanket is on the bed.,1,NA,1,"B (claims ""blanket"" and ""on the bed"" — this specific context isn't supported by the extreme close-up crop; could be a shirt, blanket, cushion, or other fabric item, and no bed is visible"
+91,VizWiz_val_00003295.jpg,26726,random,2,A living room with a couch and a bookshelf.,0,NA,1,A living room with a brown couch and a bookshelf.,0,NA,1,
+92,VizWiz_val_00004613.jpg,28044,short,2,the word richmond is on a brown background,0,0,1,A close up of a logo for Richmond.,0,0,1,
+93,VizWiz_val_00002698.jpg,26129,random,2,storm clouds in sky over trees,0,NA,1,A cloudy sky with a few trees and a street light.,0,NA,1,
+94,VizWiz_val_00006631.jpg,30062,short,2,unanswerable,0,NA,0,A red chair is on a grey carpet.,0,NA,1,
+95,VizWiz_val_00003746.jpg,27177,random,2,unanswerable,0,1,0,A box of a frozen dinner is on a table.,0,1,1,
+96,VizWiz_val_00003661.jpg,27092,random,2,maple brown sugar instant oatmeal,0,1,1,A box of Quaker instant oatmeal with maple and brown sugar flavor.,0,0,1,"A omits the legible brand name ""Quaker"""
+97,VizWiz_val_00000743.jpg,24174,random,2,macbook air laptop computer on desk,0,0,1,A laptop computer is open and has a black screen.,0,1,1,"B omits the legible ""MacBook Air"" branding and doesn't mention the visible boot menu text"
+98,VizWiz_val_00006079.jpg,29510,short,2,A person is holding a package of food.,0,1,1,a hand holding a bag of alberts sweet sour chicken,1,1,1,"B misreads the brand as ""Alberts"" — it's clearly ""Amoy,"" and it's a sauce packet, not ""chicken"" itself — the chicken is just part of the recipe suggestion"
+99,VizWiz_val_00004306.jpg,27737,short,2,A green fabric is on a blue carpet.,0,NA,1,green cloth,0,NA,1,
+100,VizWiz_val_00006451.jpg,29882,short,2,A person's head with short hair is shown.,0,NA,1,back head,0,NA,1,
