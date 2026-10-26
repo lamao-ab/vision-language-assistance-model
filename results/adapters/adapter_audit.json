@@ -1,0 +1,200 @@
+[
+  {
+    "run": "drive/MyDrive/VLMs/outputs/lora_seed7_rank8/final_adapter",
+    "n_tensors": 414,
+    "params": 11298816,
+    "params_by_component": {
+      "decoder": 9805824,
+      "vision": 1492992
+    },
+    "dtypes": {
+      "F32": 414
+    },
+    "modules_by_component": {
+      "decoder": 126,
+      "vision": 81
+    },
+    "config": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "v_proj",
+        "gate_proj",
+        "o_proj",
+        "up_proj",
+        "q_proj",
+        "k_proj",
+        "down_proj"
+      ],
+      "base_model_name_or_path": "google/paligemma-3b-mix-224",
+      "peft_type": "LORA",
+      "task_type": "CAUSAL_LM"
+    }
+  },
+  {
+    "run": "drive/MyDrive/VLMs/outputs/lora_seed42_rank8/final_adapter",
+    "n_tensors": 414,
+    "params": 11298816,
+    "params_by_component": {
+      "decoder": 9805824,
+      "vision": 1492992
+    },
+    "dtypes": {
+      "F32": 414
+    },
+    "modules_by_component": {
+      "decoder": 126,
+      "vision": 81
+    },
+    "config": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "v_proj",
+        "k_proj",
+        "o_proj",
+        "up_proj",
+        "down_proj",
+        "gate_proj"
+      ],
+      "base_model_name_or_path": "google/paligemma-3b-mix-224",
+      "peft_type": "LORA",
+      "task_type": "CAUSAL_LM"
+    }
+  },
+  {
+    "run": "drive/MyDrive/VLMs/outputs/lora_seed_123_rank_8/final_adapter",
+    "n_tensors": 414,
+    "params": 11298816,
+    "params_by_component": {
+      "decoder": 9805824,
+      "vision": 1492992
+    },
+    "dtypes": {
+      "F32": 414
+    },
+    "modules_by_component": {
+      "decoder": 126,
+      "vision": 81
+    },
+    "config": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "o_proj",
+        "up_proj",
+        "k_proj",
+        "down_proj",
+        "gate_proj",
+        "v_proj",
+        "q_proj"
+      ],
+      "base_model_name_or_path": "google/paligemma-3b-mix-224",
+      "peft_type": "LORA",
+      "task_type": "CAUSAL_LM"
+    }
+  },
+  {
+    "run": "drive/MyDrive/VLMs/qoutputs/qlora_seed_7_rank_8/final_adapter",
+    "n_tensors": 414,
+    "params": 11298816,
+    "params_by_component": {
+      "decoder": 9805824,
+      "vision": 1492992
+    },
+    "dtypes": {
+      "F32": 414
+    },
+    "modules_by_component": {
+      "decoder": 126,
+      "vision": 81
+    },
+    "config": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "o_proj",
+        "q_proj",
+        "gate_proj",
+        "down_proj",
+        "up_proj",
+        "k_proj",
+        "v_proj"
+      ],
+      "base_model_name_or_path": "google/paligemma-3b-mix-224",
+      "peft_type": "LORA",
+      "task_type": "CAUSAL_LM"
+    }
+  },
+  {
+    "run": "drive/MyDrive/VLMs/qoutputs/qlora_seed_42_rank_8/final_adapter",
+    "n_tensors": 414,
+    "params": 11298816,
+    "params_by_component": {
+      "decoder": 9805824,
+      "vision": 1492992
+    },
+    "dtypes": {
+      "F32": 414
+    },
+    "modules_by_component": {
+      "decoder": 126,
+      "vision": 81
+    },
+    "config": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "up_proj",
+        "q_proj",
+        "down_proj",
+        "o_proj",
+        "v_proj",
+        "k_proj",
+        "gate_proj"
+      ],
+      "base_model_name_or_path": "google/paligemma-3b-mix-224",
+      "peft_type": "LORA",
+      "task_type": "CAUSAL_LM"
+    }
+  },
+  {
+    "run": "drive/MyDrive/VLMs/qoutputs/qlora_seed_123_rank_8/final_adapter",
+    "n_tensors": 414,
+    "params": 11298816,
+    "params_by_component": {
+      "decoder": 9805824,
+      "vision": 1492992
+    },
+    "dtypes": {
+      "F32": 414
+    },
+    "modules_by_component": {
+      "decoder": 126,
+      "vision": 81
+    },
+    "config": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "gate_proj",
+        "o_proj",
+        "up_proj",
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "down_proj"
+      ],
+      "base_model_name_or_path": "google/paligemma-3b-mix-224",
+      "peft_type": "LORA",
+      "task_type": "CAUSAL_LM"
+    }
+  }
+]
