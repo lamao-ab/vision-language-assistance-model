@@ -1,0 +1,125 @@
+{
+  "val_images": 7750,
+  "matched_uniquely": 7536,
+  "ambiguous": 22,
+  "unmatched": 192,
+  "by_csv_family": {
+    "VizWiz_test": {
+      "n": 4,
+      "most_common_offset": 16312,
+      "share_with_that_offset": 0.25,
+      "spearman_released_vs_csv": 1.0,
+      "csv_number_range": [
+        20631,
+        23477
+      ],
+      "released_index_range": [
+        4319,
+        4322
+      ]
+    },
+    "VizWiz_train": {
+      "n": 19,
+      "most_common_offset": -3706,
+      "share_with_that_offset": 0.0526,
+      "spearman_released_vs_csv": 1.0,
+      "csv_number_range": [
+        617,
+        19931
+      ],
+      "released_index_range": [
+        4323,
+        4342
+      ]
+    },
+    "VizWiz_v2": {
+      "n": 4419,
+      "most_common_offset": 40163,
+      "share_with_that_offset": 0.0025,
+      "spearman_released_vs_csv": -0.1224,
+      "csv_number_range": [
+        31175,
+        44710
+      ],
+      "released_index_range": [
+        0,
+        7749
+      ]
+    },
+    "VizWiz_val": {
+      "n": 3094,
+      "most_common_offset": 26841,
+      "share_with_that_offset": 0.2288,
+      "spearman_released_vs_csv": 0.9994,
+      "csv_number_range": [
+        28000,
+        31172
+      ],
+      "released_index_range": [
+        1163,
+        4344
+      ]
+    }
+  },
+  "text_flag_agreement_under_TRUE_val_mapping": 1.0,
+  "val_json_text_detected_share": 0.6475,
+  "csv_text_votes_ge3_share_all_images": 0.6333,
+  "test_json_image_keys": [
+    "file_name",
+    "id",
+    "text_detected",
+    "vizwiz_url"
+  ],
+  "test_json_text_detected_share": 0.6366,
+  "csv_test_text_votes_ge3_share": 0.6359,
+  "first_pairs": [
+    [
+      "VizWiz_val_00000000.jpg",
+      "VizWiz_v2_000000038656.jpg"
+    ],
+    [
+      "VizWiz_val_00000001.jpg",
+      "VizWiz_v2_000000038659.jpg"
+    ],
+    [
+      "VizWiz_val_00000002.jpg",
+      "VizWiz_v2_000000038661.jpg"
+    ],
+    [
+      "VizWiz_val_00000003.jpg",
+      "VizWiz_v2_000000038663.jpg"
+    ],
+    [
+      "VizWiz_val_00000004.jpg",
+      "VizWiz_v2_000000038664.jpg"
+    ],
+    [
+      "VizWiz_val_00000005.jpg",
+      "VizWiz_v2_000000038665.jpg"
+    ],
+    [
+      "VizWiz_val_00000007.jpg",
+      "VizWiz_v2_000000038668.jpg"
+    ],
+    [
+      "VizWiz_val_00000008.jpg",
+      "VizWiz_v2_000000038673.jpg"
+    ],
+    [
+      "VizWiz_val_00000009.jpg",
+      "VizWiz_v2_000000038675.jpg"
+    ],
+    [
+      "VizWiz_val_00000010.jpg",
+      "VizWiz_v2_000000038678.jpg"
+    ],
+    [
+      "VizWiz_val_00000011.jpg",
+      "VizWiz_v2_000000038681.jpg"
+    ],
+    [
+      "VizWiz_val_00000012.jpg",
+      "VizWiz_v2_000000038683.jpg"
+    ]
+  ]
+}
