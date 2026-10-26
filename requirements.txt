@@ -7,10 +7,7 @@
 #        --index-url https://download.pytorch.org/whl/cu128
 #    pip install -r requirements_original.txt
 #
-#  NOTE: This pins the environment that TRAINED the original models. The
-#  original *caption metrics* were computed with a non-official scorer
-#  (missing PTBTokenizer) and are understated; re-score with the official
-#  pipeline (pycocoevalcap + PTBTokenizer) regardless of this environment.
+
 # ════════════════════════════════════════════════════════════════════
 
 # ── Core numerics ───────────────────────────────────────────────────────────
