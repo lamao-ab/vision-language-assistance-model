@@ -1,1 +1,153 @@
-
+{
+  "images": 100,
+  "strata": {
+    "random": 60,
+    "short": 20,
+    "text": 20
+  },
+  "ab_positions": {
+    "A=base,B=lora": 51,
+    "A=lora,B=base": 49
+  },
+  "rates": {
+    "relevant": {
+      "base": {
+        "k": 69,
+        "n": 100,
+        "pct": 69.0,
+        "wilson95": [
+          59.4,
+          77.2
+        ]
+      },
+      "lora": {
+        "k": 88,
+        "n": 100,
+        "pct": 88.0,
+        "wilson95": [
+          80.2,
+          93.0
+        ]
+      }
+    },
+    "hallucination": {
+      "base": {
+        "k": 10,
+        "n": 100,
+        "pct": 10.0,
+        "wilson95": [
+          5.5,
+          17.4
+        ]
+      },
+      "lora": {
+        "k": 19,
+        "n": 100,
+        "pct": 19.0,
+        "wilson95": [
+          12.5,
+          27.8
+        ]
+      }
+    },
+    "missed_safety_detail": {
+      "base": {
+        "k": 35,
+        "n": 58,
+        "pct": 60.3,
+        "wilson95": [
+          47.5,
+          71.9
+        ]
+      },
+      "lora": {
+        "k": 39,
+        "n": 58,
+        "pct": 67.2,
+        "wilson95": [
+          54.4,
+          77.9
+        ]
+      }
+    }
+  },
+  "paired": {
+    "relevant": {
+      "n": 100,
+      "lora_minus_base_pts": 19.0,
+      "bootstrap95": [
+        10.0,
+        28.0
+      ],
+      "discordant_lora_only": 23,
+      "discordant_base_only": 4,
+      "exact_mcnemar_p": 0.0003
+    },
+    "hallucination": {
+      "n": 100,
+      "lora_minus_base_pts": 9.0,
+      "bootstrap95": [
+        -0.0,
+        19.0
+      ],
+      "discordant_lora_only": 17,
+      "discordant_base_only": 8,
+      "exact_mcnemar_p": 0.1078
+    },
+    "missed_safety_detail": {
+      "n": 58,
+      "lora_minus_base_pts": 6.9,
+      "bootstrap95": [
+        -8.6,
+        22.4
+      ],
+      "discordant_lora_only": 13,
+      "discordant_base_only": 9,
+      "exact_mcnemar_p": 0.5235
+    }
+  },
+  "by_stratum": {
+    "random": {
+      "relevant": {
+        "lora": "50/60",
+        "base": "41/60"
+      },
+      "hallucination": {
+        "lora": "10/60",
+        "base": "7/60"
+      },
+      "missed_safety_detail": {
+        "lora": "21/32",
+        "base": "20/32"
+      }
+    },
+    "short": {
+      "relevant": {
+        "lora": "20/20",
+        "base": "14/20"
+      },
+      "hallucination": {
+        "lora": "3/20",
+        "base": "2/20"
+      },
+      "missed_safety_detail": {
+        "lora": "9/14",
+        "base": "8/14"
+      }
+    },
+    "text": {
+      "relevant": {
+        "lora": "18/20",
+        "base": "14/20"
+      },
+      "hallucination": {
+        "lora": "6/20",
+        "base": "1/20"
+      },
+      "missed_safety_detail": {
+        "lora": "9/12",
+        "base": "7/12"
+      }
+    }
+  }
+}
