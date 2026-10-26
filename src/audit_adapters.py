@@ -18,7 +18,7 @@ Usage
              drive/MyDrive/VLMs/outputs/qlora_seed7_rank8/final_adapter \
              drive/MyDrive/VLMs/outputs/qlora_seed42_rank8/final_adapter \
              drive/MyDrive/VLMs/outputs/qlora_seed123_rank8/final_adapter \
-      --out results/adapter_audit.json
+      --out results/adapter_audit.json --tensors_csv results/adapter_tensors.csv
 """
 import argparse
 import collections
@@ -49,13 +49,15 @@ def audit(run_dir):
     header = read_header(st)
     numel = lambda shape: int(__import__("math").prod(shape)) if shape else 1
 
-    out = {"run": run_dir, "n_tensors": len(header), "params": 0,
+    out = {"run": run_dir, "n_tensors": len(header), "params": 0, "_rows": [],
            "params_by_component": collections.Counter(),
            "dtypes": collections.Counter(), "modules_by_component": collections.defaultdict(set)}
     for key, meta in header.items():
         n = numel(meta["shape"])
         c = component(key)
         out["params"] += n
+        out["_rows"].append({"run": run_dir, "key": key, "shape": "x".join(map(str, meta["shape"])),
+                             "dtype": meta["dtype"], "numel": n, "component": c})
         out["params_by_component"][c] += n
         out["dtypes"][meta["dtype"]] += 1
         if ".lora_A." in key:
@@ -78,6 +80,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", nargs="+", required=True, help="final_adapter directories")
     ap.add_argument("--out", default="results/adapter_audit.json")
+    ap.add_argument("--tensors_csv", default="results/adapter_tensors.csv",
+                    help="one row per adapter tensor of every run: key, shape, dtype, numel, component")
     args = ap.parse_args()
 
     results = [audit(r) for r in args.runs]
@@ -87,9 +91,14 @@ def main():
         print(f"{os.path.basename(os.path.dirname(r['run'])):<58}{r['n_tensors']:>8}{r['params']:>13,}"
               f"{c.get('decoder', 0):>11,}{c.get('vision', 0):>10,}  {r['dtypes']}")
 
+    import csv
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
+    rows = [row for r in results for row in r.pop("_rows")]
+    with open(args.tensors_csv, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["run", "key", "shape", "dtype", "numel", "component"])
+        w.writeheader(); w.writerows(rows)
     json.dump(results, open(args.out, "w"), indent=2)
-    print("\nsaved ->", args.out)
+    print("\nsaved ->", args.out, "and", args.tensors_csv, f"({len(rows)} tensor rows)")
 
 
 if __name__ == "__main__":
