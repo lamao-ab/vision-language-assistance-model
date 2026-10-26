@@ -15,6 +15,10 @@ Keep the partitions DISJOINT. If an internal development split is carved from th
 list the REMAINING training images as the training partition (a "list" file), otherwise the
 development images are reported as shared with training by construction.
 
+The leakage summary separates two kinds of overlap: the SAME file listed in another partition
+(expected when the two tasks share images, e.g. a VQA image that is also a caption image) and
+identical content under a DIFFERENT file name (a duplicate photograph, the real leakage signal).
+
 It then prints a leakage summary: for each EVALUATION partition (--eval), how many of its
 images also occur in any non-evaluation partition (training or development) of either task.
 It makes no claim beyond what it counts.
@@ -166,14 +170,22 @@ def main():
     leak = {}
     for e in args.eval:
         others = [p for p in parts if p not in args.eval]
-        eval_hash = set(sha[e].values())
-        in_other = set()
-        for o in others:
-            in_other |= eval_hash & set(sha[o].values())
+        same_file, diff_name, in_other = set(), set(), set()
+        for n, h in sha[e].items():
+            for o in others:
+                names_with_h = [m for m, hh in sha[o].items() if hh == h]
+                if names_with_h:
+                    in_other.add(n)
+                    if n in names_with_h:
+                        same_file.add(n)          # the SAME file listed in another partition (e.g. a VQA image that is also a caption image)
+                    if any(m != n for m in names_with_h):
+                        diff_name.add(n)          # identical content stored under a DIFFERENT file name
         near_imgs = {(pa if pa == e else pb, na if pa == e else nb) for pa, na, pb, nb, _ in near
                      if (pa == e and pb in others) or (pb == e and pa in others)}
         leak[e] = {"n_images": info[e]["n_hashed"],
                    "identical_content_in_a_non_eval_partition": len(in_other),
+                   "  of which the same file listed in another partition": len(same_file),
+                   "  of which identical content under a different file name": len(diff_name),
                    "near_duplicates_in_a_non_eval_partition": len(near_imgs) if args.phash else None}
 
     out = {"partitions": info, "pairwise": matrix, "evaluation_leakage": leak,
