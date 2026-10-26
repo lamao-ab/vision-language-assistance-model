@@ -1,0 +1,7 @@
+method,seed,rank,alpha,lr,max_length,epochs,global_step,best_val_loss,finished,adapter_folder
+LoRA,7,8,16,0.0002,512,3,3228,1.66734,6/16/2026 16:58,drive/MyDrive/VLMs/outputs/lora/lora_seed7_rank8/final_adapter
+LoRA,42,8,16,0.0002,512,3,3228,1.66507,6/16/2026,drive/MyDrive/VLMs/outputs/lora/lora_seed42_rank8/final_adapter
+LoRA,123,8,16,0.0002,512,3,3228,1.66552,6/16/2026 12:01,drive/MyDrive/VLMs/outputs/lora/lora_seed_123_rank_8/final_adapter
+QLoRA,7,8,16,0.0002,512,3,3228,1.67573,2026-06-22 17:06,drive/MyDrive/VLMs/qoutputs/qlora_seed_7_rank_8/final_adapter
+QLoRA,42,8,16,0.0002,512,3,3228,1.67509,2026-06-22 02:51,drive/MyDrive/VLMs/qoutputs/qlora_seed_42_rank_8/final_adapter
+QLoRA,123,8,16,0.0002,512,3,3228,1.67226,2026-06-22 10:22,drive/MyDrive/VLMs/qoutputs/qlora_seed_123_rank_8/final_adapter
