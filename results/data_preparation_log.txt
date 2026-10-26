@@ -1,0 +1,196 @@
+════════════════════════════════════════════════════════════════════════
+  VizWiz Dataset Builder
+  Train  :  5 captions / image
+  Val    :  3 captions / image
+════════════════════════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════════════════════════
+  Downloading VizWiz Dataset
+════════════════════════════════════════════════════════════════════════
+
+········································································
+    Train Images
+········································································
+    Downloading  train_images.zip ...
+    Progress: 100.0%
+    [+]  Download complete
+    Extracting  train_images.zip ...
+    [+]  Extraction complete
+
+········································································
+    Val Images
+········································································
+    Downloading  val_images.zip ...
+    Progress: 100.0%
+    [+]  Download complete
+    Extracting  val_images.zip ...
+    [+]  Extraction complete
+
+········································································
+    VQA Annotations
+········································································
+    Downloading  vqa_annotations.zip ...
+    Progress: 100.0%
+    [+]  Download complete
+    Extracting  vqa_annotations.zip ...
+    [+]  Extraction complete
+
+········································································
+    Caption Annotations
+········································································
+    Downloading  caption_annotations.zip ...
+    Progress: 100.0%
+    [+]  Download complete
+    Extracting  caption_annotations.zip ...
+    [+]  Extraction complete
+
+────────────────────────────────────────────────────────────────────────
+    [+]  All files downloaded and extracted
+
+════════════════════════════════════════════════════════════════════════
+  Phase 1  —  Train Dataset
+════════════════════════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════════════════════════
+  Processing  TRAIN  Split
+════════════════════════════════════════════════════════════════════════
+    Captions per image              5
+    Indexing images ...
+    [+]  Found 31,704 images
+
+────────────────────────────────────────────────────────────────────────
+  Step 1/2  │  VQA  —  train
+────────────────────────────────────────────────────────────────────────
+    [+]  Annotation file  :  train.json
+    Total questions                 20,523
+
+    Processed                       20,523
+    Skipped                         0
+    Unanswerable                    7,781  (37.9%)
+    [+]  VQA processing complete
+
+────────────────────────────────────────────────────────────────────────
+  Step 2/2  │  Captions  —  train
+────────────────────────────────────────────────────────────────────────
+    [+]  Annotation file  :  train.json
+    Total images                    23,431
+    Total annotations               117,155
+
+    Images processed                23,431
+    Captions per image              5
+    Total processed                 117,155
+    Skipped                         0
+    [+]  Caption processing complete
+
+════════════════════════════════════════════════════════════════════════
+  TRAIN  Dataset Composition
+════════════════════════════════════════════════════════════════════════
+    Total samples                   137,678
+
+    Task                       Count    Share
+    ──────────────────────  ────────  ───────
+    vizwiz_caption           117,155    85.1%
+    vizwiz_vqa                20,523    14.9%
+
+    Caption:VQA ratio               5.7:1
+
+────────────────────────────────────────────────────────────────────────
+    Building HuggingFace Dataset
+────────────────────────────────────────────────────────────────────────
+    [1/3]  Converting to Dataset ...
+    [+]  Done  (0.2 s)
+    [2/3]  Casting features ...
+Casting the dataset: 100% 137678/137678 [00:00<00:00, 1160763.09 examples/s]
+    [+]  Done  (0.0 min)
+    [3/3]  Saving to disk ...
+Saving the dataset (127/127 shards): 100% 137678/137678 [02:53<00:00, 793.89 examples/s] 
+    [+]  Done  (173.5 s)
+    [+]  Metadata saved  →  data/train_dataset
+
+════════════════════════════════════════════════════════════════════════
+  Phase 2  —  Validation Dataset
+════════════════════════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════════════════════════
+  Processing  VAL  Split
+════════════════════════════════════════════════════════════════════════
+    Captions per image              3
+    Indexing images ...
+    [+]  Found 31,704 images
+
+────────────────────────────────────────────────────────────────────────
+  Step 1/2  │  VQA  —  val
+────────────────────────────────────────────────────────────────────────
+    [+]  Annotation file  :  val.json
+    Total questions                 4,319
+
+    Processed                       4,319
+    Skipped                         0
+    Unanswerable                    1,890  (43.8%)
+    [+]  VQA processing complete
+
+────────────────────────────────────────────────────────────────────────
+  Step 2/2  │  Captions  —  val
+────────────────────────────────────────────────────────────────────────
+    [+]  Annotation file  :  val.json
+    Total images                    7,750
+    Total annotations               38,750
+
+    Images processed                7,750
+    Captions per image              3
+    Total processed                 23,250
+    Skipped                         0
+    [+]  Caption processing complete
+
+════════════════════════════════════════════════════════════════════════
+  VAL  Dataset Composition
+════════════════════════════════════════════════════════════════════════
+    Total samples                   27,569
+
+    Task                       Count    Share
+    ──────────────────────  ────────  ───────
+    vizwiz_caption            23,250    84.3%
+    vizwiz_vqa                 4,319    15.7%
+
+    Caption:VQA ratio               5.4:1
+
+────────────────────────────────────────────────────────────────────────
+    Building HuggingFace Dataset
+────────────────────────────────────────────────────────────────────────
+    [1/3]  Converting to Dataset ...
+    [+]  Done  (0.0 s)
+    [2/3]  Casting features ...
+Casting the dataset: 100% 27569/27569 [00:00<00:00, 1049051.65 examples/s]
+    [+]  Done  (0.0 min)
+    [3/3]  Saving to disk ...
+Saving the dataset (27/27 shards): 100% 27569/27569 [00:37<00:00, 727.95 examples/s]
+    [+]  Done  (37.9 s)
+    [+]  Metadata saved  →  data/val_dataset
+
+════════════════════════════════════════════════════════════════════════
+  Summary
+════════════════════════════════════════════════════════════════════════
+
+    Split                      Samples       VQA     Caption    Ratio
+    ──────────────────────  ──────────  ────────  ──────────  ───────
+    Train                      137,678    20,523     117,155    5.7:1
+    Val                         27,569     4,319      23,250    5.4:1
+
+    [+]  Ratio matched  —  train (5.7:1) ≈ val (5.4:1)  Δ=0.33
+
+    Train output                    data/train_dataset
+    Val output                      data/val_dataset
+
+────────────────────────────────────────────────────────────────────────
+    Cleaning up temporary files ...
+    [+]  Cleanup complete
+
+────────────────────────────────────────────────────────────────────────
+  Next Steps
+────────────────────────────────────────────────────────────────────────
+    [-]  tensorboard --logdir=outputs/logs
+    [-]  python src/train.py \
+    [-]      --train_dataset_path data/train_dataset \
+    [-]      --val_dataset_path   data/val_dataset
+
+════════════════════════════════════════════════════════════════════════
