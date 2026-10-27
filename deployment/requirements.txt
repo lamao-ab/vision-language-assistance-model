@@ -2,8 +2,8 @@
 # JetPack 6.0+ (Ubuntu 22.04, CUDA 12.6)
 #
 # Installation Instructions:
-# 1. Run: pip3 install -r requirements-jetson.txt
-# 2. Follow setup steps in deployment/jetson_setup.sh
+# 1. Run: pip3 install -r deployment/requirements.txt
+# 2. Follow setup steps in deployment/RUN_GUIDE.md
 #
 # Note: PyTorch must be installed separately from Jetson AI Lab repository
 
