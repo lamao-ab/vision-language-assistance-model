@@ -1,0 +1,72 @@
+[
+  {
+    "task": "caps",
+    "gt": "val.json",
+    "pred": "vizwiz_caption_val_predictions_base_generic.json",
+    "n_expected": 7542,
+    "n_eligible": 7542,
+    "n_predicted": 7542,
+    "n_missing": 0,
+    "n_extra": 208,
+    "n_duplicate": 0,
+    "complete": true,
+    "problems": [],
+    "name": "base (generic prompt)"
+  },
+  {
+    "task": "caps",
+    "gt": "val.json",
+    "pred": "vizwiz_caption_val_predictions_base_custom.json",
+    "n_expected": 7542,
+    "n_eligible": 7542,
+    "n_predicted": 7542,
+    "n_missing": 0,
+    "n_extra": 208,
+    "n_duplicate": 0,
+    "complete": true,
+    "problems": [],
+    "name": "base (accessibility prompt)"
+  },
+  {
+    "task": "caps",
+    "gt": "val.json",
+    "pred": "vizwiz_caption_val_predictions_lora_seed7_custom.json",
+    "n_expected": 7542,
+    "n_eligible": 7542,
+    "n_predicted": 7542,
+    "n_missing": 0,
+    "n_extra": 208,
+    "n_duplicate": 0,
+    "complete": true,
+    "problems": [],
+    "name": "LoRA seed 7"
+  },
+  {
+    "task": "caps",
+    "gt": "val.json",
+    "pred": "vizwiz_caption_val_predictions_lora_seed42_custom.json",
+    "n_expected": 7542,
+    "n_eligible": 7542,
+    "n_predicted": 7542,
+    "n_missing": 0,
+    "n_extra": 208,
+    "n_duplicate": 0,
+    "complete": true,
+    "problems": [],
+    "name": "LoRA seed 42"
+  },
+  {
+    "task": "caps",
+    "gt": "val.json",
+    "pred": "vizwiz_caption_val_predictions_lora_seed123_custom.json",
+    "n_expected": 7542,
+    "n_eligible": 7542,
+    "n_predicted": 7542,
+    "n_missing": 0,
+    "n_extra": 208,
+    "n_duplicate": 0,
+    "complete": true,
+    "problems": [],
+    "name": "LoRA seed 123"
+  }
+]
