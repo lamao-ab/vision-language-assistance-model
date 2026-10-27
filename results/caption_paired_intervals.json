@@ -1,0 +1,30 @@
+{
+  "n_images": 7542,
+  "cider_d": {
+    "base_generic": 55.31,
+    "base_accessibility": 22.3,
+    "lora_per_seed": [
+      96.34,
+      98.84,
+      99.05
+    ],
+    "lora_mean": 98.08
+  },
+  "mean_and_95ci": {
+    "lora_minus_base_generic": [
+      42.76,
+      41.14,
+      44.43
+    ],
+    "prompt_only_base_accessibility_minus_generic": [
+      -33.01,
+      -34.35,
+      -31.67
+    ],
+    "lora_minus_base_accessibility": [
+      75.77,
+      74.15,
+      77.41
+    ]
+  }
+}
