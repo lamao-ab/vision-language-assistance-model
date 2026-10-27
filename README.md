@@ -296,7 +296,7 @@ Hub revisions: LoRA `0545d03`, QLoRA merged `0a66cea` ([huggingface.co/lamao-ab]
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
 | Blinded caption review (single rater) | `src/build_caption_review.py`, `src/analyze_caption_review.py`, `src/caption_review_stats.py` | `results/caption_review/` |
 | Export to the Hub (merge in bf16, 4-bit NF4 requantization) | `src/deploy_paligemma_to_hf.py` | Hub revisions `0545d03`, `0a66cea` |
-| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions_baseline.py` | `results/` |
+| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, | `results/` |
 | Deployment measurements | `deployment/*.py` | `deployment/records/` |
 
 The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` are unchanged since the audited commit `4f4d378`.
