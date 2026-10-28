@@ -46,7 +46,15 @@ Usage
 """
 import argparse
 import json
+import os
 import sys
+
+# The PTB tokenizer and METEOR read Java's stdout line by line. Some hosts
+# (e.g. Google Colab) make the JVM print container/cgroup warnings to stdout,
+# which shifts every caption onto the wrong image. Send JVM logging to stderr.
+_JVM_LOG = "-Xlog:disable -Xlog:all=warning:stderr"
+if _JVM_LOG not in os.environ.get("JAVA_TOOL_OPTIONS", ""):
+    os.environ["JAVA_TOOL_OPTIONS"] = (os.environ.get("JAVA_TOOL_OPTIONS", "") + " " + _JVM_LOG).strip()
 
 
 def caption_length_stats(captions):
@@ -107,12 +115,38 @@ def score_coco(gt_path, pred_path):
 PRECANNED = "Quality issues are too severe to recognize visual content."
 
 
+_QUOTES = str.maketrans({"\u2018": "'", "\u2019": "'", "\u00b4": "'", "`": "'",
+                         "\u201c": '"', "\u201d": '"', "\u2013": "-", "\u2014": "-"})
+
+
 def _clean(text):
-    """Remove control characters (incl. C1 \x80-\x9f) and line breaks, which
-    desynchronise the METEOR Java subprocess."""
+    """Normalise a caption to plain ASCII on a single line.
+
+    The PTB tokenizer and METEOR are Java subprocesses fed one caption per
+    line; depending on the Java version/locale, non-ASCII or control
+    characters can split or merge lines, which silently pairs captions with
+    the wrong images and then crashes METEOR. Accents are folded
+    (e.g. "Jagermeister"), curly quotes become straight quotes.
+    """
     import unicodedata
-    text = "".join(" " if unicodedata.category(ch)[0] == "C" else ch for ch in str(text))
+    text = str(text).translate(_QUOTES)
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    text = "".join(" " if not ch.isprintable() else ch for ch in text)
     return " ".join(text.split())
+
+
+def _check_alignment(raw, tok, label):
+    """Abort if tokenized captions no longer line up with their image ids."""
+    import re
+    def words(t):
+        return re.findall(r"[a-z0-9]+", t.lower())
+    bad = [i for i in raw
+           if words(raw[i][0])[:1] and words(tok[i][0])[:1] != words(raw[i][0])[:1]]
+    if len(bad) > 0.01 * len(raw):
+        raise RuntimeError(
+            f"{label}: {len(bad)}/{len(raw)} tokenized captions do not match their "
+            f"image (e.g. image_id {bad[:3]}). The PTB tokenizer output is "
+            "misaligned; check `java -version` and the system locale.")
 
 
 def score_vizwiz(gt_path, pred_path, repo_path=None):
@@ -159,6 +193,23 @@ def score_vizwiz(gt_path, pred_path, repo_path=None):
     tok = PTBTokenizer()
     gts = tok.tokenize(gts)
     res = tok.tokenize(res)
+    _check_alignment({i: [pred_by_id[i]] for i in common_ids}, res, "predictions")
+    _check_alignment({i: gts_raw[i][:1] for i in common_ids},
+                     {i: gts[i][:1] for i in common_ids}, "references")
+
+    # METEOR talks to a Java process line by line: an empty string or a "|"
+    # (its field separator) shifts the protocol and crashes it. PTBTokenizer
+    # turns punctuation-only captions into "", so guard after tokenization.
+    def _safe(lst):
+        out_ = [" ".join(x.replace("|", " ").split()) for x in lst]
+        out_ = [x for x in out_ if x]
+        return out_ or ["unk"]
+    gts = {i: _safe(v) for i, v in gts.items()}
+    res = {i: _safe(v) for i, v in res.items()}
+    n_empty_pred = sum(1 for v in res.values() if v == ["unk"])
+    if n_empty_pred:
+        print(f"WARNING: {n_empty_pred} predictions are empty after tokenization "
+              "(scored as 'unk').", file=sys.stderr)
 
     scorers = [
         (Bleu(4), ["Bleu_1", "Bleu_2", "Bleu_3", "Bleu_4"]),
