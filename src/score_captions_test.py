@@ -107,6 +107,14 @@ def score_coco(gt_path, pred_path):
 PRECANNED = "Quality issues are too severe to recognize visual content."
 
 
+def _clean(text):
+    """Remove control characters (incl. C1 \x80-\x9f) and line breaks, which
+    desynchronise the METEOR Java subprocess."""
+    import unicodedata
+    text = "".join(" " if unicodedata.category(ch)[0] == "C" else ch for ch in str(text))
+    return " ".join(text.split())
+
+
 def score_vizwiz(gt_path, pred_path, repo_path=None):
     """VizWiz caption scoring (validation) via the standard pycocoevalcap
     pipeline (same as COCO), with the official reference filtering:
@@ -130,7 +138,7 @@ def score_vizwiz(gt_path, pred_path, repo_path=None):
     #   - drop rejected captions (is_rejected) if the field is present
     gts_raw = {}
     for ann in gt["annotations"]:
-        cap = ann["caption"].strip()
+        cap = _clean(ann["caption"])
         if cap == PRECANNED:
             continue
         if ann.get("is_rejected", False) or ann.get("is_precanned", False):
@@ -138,7 +146,7 @@ def score_vizwiz(gt_path, pred_path, repo_path=None):
         gts_raw.setdefault(ann["image_id"], []).append(cap)
 
     # Only score images that have at least one valid reference AND a prediction
-    pred_by_id = {p["image_id"]: p["caption"] for p in preds}
+    pred_by_id = {p["image_id"]: _clean(p["caption"]) or "." for p in preds}
     common_ids = [i for i in gts_raw if i in pred_by_id]
     missing = [i for i in gts_raw if i not in pred_by_id]
     if missing:
