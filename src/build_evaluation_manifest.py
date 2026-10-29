@@ -32,6 +32,13 @@ CAL = ("qlora-s123-exported-calibration", "exported model: adapter merged into B
        "calibration notebook (confidence extraction)", "decoding settings of this run to be confirmed from the notebook")
 
 
+
+def _safe(lst):
+    """Copy of the guard inside src/score_captions_test.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
+    out_ = [" ".join(x.replace("|", " ").split()) for x in lst]
+    out_ = [x for x in out_ if x]
+    return out_ or ["unk"]
+
 def sha(p):
     h = hashlib.sha256()
     for c in iter(lambda: open(p, "rb").read(1 << 20), b""):
@@ -43,6 +50,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--preds_dir", required=True); ap.add_argument("--vqa_gt", required=True); ap.add_argument("--caps_gt", required=True)
     ap.add_argument("--scorer_dir", default="src"); ap.add_argument("--calibration", default=None); ap.add_argument("--out", default="evaluation_manifest.csv")
+    ap.add_argument("--caps_test_gt", default=None, help="reconstructed test references (test_captions_7974.json)")
+    ap.add_argument("--test_preds_dir", default=None, help="folder with the vizwiz_caption_test_predictions_*_test.json files")
     args = ap.parse_args()
     sys.path.insert(0, args.scorer_dir)
     from score_vizwiz_vqa import vqa_accuracy
@@ -76,6 +85,30 @@ def main():
                          "scorer": "src/score_vizwiz_vqa.py" if "VQA" in task else "src/score_captions.py (PTBTokenizer, CIDEr-D)",
                          "metric": metric, "score": round(float(score), 2), "n_scored": f"{n}/{expected}", "prediction_file": os.path.basename(path),
                          "prediction_sha256": sha(path), "note": note})
+    if args.caps_test_gt and args.test_preds_dir:
+        sys.path.insert(0, args.scorer_dir)
+        from score_captions_test import _clean     # the scorer that produced the reported test scores
+        tj = json.load(open(args.caps_test_gt)); trefs = {}
+        for a in tj["annotations"]:
+            c = _clean(a["caption"])
+            if c == "Quality issues are too severe to recognize visual content." or a.get("is_rejected") or a.get("is_precanned"): continue
+            trefs.setdefault(a["image_id"], []).append(c)
+        tids = sorted(trefs); tgt = {i: _safe(v) for i, v in tok.tokenize({i: [{"caption": c} for c in trefs[i]] for i in tids}).items()}
+        pre = "vizwiz_caption_test_predictions_"
+        tfile = {"base-generic": "base_generic_test", "base-accessibility": "base_custom_test", "lora-s7": "lora_seed7_custom_test",
+                 "lora-s42": "lora_seed42_custom_test", "lora-s123": "lora_seed123_custom_test", "qlora-s7": "qlora_seed7_test",
+                 "qlora-s42": "qlora_seed42_test", "qlora-s123": "qlora_seed123_test", "qlora-s123-exported": "qlora_merged_seed123_test"}
+        for rid, stem, rep, ckpt, seed, prec, prompt, bs, script, note in RUNS:
+            path = os.path.join(args.test_preds_dir, pre + tfile[rid] + ".json")
+            if not os.path.exists(path): continue
+            pm = {p["image_id"]: (_clean(p["caption"]) or ".") for p in json.load(open(path))}
+            r = {i: _safe(v) for i, v in tok.tokenize({i: [{"caption": pm[i]}] for i in tids}).items()}
+            score = 100 * Cider().compute_score({i: tgt[i] for i in tids}, {i: r[i] for i in tids})[0]
+            rows.append({"run": rid, "task": "VizWiz-Captions test (reconstructed references)", "representation": rep, "checkpoint": ckpt, "seed": seed,
+                         "precision": prec, "prompt": prompt, "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script,
+                         "scorer": "src/score_captions_test.py (PTBTokenizer, CIDEr-D, ASCII-folded text)", "metric": "CIDEr-D", "score": round(float(score), 2),
+                         "n_scored": f"{sum(1 for i in tids if i in pm)}/7807", "prediction_file": os.path.basename(path), "prediction_sha256": sha(path),
+                         "note": "references reconstructed from the released metadata file (see results/caption_test/README.md)"})
     if args.calibration and os.path.exists(args.calibration):
         rid, rep, ckpt, seed, prec, prompt, bs, script, note = CAL
         score, n = vqa_score(args.calibration)
