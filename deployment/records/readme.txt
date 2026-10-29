@@ -96,6 +96,8 @@ A100           NVIDIA A100-SXM4-40GB, 400 W power limit, Colab runtime, clocks n
 - The A100 power values are single instantaneous card-power readings, not integrals, and exclude the host.
   They support a power-draw comparison only, not an energy comparison.
 - The Jetson clock was not verified against a time server; dates in logs are the device's own clock.
+- The installed versions of transformers and bitsandbytes on the Jetson were not recorded at measurement time;
+  the minimum versions are listed in deployment/requirements.txt.
 - The image used in the A100 measurement was not retained, and generated lengths were not recorded. The latency
   ratio of the two profiles (0.572 / 0.266 s = 2.15) is close to the ratio of the caps (64 / 30 = 2.13), which
   is consistent with generation running to the cap, but this is an inference.
@@ -119,4 +121,3 @@ Written for the revision:
 [ ] Date of the A100 run (Colab)
 [ ] Boot target of the Jetson: the paper's measurement paragraph does not say headless, only the Table 11
     caption did; the word is removed. Restore it only after saving `systemctl get-default`.
-[ ] transformers and bitsandbytes versions on the Jetson (`pip list | grep -E "transformers|bitsandbytes"`)
