@@ -179,7 +179,7 @@ python src/score_captions.py --dataset coco \
 python src/predict.py \
     --model_id   outputs/run/final_adapter \
     --task       vqa \
-    --image_dir  /content/paligemma-blind-assist/data/images \
+    --image_dir  /content/vision-language-assistance-model/data/images \
     --output     results/vqa_only.json
     --batch_size 32 \
     --max_tokens 64
@@ -188,7 +188,7 @@ python src/predict.py \
 python src/predict.py \
     --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --task       caps \
-    --image_dir  /content/paligemma-blind-assist/data/images \
+    --image_dir  /content/vision-language-assistance-model/data/images \
     --output     results/caps_results.json \
     --batch_size 32 \
     --max_tokens 64
@@ -281,7 +281,7 @@ Only the 4-bit QLoRA model (the exported merged model) is deployed on-device; th
 | QLoRA tables (three-seed means, Table 20) | training-time adapter, unmerged, over the 4-bit NF4 backbone (`checkpoint-2152` of each seed) |
 | Deployment (memory, latency, energy, A100) and the confidence analysis | exported merged model: adapter merged into BF16 weights, requantized to 4 bits |
 
-Hub revisions: LoRA `0545d03`, QLoRA merged `0a66cea` ([huggingface.co/lamao-ab](https://huggingface.co/lamao-ab)). On VizWiz-VQA, seed 123: unmerged adapter 75.86, exported model 75.53 under identical settings (same script, accessibility prompt, batch size 128, greedy decoding, 64 new tokens, 4-bit), 75.59 in the confidence analysis (batch size 32).
+Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lora-merged-v1`](https://huggingface.co/lamao-ab/paligemma-blind-assist-lora-merged-v1) at `0545d03`; QLoRA merged [`lamao-ab/paligemma-blind-assist-qlora-merged-v1`](https://huggingface.co/lamao-ab/paligemma-blind-assist-qlora-merged-v1) at `0a66cea` (load with `revision="0a66cea"` to pin it). On VizWiz-VQA, seed 123: unmerged adapter 75.86, exported model 75.53 under identical settings (same script, accessibility prompt, batch size 128, greedy decoding, 64 new tokens, 4-bit), 75.59 in the confidence analysis (batch size 32).
 
 ---
 
@@ -294,9 +294,12 @@ Hub revisions: LoRA `0545d03`, QLoRA merged `0a66cea` ([huggingface.co/lamao-ab]
 | Image overlap between partitions and tasks | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py` | `results/overlap/` |
 | Selective prediction (retained-set composition, cross-fitted thresholds) | `src/selective_prediction_analysis.py` | `results/selective/` |
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
+| Paired captioning comparisons (CIDEr-D gains and QLoRA against LoRA with intervals, exported model against its adapter) | `src/caption_paired_intervals.py` | `results/caption_paired_intervals.json` |
+| Evaluation manifest (every run: checkpoint, representation, precision, prompt, decoding, scorer, prediction file with SHA-256) | `src/build_evaluation_manifest.py` | `results/evaluation_manifest.csv`, `results/predictions/` |
+| Independent captioning evaluation on reconstructed test references | `src/score_captions_test.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
 | Blinded caption review (single rater) | `src/build_caption_review.py`, `src/analyze_caption_review.py`, `src/caption_review_stats.py` | `results/caption_review/` |
 | Export to the Hub (merge in bf16, 4-bit NF4 requantization) | `src/deploy_paligemma_to_hf.py` | Hub revisions `0545d03`, `0a66cea` |
-| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py` `src/score_captions_baseline.py` , | `results/` |
+| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions_baseline.py` | `results/` |
 | Deployment measurements | `deployment/*.py` | `deployment/records/` |
 
 The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` are unchanged since the audited commit `4f4d378`.
@@ -323,7 +326,7 @@ If you use this work in your research, please cite:
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Issues and pull requests are welcome on [GitHub](https://github.com/lamao-ab/vision-language-assistance-model/issues).
 
 ---
 
@@ -346,11 +349,11 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 For questions or collaboration:
 - **Email**: a.boussihmed@ump.ac.ma
-- **GitHub Issues**: [Open an issue](https://github.com/lamao-ab/paligemma-qlora-blind-assist/issues)
+- **GitHub Issues**: [Open an issue](https://github.com/lamao-ab/vision-language-assistance-model/issues)
 - **HugFace**: [@lamao-ab](https://huggingface.co/lamao-ab)
 
 ---
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=BOUSSIHMED_AHMED/paligemma-qlora-blind-assistance&type=Date)](https://star-history.com/#BOUSSIHMED_AHMED/paligemma-qlora-blind-assistance&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=lamao-ab/vision-language-assistance-model&type=Date)](https://star-history.com/#lamao-ab/vision-language-assistance-model&Date)
 

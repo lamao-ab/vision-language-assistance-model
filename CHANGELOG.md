@@ -2,7 +2,7 @@
 
 ## v2.0 — revised submission (October 2026)
 
-The audited version is **v1.0 (commit `4f4d378`)**. Nothing that produced a reported score was modified: the scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py`, the evaluation script `src/evaluate_vizwiz.py`, the training scripts `src/train_lora.py` and `src/train_qlora.py`, and `data/prepare_dataset.py` are byte-identical to their v1.0 versions (checked with `git diff 4f4d378 HEAD`). Until this release the history since `4f4d378` consisted of additions only.
+The audited version is **v1.0 (commit `4f4d378`)**. Nothing that produced a reported score was modified: the scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py`, the training scripts `src/train_lora.py` and `src/train_qlora.py`, and `data/prepare_dataset.py` are byte-identical to their v1.0 versions (checked with `git diff 4f4d378 HEAD`). `src/evaluate_vizwiz.py`, `src/evaluate_benchmark.py` and `src/predict.py` differ from v1.0 only in a corrected example Hub ID in their docstrings and help texts (see Corrections). Until this release the history since `4f4d378` consisted of additions only.
 
 ### Added
 
@@ -14,6 +14,10 @@ The audited version is **v1.0 (commit `4f4d378`)**. Nothing that produced a repo
 - `diagnose_caption_csv.py`: checks how image names in the released VizWiz-Captions metadata CSV relate to the released splits.
 - `check_completeness.py`: asserts that a prediction file covers every eligible item (the scorers are unchanged).
 - `score_captions_baseline.py`: caption scoring used for the baseline comparison.
+- `score_captions_test.py`: scores the reconstructed test references with the same metrics and reference filtering as `score_captions.py`, after folding non-ASCII characters to ASCII (changes the test CIDEr-D by 0.01 to 0.06 and the validation CIDEr-D by at most 0.01).
+- `caption_test_checks.py`: validity checks of the reconstructed test references (neighbour-shift test, position check, duplicate sensitivity).
+- `caption_paired_intervals.py`: paired VizWiz-Captions comparisons (CIDEr-D gains and QLoRA against LoRA with bootstrap intervals, exported model against its adapter).
+- `build_evaluation_manifest.py`: the evaluation manifest linking every reported run to its checkpoint, representation, precision, prompt, decoding, scorer and prediction file (SHA-256).
 - `paired_comparisons.py`: paired VizWiz-VQA comparisons (gains with bootstrap intervals, prompt and adaptation decomposition, adapter against exported model).
 - `caption_review_stats.py`, `build_caption_review.py`, `analyze_caption_review.py`: blinded caption review (sampling, unblinding, single-rater statistics with Wilson intervals and exact McNemar tests).
 - `deploy_paligemma_to_hf.py`: the export procedure (merge the adapter in bf16, quantize to 4-bit NF4, push to the Hub).
@@ -24,7 +28,7 @@ The audited version is **v1.0 (commit `4f4d378`)**. Nothing that produced a repo
 - Final `measure_memory.py` and `model_breakdown.py` used for the reported memory block.
 
 **Results (`results/`)**
-- `selective/`, `overlap/`, `adapters/`, `runs/`, `completeness_report_vqa.json`, `data_preparation_log.txt`, `caption_review/` (blinded review sheet, key and rubric).
+- `selective/`, `overlap/`, `adapters/`, `runs/`, `completeness_report_vqa.json`, `data_preparation_log.txt`, `caption_review/` (rated sheet, blank sheet for independent rating, key, rubric, single-rater statistics).
 
 **Documentation**
 - README: evaluation representations, reproduction table, updated results.
@@ -36,9 +40,10 @@ The audited version is **v1.0 (commit `4f4d378`)**. Nothing that produced a repo
 
 ### Moved
 - `notebooks ` (folder name with a trailing space) to `notebooks/`.
-- `configs/training_config.yaml` to `archive/training_config_stale.yaml`. No script reads it, and its values (learning rate 2e-5, dropout 0.05, maximum length 256) differ from the defaults of the training scripts (2e-4, 0.03, 512).
+- `configs/training_config.yaml` to `archive/training_config_stale.yaml`. No script reads it, and its values (learning rate 2e-5, warmup ratio 0.05, maximum length 256) differ from the settings of the training scripts (learning rate 2e-4, warmup ratio 0.03, maximum length 512).
 
 ### Corrections to the documentation (code and reported scores unchanged)
+- Hub model ID: the docstrings and help texts of `src/evaluate_vizwiz.py`, `src/evaluate_benchmark.py` and `src/predict.py` named `lamao-ab/paligemma-blind-assist-jetson-ready`, which is not among the public models. They now name `lamao-ab/paligemma-blind-assist-qlora-merged-v1` (7 lines, no code changed). The README links the correct GitHub repository for issues, and states the Hub repositories and pinned revisions: LoRA `lamao-ab/paligemma-blind-assist-lora-merged-v1` at `0545d03`, QLoRA merged `lamao-ab/paligemma-blind-assist-qlora-merged-v1` at `0a66cea`.
 - Trainable parameters: the reconstructed inventory gives 11,298,816 trainable parameters (0.385%): 126 decoder modules (9,805,824 parameters) and 81 vision-encoder `q/k/v` modules (1,492,992 parameters), 207 modules and 414 adapter tensors, in float32. The earlier description of the adapted modules and parameter count is corrected.
 - Deployment: the energy per query is restated from an exact-window integration (the earlier analysis summed only the samples inside each window); the A100 static footprint is 2.14 GB; the energy-reduction claim against the A100 is withdrawn because the measurement boundaries differ.
 
