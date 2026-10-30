@@ -14,7 +14,7 @@ USED FOR (paper table -> section of this file)
   Table 12  latency ........................ section 2.3 (run 3 of three consecutive runs)
   Table 13  power and energy ............... section 3.2 (analyze_energy.py, fixed version, Windows)
   Table 13  exact-window re-analysis ....... section 3.3 (DERIVED, analyze_energy_v3.py)
-  NOT used: 1.1, 1.2 (earlier script versions), 2.1, 2.2 (runs 1-2, reported as a range), 3.1 (older analyzer)
+  NOT used for the tables: 2.1, 2.2 (runs 1-2, reported as a range), 3.1 (older analyzer); the earlier memory measurement (raw lines 12-148) is not reproduced
 
 CONDITIONS COMMON TO ALL MEASUREMENTS
   Device: Jetson Orin Nano 8 GB, power mode 15 W, clocks locked with jetson_clocks.
@@ -37,109 +37,8 @@ NV Power Mode: 15W
 ====================================================================================================
 1. MEMORY
 ====================================================================================================
-1.1  Measurement A - older measure_memory.py (prints 'Model footprint (CUDA)'; this is the version in the repo folder)
-  NOT USED for Table 11.
-----------------------------------------------------------------------------------------------------
-1.1 measure_memory.py, version A   [raw lines 12-39]
-----------------------------------------------------------------------------------------------------
-jetson@jetson-desktop:~$ python3 measure_memory.py
-=======================================================
-STAGE 1 — OS BASELINE (model + app NOT running)
-=======================================================
-Total     : 7.44 GB
-Used (OS) : 1.10 GB
-Available : 6.09 GB
-
-[Enter] to load the model and measure the full footprint...
-
-=======================================================
-STAGE 2 — MODEL LOADED
-=======================================================
-Loading weights: 100%|█| 603/603 [00:26<00:00, 22.93it/s, Materializing param=model.vision_tower.vision_model.post_layer
-Total     : 7.44 GB
-Used      : 4.24 GB
-Available : 2.93 GB
-
-=======================================================
-SUMMARY
-=======================================================
-Total memory             : 7.44 GB
-Model footprint (CUDA)   : 2.14 GB   <- direct, reproducible
-CUDA reserved            : 2.22 GB
--------------------------------------------------------
-System used after load   : 4.24 GB   <- device utilization (model + libs + OS)
-OS baseline (context)    : 1.10 GB
-Available after load     : 2.93 GB
-
-----------------------------------------------------------------------------------------------------
-1.2 model_breakdown.py, version A (first run)   [raw lines 62-92]  older version: quantization constants 35.7 MB
-----------------------------------------------------------------------------------------------------
-============================================================
-DTYPE HISTOGRAM
-============================================================
-dtype                           params          MB
-4bit(NF4)                1,197,619,200      1142.1
-torch.bfloat16             528,228,080      1007.5
-buffer/torch.int64                 256         0.0
-buffer/torch.float32               256         0.0
-
-============================================================
-MODEL MEMORY BREAKDOWN
-============================================================
-Base weights (4-bit NF4)   :    1142.1 MB  (1.115 GB)
-Quantization constants     :      35.7 MB
-LoRA adapters              :       0.0 MB
-Other non-quant (bf16 embed+vision) :    1007.5 MB  (0.984 GB)
-------------------------------------------------------------
-Static model footprint     : 2.134 GB
-
-Measuring peak activation + KV cache (corrected method)...
-
-============================================================
-FINAL SUMMARY FOR PAPER
-============================================================
-Base model weights (4-bit)    : 1.115 GB
-Quantization constants        : 35.7 MB
-LoRA adapters                 : 0.0 MB
-Other non-quant (bf16 embed+vis) : 0.984 GB
-Static footprint              : 2.134 GB
-Activation + KV cache (PEAK)  : 0.098 GB  (100 MB, measured)
-Peak CUDA reserved            : 2.254 GB
-
-----------------------------------------------------------------------------------------------------
-1.2 model_breakdown.py, version A (second run, labelled 'run 2' in the raw file)   [raw lines 118-148]  identical numbers
-----------------------------------------------------------------------------------------------------
-============================================================
-DTYPE HISTOGRAM
-============================================================
-dtype                           params          MB
-4bit(NF4)                1,197,619,200      1142.1
-torch.bfloat16             528,228,080      1007.5
-buffer/torch.int64                 256         0.0
-buffer/torch.float32               256         0.0
-
-============================================================
-MODEL MEMORY BREAKDOWN
-============================================================
-Base weights (4-bit NF4)   :    1142.1 MB  (1.115 GB)
-Quantization constants     :      35.7 MB
-LoRA adapters              :       0.0 MB
-Other non-quant (bf16 embed+vision) :    1007.5 MB  (0.984 GB)
-------------------------------------------------------------
-Static model footprint     : 2.134 GB
-
-Measuring peak activation + KV cache (corrected method)...
-
-============================================================
-FINAL SUMMARY FOR PAPER
-============================================================
-Base model weights (4-bit)    : 1.115 GB
-Quantization constants        : 35.7 MB
-LoRA adapters                 : 0.0 MB
-Other non-quant (bf16 embed+vis) : 0.984 GB
-Static footprint              : 2.134 GB
-Activation + KV cache (PEAK)  : 0.098 GB  (100 MB, measured)
-Peak CUDA reserved            : 2.254 GB
+1.1-1.2  (not reproduced)  The raw transcript also contains an earlier memory measurement with earlier script versions
+  (raw lines 12-148). It is not used in the paper and is only available in the unchanged raw file.
 
 1.3  Measurement B - FINAL measure_memory.py (prints free, buffers/cache and an identity check)
   USED FOR Table 11 system rows. This script version is not in the repo folder; copy it from the Jetson.
@@ -231,13 +130,15 @@ Static footprint                   : 2.135 GB
 Activation + KV cache (peak, 64 tok): 0.098 GB  (100 MB)
 Peak CUDA reserved                 : 2.254 GB
 
-DERIVED (computed from the two measurement blocks above)
-  quantity                    A (older script)    B (final script)
-  OS + kernel baseline (GB)   1.10                1.00
-  System used after load      4.24                4.10
-  Available after load        2.93                3.09
-  Model + runtime (used-OS)   3.14                3.10
-  Identity used+free+cache    not printed         4.10 + 0.11 + 3.23 = 7.44 (printed)
+DERIVED (computed from the final measurement blocks above, sections 1.3 and 1.4)
+  quantity                                  value
+  OS + kernel baseline (GB)                 1.00
+  System used after load (GB)               4.10
+  Model + runtime (used - OS) (GB)          3.10
+  Framework / CUDA context (GB)             0.97   (3.10 - 2.135 static model)
+  Identity used+free+cache                  4.10 + 0.11 + 3.23 = 7.44 (printed)
+  Free + buff/cache (GB)                    3.34   (7.44 - 4.10)
+  Available (GB)                            3.09   (non-reclaimable / reserved: 0.25)
 
 ====================================================================================================
 2. LATENCY - bench_latency.py, three consecutive runs (30 queries per task per run)

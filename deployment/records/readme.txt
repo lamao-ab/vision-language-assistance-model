@@ -106,9 +106,10 @@ A100           NVIDIA A100-SXM4-40GB, 400 W power limit, Colab runtime, clocks n
 6. SCRIPTS (deployment/)
 ------------------------
 As run:       bench_latency.py, energy_run.py, analyze_energy.py (the fixed version used for Table 13)
-Older:        measure_memory.py and model_breakdown.py in this repository are the EARLIER versions
-              (raw lines 12-39, 62-92). The final versions that produced Table 11 (raw lines 556-660)
-              are on the Jetson and are to be copied into the repository.
+Table 11:     measure_memory.py and model_breakdown.py as run for raw lines 556-660. These print lines
+              that the copies in this repository do not contain (free / buff-cache / identity check in
+              measure_memory.py, anchor check in model_breakdown.py), so the repository copies are not
+              the scripts that produced Table 11; copy the versions from the Jetson into deployment/.
 Written for the revision:
               analyze_energy_v3.py   exact-window energy, post-window energy, checksums
               measure_a100_table.py  same protocol as the recorded A100 run, with command-line
