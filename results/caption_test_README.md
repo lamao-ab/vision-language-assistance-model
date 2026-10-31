@@ -1,6 +1,6 @@
-# VizWiz-Captions test references (reconstructed, unofficial)
+# VizWiz-Captions test references (official captions, matched to the images)
 
-`test_captions_7974.json` holds captions for 7,974 of the 8,000 VizWiz-Captions test images, in the same format as the official `train.json` and `val.json`. It exists because the official test references were never released with the test images and the evaluation server is no longer maintained. The captions come from the project metadata file `VizWiz_captions_project_all_metadata_test.csv`, which stores them under project-internal identifiers (`VizWiz_test_000000020000` to `...027999`) that do not correspond to the image file names (`VizWiz_test_00000000.jpg` to `...07999.jpg`).
+`test_captions_7974.json` holds captions for 7,974 of the 8,000 VizWiz-Captions test images, in the same format as the official `train.json` and `val.json`. It exists because the standard JSON annotations withhold the test captions and the evaluation server is no longer maintained; the officially released evaluation-annotation file contains them. The captions come from the project metadata file `VizWiz_captions_project_all_metadata_test.csv`, which stores them under project-internal identifiers (`VizWiz_test_000000020000` to `...027999`) that do not correspond to the image file names (`VizWiz_test_00000000.jpg` to `...07999.jpg`).
 
 ## Construction
 
@@ -21,7 +21,7 @@ Same format as `val.json`; file-name numbers contiguous 0 to 7973; 5 captions pe
 
 ## Limitations
 
-The references are unofficial. A mis-placed position in the alignment could shift captions only within a run of identical `text_detected` flags (the longest run is 23 images). Misassigned captions would add noise to every model alike. Scores on this file are not comparable with leaderboard numbers.
+The captions are the official ones; the matching of caption sets to image files is ours. A mis-placed position in the alignment could shift captions only within a run of identical `text_detected` flags (the longest run is 23 images). Misassigned captions would add noise to every model alike. Scores on this file were not produced by the (deprecated) evaluation server.
 
 ## Scorer
 
