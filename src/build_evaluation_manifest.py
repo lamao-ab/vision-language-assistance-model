@@ -50,7 +50,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--preds_dir", required=True); ap.add_argument("--vqa_gt", required=True); ap.add_argument("--caps_gt", required=True)
     ap.add_argument("--scorer_dir", default="src"); ap.add_argument("--calibration", default=None); ap.add_argument("--out", default="evaluation_manifest.csv")
-    ap.add_argument("--caps_test_gt", default=None, help="reconstructed test references (test_captions_7974.json)")
+    ap.add_argument("--caps_test_gt", default=None, help="test references matched to the images (test_captions_7974.json)")
     ap.add_argument("--test_preds_dir", default=None, help="folder with the vizwiz_caption_test_predictions_*_test.json files")
     args = ap.parse_args()
     sys.path.insert(0, args.scorer_dir)
@@ -95,20 +95,18 @@ def main():
             trefs.setdefault(a["image_id"], []).append(c)
         tids = sorted(trefs); tgt = {i: _safe(v) for i, v in tok.tokenize({i: [{"caption": c} for c in trefs[i]] for i in tids}).items()}
         pre = "vizwiz_caption_test_predictions_"
-        tfile = {"base-generic": "base_generic_test", "base-accessibility": "base_custom_test", "lora-s7": "lora_seed7_custom_test",
-                 "lora-s42": "lora_seed42_custom_test", "lora-s123": "lora_seed123_custom_test", "qlora-s7": "qlora_seed7_test",
-                 "qlora-s42": "qlora_seed42_test", "qlora-s123": "qlora_seed123_test", "qlora-s123-exported": "qlora_merged_seed123_test"}
+        tfile = {"base-generic": "base_generic", "base-accessibility": "base_custom", "lora-s7": "lora_seed7_custom", "lora-s42": "lora_seed42_custom", "lora-s123": "lora_seed123_custom", "qlora-s7": "qlora_seed7", "qlora-s42": "qlora_seed42", "qlora-s123": "qlora_seed123", "qlora-s123-exported": "qlora_merged_seed123"}
         for rid, stem, rep, ckpt, seed, prec, prompt, bs, script, note in RUNS:
             path = os.path.join(args.test_preds_dir, pre + tfile[rid] + ".json")
             if not os.path.exists(path): continue
             pm = {p["image_id"]: (_clean(p["caption"]) or ".") for p in json.load(open(path))}
             r = {i: _safe(v) for i, v in tok.tokenize({i: [{"caption": pm[i]}] for i in tids}).items()}
             score = 100 * Cider().compute_score({i: tgt[i] for i in tids}, {i: r[i] for i in tids})[0]
-            rows.append({"run": rid, "task": "VizWiz-Captions test (reconstructed references)", "representation": rep, "checkpoint": ckpt, "seed": seed,
+            rows.append({"run": rid, "task": "VizWiz-Captions test (official evaluation captions, matched to the images)", "representation": rep, "checkpoint": ckpt, "seed": seed,
                          "precision": prec, "prompt": prompt, "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script,
                          "scorer": "src/score_captions_test.py (PTBTokenizer, CIDEr-D, ASCII-folded text)", "metric": "CIDEr-D", "score": round(float(score), 2),
                          "n_scored": f"{sum(1 for i in tids if i in pm)}/7807", "prediction_file": os.path.basename(path), "prediction_sha256": sha(path),
-                         "note": "references reconstructed from the released metadata file (see results/caption_test/README.md)"})
+                         "note": "official evaluation captions matched to the test images (see results/caption_test/README.md)"})
     if args.calibration and os.path.exists(args.calibration):
         rid, rep, ckpt, seed, prec, prompt, bs, script, note = CAL
         score, n = vqa_score(args.calibration)
