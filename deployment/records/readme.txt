@@ -39,14 +39,19 @@ Table 11  Memory and footprint
 Table 12  Latency
     Run 3 of three consecutive runs: section 2.3 = raw lines 457-487
         VQA inference 0.93 +- 0.11 s, caption 1.97 +- 0.26 s, system E2E 1.36 / 2.41 s,
-        user-perceived 2.37 / 5.88 s, throughput 0.74 / 0.42 q/s
+        user-perceived 2.37 / 5.88 s, throughput 0.74 / 0.41 q/s (1 / system E2E; the benchmark
+        prints 0.415 for the caption profile, 1 / 2.4115 s = 0.4147)
     Runs 1 and 2 (raw lines 235-265, 349-379) are reported as a range, not discarded.
 Table 13  Power and energy
-    As printed by the fixed analyzer: section 3.2 = raw lines 664-692
-        P_sys 4.11, P_idle 4.14, P_active 9.60 W; 15.80 +- 0.41 J total, 8.67 +- 0.22 J net;
-        24.0 h at 10 queries/h and 10.4 h continuous (100 Wh pack, illustrative)
-    Exact-window re-analysis of the same files: energy_summary_table13_pair.json
-        16.62 +- 0.16 J total, 9.02 +- 0.15 J above idle, +2.02 +- 0.08 J in the following second
+    Power rows (section 3.2 = raw lines 664-692, fixed analyzer): P_sys 4.11, P_idle 4.14,
+        P_active 9.60 W
+    Energy rows (exact-window re-analysis of the same files, energy_summary_table13_pair.json):
+        16.62 +- 0.16 J total over the 1.84 s inference window, 9.02 +- 0.15 J above idle,
+        +2.02 +- 0.08 J in the following second, 11.04 +- 0.16 J through the cycle, about 11.3 J
+        estimated complete (fitted decay time constant 0.42 s)
+    Superseded for traceability: the fixed analyzer printed 15.80 +- 0.41 J total and 8.67 +- 0.22 J
+        net, because it integrates only the samples inside each window
+    Battery estimates: 24.0 h at 10 queries/h and 10.4 h continuous (100 Wh pack, illustrative)
 Table 14  Cloud column (A100)
     a100_table14_output.txt: latency 0.266 +- 0.039 s (VQA, 30 tokens) and 0.572 +- 0.007 s (caption,
     64 tokens); power 76.7 W and 64.7 W (one instantaneous NVML reading after each run); static
