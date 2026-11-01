@@ -12,9 +12,9 @@ The audited version is **v1.0 (commit `4f4d378`)**. Nothing that produced a repo
 - `selective_prediction_analysis.py`: retained-set composition by confidence threshold, informative accepted set, cross-fitted thresholds, comparison of two prediction sets of the same model.
 - `make_overlap_spec.py`, `audit_overlap.py`, `overlap_exposure_analysis.py`: image-overlap audit across the training, validation and evaluation partitions of both tasks (SHA-256 identity, optional difference hash), exposure categories and sensitivity analyses.
 - `diagnose_caption_csv.py`: checks how image names in the released VizWiz-Captions metadata CSV relate to the released splits.
-- `check_completeness.py`: asserts that a prediction file covers every eligible item (the scorers are unchanged).
+- `check_completeness.py`: asserts that a prediction file covers every eligible item.
 - `score_captions_baseline.py`: caption scoring used for the baseline comparison.
-- `score_captions_test.py`: scores the reconstructed test references with the same metrics and reference filtering as `score_captions.py`, after folding non-ASCII characters to ASCII (changes the test CIDEr-D by 0.01 to 0.06 and the validation CIDEr-D by at most 0.01).
+- `score_captions.py`: scores test captions references with the same metrics and reference filtering as `score_captions.py`, after folding non-ASCII characters to ASCII (changes the test CIDEr-D by 0.01 to 0.06 and the validation CIDEr-D by at most 0.01).
 - `caption_test_checks.py`: validity checks of the reconstructed test references (neighbour-shift test, position check, duplicate sensitivity).
 - `caption_paired_intervals.py`: paired VizWiz-Captions comparisons (CIDEr-D gains and QLoRA against LoRA with bootstrap intervals, exported model against its adapter).
 - `build_evaluation_manifest.py`: the evaluation manifest linking every reported run to its checkpoint, representation, precision, prompt, decoding, scorer and prediction file (SHA-256).
