@@ -1,0 +1,59 @@
+{
+  "n_tensors": 1017,
+  "n_trainable_tensors": 414,
+  "trainable_params": 11298816,
+  "total_params_stored": 1737146096,
+  "trainable_pct_of_stored": 0.6504,
+  "trainable_params_by_component": {
+    "vision": 1492992,
+    "decoder": 9805824
+  },
+  "adapted_modules_by_component": {
+    "vision": 81,
+    "decoder": 126
+  },
+  "adapted_module_suffixes_by_component": {
+    "vision": {
+      "q_proj": 27,
+      "v_proj": 27,
+      "k_proj": 27
+    },
+    "decoder": {
+      "up_proj": 18,
+      "gate_proj": 18,
+      "q_proj": 18,
+      "v_proj": 18,
+      "k_proj": 18,
+      "o_proj": 18,
+      "down_proj": 18
+    }
+  },
+  "trainable_non_adapter_tensors": [],
+  "adapter_dtypes": {
+    "float32": 414
+  },
+  "frozen_dtypes": {
+    "float32": {
+      "tensors": 314,
+      "numel_stored": 528228080
+    },
+    "uint8": {
+      "tensors": 289,
+      "numel_stored": 1197619200
+    }
+  },
+  "frozen_quantized_tensors": 289,
+  "mode": "qlora",
+  "scope": "all",
+  "rank": 8,
+  "model_id": "google/paligemma-3b-mix-224",
+  "versions": {
+    "python": "3.13.16",
+    "torch": "2.10.0+cu128",
+    "transformers": "5.0.0",
+    "peft": "0.18.1",
+    "bitsandbytes": "0.49.2",
+    "accelerate": "1.13.0",
+    "cuda_device": "A100-SXM4-80GB"
+  }
+}
