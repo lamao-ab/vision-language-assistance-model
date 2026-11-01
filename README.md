@@ -296,7 +296,7 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
 | Paired captioning comparisons (CIDEr-D gains and QLoRA against LoRA with intervals, exported model against its adapter) | `src/caption_paired_intervals.py` | `results/caption_paired_intervals.json` |
 | Evaluation manifest (every run: checkpoint, representation, precision, prompt, decoding, scorer, prediction file with SHA-256) | `src/build_evaluation_manifest.py` | `results/evaluation_manifest.csv`, `results/predictions/` |
-| Independent captioning evaluation on reconstructed test references | `src/score_captions_test.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
+| Independent captioning evaluation on reconstructed test references | `src/score_captions.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
 | Blinded caption review (single rater) | `src/build_caption_review.py`, `src/analyze_caption_review.py`, `src/caption_review_stats.py` | `results/caption_review/` |
 | Export to the Hub (merge in bf16, 4-bit NF4 requantization) | `src/deploy_paligemma_to_hf.py` | Hub revisions `0545d03`, `0a66cea` |
 | Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions_baseline.py` | `results/` |
