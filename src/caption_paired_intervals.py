@@ -13,7 +13,7 @@ Optional representation pair (QLoRA seed 123): --exported is the exported merged
 unmerged adapter of the same seed, both evaluated with the same script and settings. Reported: exported - adapter with a
 paired interval and the number of images whose caption text differs.
 
---clean applies the text cleaning and the post-tokenisation guards of src/score_captions_test.py (curly quotes and accents folded to
+--clean applies the text cleaning and the post-tokenisation guards of src/score_captions.py (curly quotes and accents folded to
 ASCII), the scorer that produced the reported test scores; use it for the reconstructed test references (--scorer_dir points to src/).
 
 Usage
@@ -31,7 +31,7 @@ PRECANNED = "Quality issues are too severe to recognize visual content."
 
 
 def _safe(lst):
-    """Copy of the guard inside src/score_captions_test.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
+    """Copy of the guard inside src/score_captions.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
     out_ = [" ".join(x.replace("|", " ").split()) for x in lst]
     out_ = [x for x in out_ if x]
     return out_ or ["unk"]
@@ -63,7 +63,7 @@ def main():
     clean = lambda x: x; safe = lambda x: x
     if args.clean:
         import sys; sys.path.insert(0, args.scorer_dir)
-        from score_captions_test import _clean as clean
+        from score_captions import _clean as clean
         safe = _safe
         refs = {i: [clean(c) for c in refs[i]] for i in ids}
     g = tok.tokenize({i: [{"caption": c} for c in refs[i]] for i in ids})

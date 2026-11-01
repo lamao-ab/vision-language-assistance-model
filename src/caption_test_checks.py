@@ -28,12 +28,12 @@ from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 PRE = "Quality issues are too severe to recognize visual content."
 
 
-CLEAN = None  # (clean, safe) of src/score_captions_test.py, set by --clean
+CLEAN = None  # (clean, safe) of src/score_captions.py, set by --clean
 
 
 
 def _safe(lst):
-    """Copy of the guard inside src/score_captions_test.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
+    """Copy of the guard inside src/score_captions.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
     out_ = [" ".join(x.replace("|", " ").split()) for x in lst]
     out_ = [x for x in out_ if x]
     return out_ or ["unk"]
@@ -90,12 +90,12 @@ def main():
     ap.add_argument("--test_gt", required=True); ap.add_argument("--test_pred", nargs="+", required=True)
     ap.add_argument("--val_gt", required=True); ap.add_argument("--val_pred", nargs="+", required=True)
     ap.add_argument("--base_test", required=True); ap.add_argument("--sets", required=True); ap.add_argument("--out", default="caption_test_checks.json")
-    ap.add_argument("--clean", action="store_true", help="use the text cleaning of src/score_captions_test.py for the TEST set"); ap.add_argument("--scorer_dir", default="src")
+    ap.add_argument("--clean", action="store_true", help="use the text cleaning of src/score_captions.py for the TEST set"); ap.add_argument("--scorer_dir", default="src")
     a = ap.parse_args(); tok = PTBTokenizer(); out = {}
     global CLEAN
     if a.clean:
         import sys; sys.path.insert(0, a.scorer_dir)
-        from score_captions_test import _clean
+        from score_captions import _clean
         CLEAN = (_clean, _safe)
     tg, trefs = load_refs(a.test_gt, bool(CLEAN)); tids = sorted(trefs); tgt = tok.tokenize({i: [{"caption": c} for c in trefs[i]] for i in tids})
     if CLEAN: tgt = {i: CLEAN[1](v) for i, v in tgt.items()}

@@ -34,7 +34,7 @@ CAL = ("qlora-s123-exported-calibration", "exported model: adapter merged into B
 
 
 def _safe(lst):
-    """Copy of the guard inside src/score_captions_test.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
+    """Copy of the guard inside src/score_captions.py: drop '|' (METEOR's field separator) and empty strings after tokenisation."""
     out_ = [" ".join(x.replace("|", " ").split()) for x in lst]
     out_ = [x for x in out_ if x]
     return out_ or ["unk"]
@@ -87,7 +87,7 @@ def main():
                          "prediction_sha256": sha(path), "note": note})
     if args.caps_test_gt and args.test_preds_dir:
         sys.path.insert(0, args.scorer_dir)
-        from score_captions_test import _clean     # the scorer that produced the reported test scores
+        from score_captions import _clean     # the scorer that produced the reported test scores
         tj = json.load(open(args.caps_test_gt)); trefs = {}
         for a in tj["annotations"]:
             c = _clean(a["caption"])
@@ -104,7 +104,7 @@ def main():
             score = 100 * Cider().compute_score({i: tgt[i] for i in tids}, {i: r[i] for i in tids})[0]
             rows.append({"run": rid, "task": "VizWiz-Captions test (official evaluation captions, matched to the images)", "representation": rep, "checkpoint": ckpt, "seed": seed,
                          "precision": prec, "prompt": prompt, "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script,
-                         "scorer": "src/score_captions_test.py (PTBTokenizer, CIDEr-D, ASCII-folded text)", "metric": "CIDEr-D", "score": round(float(score), 2),
+                         "scorer": "src/score_captions.py (PTBTokenizer, CIDEr-D)", "metric": "CIDEr-D", "score": round(float(score), 2),
                          "n_scored": f"{sum(1 for i in tids if i in pm)}/7807", "prediction_file": os.path.basename(path), "prediction_sha256": sha(path),
                          "note": "official evaluation captions matched to the test images (see results/caption_test/README.md)"})
     if args.calibration and os.path.exists(args.calibration):
