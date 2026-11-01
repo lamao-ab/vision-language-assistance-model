@@ -329,7 +329,11 @@ def run_vqa(model, processor, args):
 #  evaluable format, so captioning is reported on validation):
 #    Images : https://vizwiz.cs.colorado.edu/VizWiz_final/images/val.zip   (auto-downloaded)
 #    Refs   : official annotations/val.json  (pass via --vizwiz_val_json)
+#  TEST split (--caps_split test): uses the realigned test references
+#    Images : https://vizwiz.cs.colorado.edu/VizWiz_final/images/test.zip  (auto-downloaded)
+#    Refs   : test_captions_7974.json (pass via --vizwiz_test_json)
 CAPS_VAL_IMAGES_URL = "https://vizwiz.cs.colorado.edu/VizWiz_final/images/val.zip"
+CAPS_TEST_IMAGES_URL = "https://vizwiz.cs.colorado.edu/VizWiz_final/images/test.zip"
 CAPS_ANNOT_URL      = "https://vizwiz.cs.colorado.edu/VizWiz_final/caption/annotations.zip"  # -> annotations/val.json
 
 
@@ -407,8 +411,9 @@ def run_caps(model, processor, args):
     print(f"📊 Batch size: {args.batch_size}")
     print(f"📏 Max tokens: {args.max_tokens}")
 
-    temp_output_file  = _pred_path(args.output_dir, "vizwiz_caption_temp_results.jsonl", args.tag)
-    final_output_file = _pred_path(args.output_dir, "vizwiz_caption_val_predictions.json", args.tag)
+    split = args.caps_split
+    temp_output_file  = _pred_path(args.output_dir, f"vizwiz_caption_{split}_temp_results.jsonl", args.tag)
+    final_output_file = _pred_path(args.output_dir, f"vizwiz_caption_{split}_predictions.json", args.tag)
 
     # ── Resume support ────────────────────────────────────────────────────────
     processed_image_ids: set = set()
@@ -431,26 +436,38 @@ def run_caps(model, processor, args):
     # official val image folder (val.zip from vizwiz.cs.colorado.edu).
     #   Images:    https://vizwiz.cs.colorado.edu/VizWiz_final/images/val.zip
     #   val.json:  annotations/val.json from the official annotations.zip
-    print("\n📥 Loading official VizWiz-Caps VALIDATION set...")
     caps_root = os.path.join(args.workdir, "vizwiz_caps_data")
     os.makedirs(caps_root, exist_ok=True)
 
-    # Auto-download official validation images if not already present
-    if not os.path.isdir(args.vizwiz_val_images) or not os.listdir(args.vizwiz_val_images):
-        download_and_extract(CAPS_VAL_IMAGES_URL, caps_root)
-        args.vizwiz_val_images = os.path.join(caps_root, "val")
+    if split == "val":
+        print("\n📥 Loading official VizWiz-Caps VALIDATION set...")
+        images_dir, refs_json = args.vizwiz_val_images, args.vizwiz_val_json
+        # Auto-download official validation images if not already present
+        if not os.path.isdir(images_dir) or not os.listdir(images_dir):
+            download_and_extract(CAPS_VAL_IMAGES_URL, caps_root)
+            images_dir = os.path.join(caps_root, "val")
+        # Auto-download caption references (val.json) if the given path doesn't exist
+        if not os.path.exists(refs_json):
+            download_and_extract(CAPS_ANNOT_URL, caps_root)
+            refs_json = os.path.join(caps_root, "annotations", "val.json")
+    else:
+        print("\n📥 Loading realigned VizWiz-Caps TEST set...")
+        images_dir, refs_json = args.vizwiz_test_images, args.vizwiz_test_json
+        if not os.path.exists(refs_json):
+            raise FileNotFoundError(
+                f"Test references not found: {refs_json} "
+                "(pass the realigned test_captions_7974.json via --vizwiz_test_json)")
+        # Reuse test images (same test.zip as VQA); download only if missing
+        if not os.path.isdir(images_dir) or not os.listdir(images_dir):
+            download_and_extract(CAPS_TEST_IMAGES_URL, caps_root)
+            images_dir = os.path.join(caps_root, "test")
 
-    # Auto-download caption references (val.json) if the given path doesn't exist
-    if not os.path.exists(args.vizwiz_val_json):
-        download_and_extract(CAPS_ANNOT_URL, caps_root)
-        args.vizwiz_val_json = os.path.join(caps_root, "annotations", "val.json")
-
-    val_json = json.load(open(args.vizwiz_val_json))
-    # build list of {image_id (int), file_name}
+    refs = json.load(open(refs_json))
+    # build list of {image_id (int), file_name}; ids come from the JSON, so
+    # predictions match the reference file directly
     caption_val = [{"image_id": im["id"], "file_name": im["file_name"]}
-                   for im in val_json["images"]]
-    print(f"   ✅ Loaded {len(caption_val):,} validation images "
-          f"(references: {args.vizwiz_val_json})")
+                   for im in refs["images"]]
+    print(f"   ✅ Loaded {len(caption_val):,} {split} images (references: {refs_json})")
 
     indices_to_process = [
         i for i, item in enumerate(caption_val)
@@ -472,9 +489,9 @@ def run_caps(model, processor, args):
         start_time        = time.time()
 
         with open(temp_output_file, "a") as f_out:
-            for idx, item in enumerate(tqdm(caption_subset, desc="Caption Val")):
+            for idx, item in enumerate(tqdm(caption_subset, desc=f"Caption {split}")):
                 try:
-                    image_path = os.path.join(args.vizwiz_val_images, item["file_name"])
+                    image_path = os.path.join(images_dir, item["file_name"])
                     image  = Image.open(image_path).convert("RGB")
                     prompt = build_caption_prompt(args.prompt_style)
                     image_id = item["image_id"]            # official integer id
@@ -580,6 +597,12 @@ def main():
                         help="folder of official VizWiz validation images (from val.zip)")
     parser.add_argument("--vizwiz_val_json", default="outputs/eval_data/vizwiz_caps_data/annotations/val.json",
                         help="official COCO-format val.json (image_id<->file_name + references)")
+    parser.add_argument("--caps_split", choices=["val", "test"], default="val",
+                        help="captioning split: official val, or realigned test")
+    parser.add_argument("--vizwiz_test_images", default="outputs/eval_data/vizwiz_vqa_data/test",
+                        help="folder of VizWiz test images (from test.zip; shared with VQA)")
+    parser.add_argument("--vizwiz_test_json", default="outputs/eval_data/vizwiz_caps_data/test_captions_7974.json",
+                        help="realigned COCO-format test references (test_captions_7974.json)")
     parser.add_argument("--base_model_id", default="google/paligemma-3b-mix-224",
                         help="Base model ID — only used when --model_id is a local adapter")
     parser.add_argument("--precision", choices=["bf16", "4bit"], default="bf16",
