@@ -29,7 +29,7 @@ RUNS = [  # (run id, file stem, representation, checkpoint, seed, precision, pro
     ("qlora-s123-exported", "qlora_seed123_merged_custom", "exported model: adapter merged into BF16 weights, requantized to 4-bit", HUB, 123, "4-bit", "accessibility", 128, "src/evaluate_vizwiz.py", ""),
 ]
 CAL = ("qlora-s123-exported-calibration", "exported model: adapter merged into BF16 weights, requantized to 4-bit", HUB, 123, "4-bit", "accessibility", 32,
-       "calibration notebook (confidence extraction)", "decoding settings of this run to be confirmed from the notebook")
+       "calibration notebook (confidence extraction)", "decoding as in src/evaluate_vizwiz.py (confirmed by the authors); confidence extracted by the calibration notebook")
 
 
 
@@ -111,7 +111,7 @@ def main():
         rid, rep, ckpt, seed, prec, prompt, bs, script, note = CAL
         score, n = vqa_score(args.calibration)
         rows.append({"run": rid, "task": "VizWiz-VQA test", "representation": rep, "checkpoint": ckpt, "seed": seed, "precision": prec, "prompt": prompt,
-                     "decoding": "see note", "batch_size": bs, "script": script, "scorer": "src/score_vizwiz_vqa.py", "metric": "VizWiz accuracy",
+                     "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script, "scorer": "src/score_vizwiz_vqa.py", "metric": "VizWiz accuracy",
                      "score": round(float(score), 2), "n_scored": f"{n}/8000", "prediction_file": os.path.basename(args.calibration),
                      "prediction_sha256": sha(args.calibration), "note": note})
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
