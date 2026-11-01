@@ -25,10 +25,10 @@ The captions are the official ones; the matching of caption sets to image files 
 
 ## Scorer
 
-`src/score_captions_test.py` applies the same metrics and the same reference filtering as `src/score_captions.py`, after folding curly quotes and accents to ASCII (30 test references and 13 predictions contain non-ASCII characters, which the Java tokenizer can split or merge lines on). On the test predictions it gives CIDEr-D 0.01 to 0.06 higher than `score_captions.py`; on the validation predictions the two differ by at most 0.01.
+`src/score_captions.py` is used for both the validation and the test references, with the same metrics and the same reference filtering.
 
 ## Use
 
 ```bash
-python src/score_captions_test.py --dataset vizwiz --gt results/caption_test/test_captions_7974.json --pred <predictions>.json
+python src/score_captions.py --dataset vizwiz --gt results/caption_test/test_captions_7974.json --pred <predictions>.json
 ```
