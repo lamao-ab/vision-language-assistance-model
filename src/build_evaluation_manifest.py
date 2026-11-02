@@ -83,7 +83,7 @@ def main():
             rows.append({"run": rid, "task": task, "representation": rep, "checkpoint": ckpt, "seed": seed, "precision": prec, "prompt": prompt,
                          "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script,
                          "scorer": "src/score_vizwiz_vqa.py" if "VQA" in task else "src/score_captions.py (PTBTokenizer, CIDEr-D)",
-                         "metric": metric, "score": round(float(score), 2), "n_scored": f"{n}/{expected}", "prediction_file": os.path.basename(path),
+                         "metric": metric, "score": round(round(float(score), 6), 2), "n_scored": f"{n}/{expected}", "prediction_file": os.path.basename(path),
                          "prediction_sha256": sha(path), "note": note})
     if args.caps_test_gt and args.test_preds_dir:
         sys.path.insert(0, args.scorer_dir)
@@ -104,7 +104,7 @@ def main():
             score = 100 * Cider().compute_score({i: tgt[i] for i in tids}, {i: r[i] for i in tids})[0]
             rows.append({"run": rid, "task": "VizWiz-Captions test (official evaluation captions, matched to the images)", "representation": rep, "checkpoint": ckpt, "seed": seed,
                          "precision": prec, "prompt": prompt, "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script,
-                         "scorer": "src/score_captions.py (PTBTokenizer, CIDEr-D)", "metric": "CIDEr-D", "score": round(float(score), 2),
+                         "scorer": "src/score_captions.py (PTBTokenizer, CIDEr-D)", "metric": "CIDEr-D", "score": round(round(float(score), 6), 2),
                          "n_scored": f"{sum(1 for i in tids if i in pm)}/7807", "prediction_file": os.path.basename(path), "prediction_sha256": sha(path),
                          "note": "official evaluation captions matched to the test images (see results/caption_test/README.md)"})
     if args.calibration and os.path.exists(args.calibration):
@@ -112,7 +112,7 @@ def main():
         score, n = vqa_score(args.calibration)
         rows.append({"run": rid, "task": "VizWiz-VQA test", "representation": rep, "checkpoint": ckpt, "seed": seed, "precision": prec, "prompt": prompt,
                      "decoding": "greedy (do_sample=False), max_new_tokens 64", "batch_size": bs, "script": script, "scorer": "src/score_vizwiz_vqa.py", "metric": "VizWiz accuracy",
-                     "score": round(float(score), 2), "n_scored": f"{n}/8000", "prediction_file": os.path.basename(args.calibration),
+                     "score": round(round(float(score), 6), 2), "n_scored": f"{n}/8000", "prediction_file": os.path.basename(args.calibration),
                      "prediction_sha256": sha(args.calibration), "note": note})
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with open(args.out, "w", newline="") as f:
