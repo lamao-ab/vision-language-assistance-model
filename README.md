@@ -16,15 +16,15 @@
 
 ## 🎯 Overview
 This repository provides a complete pipeline for training and deploying vision-language models on edge devices for real-time blind assistance. Our deployed 4-bit (QLoRA) model achieves:
-- **75.71% VQA accuracy** on VizWiz-VQA (10-choose-9 metric), within 0.09 points of the full-precision LoRA model (75.80%)
-- **97.44 CIDEr-D** on VizWiz-Captions, within 0.6 points of full-precision LoRA (98.08)
-- **2.10 GB static memory footprint** (2.25 GB peak during inference), enabling deployment on an 8 GB Jetson Orin Nano
+- **75.53% VQA accuracy** on VizWiz-VQA test (exported 4-bit model; official VizWiz metric). The three-seed QLoRA adapters score 75.71% ± 0.14, 0.09 points below LoRA (75.80% ± 0.21; paired 95% interval −0.38 to +0.19)
+- **102.24 CIDEr-D** on the VizWiz-Captions test captions (exported 4-bit model; base 60.17). The three-seed QLoRA adapters score 103.02 ± 1.18, 1.35 below LoRA (104.37 ± 1.36), lower in every seed
+- **2.14 GB static memory footprint** (2.25 GB peak during inference), enabling deployment on an 8 GB Jetson Orin Nano
 - **0.93–1.97 s inference latency** (device-side compute) for interactive VQA and scene-description queries
-- **~24 hours realistic battery life** (10 queries/hour, 100 Wh pack); ~10.4 hours under continuous inference
+- **~24 hours illustrative battery estimate** (10 queries/hour, 100 Wh pack, excluding camera, audio and thermal limits); ~10.4 hours under continuous inference
 
 ### Key Features
 ✅ **Parameter-Efficient Fine-Tuning**: Train only 11.3M parameters (0.385% of total) using LoRA \
-✅ **4-bit Quantization**: QLoRA reduces the deployed footprint from 5.45 GB (bf16) to 2.13 GB — the bf16 model does not fit in the Jetson's available memory, making quantization a deployment requirement, not just an optimization \
+✅ **4-bit Quantization**: QLoRA reduces the deployed footprint from 5.45 GB (bf16) to 2.14 GB — the bf16 model does not fit in the Jetson's available memory, making quantization a deployment requirement, not just an optimization \
 ✅ **Multi-Task Learning**: Joint training on VQA and image captioning, with both tasks improving over the base checkpoint \
 ✅ **Edge Deployment**: Runs on an NVIDIA Jetson Orin Nano 8GB (4-bit model only — see Hardware Requirements) \
 ✅ **Privacy-Aware**: All processing on-device, reducing (not eliminating) exposure of sensitive data to external services \
@@ -214,13 +214,26 @@ Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA. Base is the off-the-shelf 
 | PaliGemma-3B (`mix`)     | 73.95%             | 81.65%             | 5.45\*                 |
 | PaliGemma-3B (`mix`), accessibility prompt | 74.83%       | —                  | 5.45                   |
 | PaliGemma-3B + LoRA      | 75.80% ± 0.21      | 81.15% ± 0.04      | 5.45                   |
-| **PaliGemma-3B + QLoRA** | **75.71% ± 0.14**  | **80.72% ± 0.04**  | **2.13**               |
+| **PaliGemma-3B + QLoRA** | **75.71% ± 0.14**  | **80.72% ± 0.04**  | **2.14**               |
 
 \*Base and LoRA share the same bf16 backbone footprint (LoRA freezes the base weights); only the adapter differs.
 
 Gain of the adapted models over the base **at its better prompt** (accessibility): LoRA +0.97 points (95% CI 0.46 to 1.46), QLoRA +0.88 (0.35 to 1.39). Against the generic-prompt base the gains are +1.85 and +1.76, of which +0.88 comes from the prompt alone. Excluding the 328 test images whose photograph also occurs in the training data under another file name, LoRA scores 75.56 and QLoRA 75.47.
 
 The QLoRA rows are the training-time adapter over the 4-bit backbone. The exported merged model (Hub revision `0a66cea`, adapter merged into BF16 weights and requantized) scores 75.53 under the same evaluation settings.
+
+### Captioning Performance (VizWiz-Caps test set, main captioning results)
+The test captions are the officially released evaluation annotations (`VizWiz_captions_project_all_metadata.csv`), matched to the test images by us (7,974 of 8,000 images, 7,807 with a valid caption); see [`results/caption_test/`](results/caption_test/). Every model was evaluated once on these images and no selection was made on them. Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA.
+
+| Model                    | CIDEr-D             | BLEU-4             | METEOR             | ROUGE-L             | Avg. Length |
+|--------------------------|---------------------|--------------------|--------------------|---------------------|-------------|
+| PaliGemma-3B (`mix`)     | 60.17               | 12.53              | 14.22              | 29.40               | 5.00        |
+| PaliGemma-3B (`mix`), accessibility prompt | 25.01      | 0.48               | 7.00               | 15.67               | 1.83        |
+| PaliGemma-3B + LoRA      | 104.37 ± 1.36       | 31.70 ± 0.20       | 23.82 ± 0.31       | 50.63 ± 0.41        | 10.19       |
+| **PaliGemma-3B + QLoRA** | **103.02 ± 1.18**   | **31.39 ± 0.28**   | **23.64 ± 0.25**   | **50.40 ± 0.32**    | **10.18**   |
+| QLoRA, exported merged model (seed 123) | 102.24           | 31.03              | 23.56              | 49.83               | 10.32       |
+
+Gain over the base at its generic prompt: LoRA +44.20 CIDEr-D (95% CI 42.53 to 45.84), QLoRA +42.85 (41.23 to 44.45). QLoRA is 1.35 below LoRA (−2.01 to −0.69), lower in every seed; the exported model is 1.28 below its own adapter (−2.19 to −0.37).
 
 ### Captioning Performance (VizWiz-Caps validation set, development-set results)
 | Model                    | CIDEr-D            | BLEU-4             | METEOR             | ROUGE-L            | Avg. Length |
@@ -296,13 +309,14 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
 | Paired captioning comparisons (CIDEr-D gains and QLoRA against LoRA with intervals, exported model against its adapter) | `src/caption_paired_intervals.py` | `results/caption_paired_intervals.json` |
 | Evaluation manifest (every run: checkpoint, representation, precision, prompt, decoding, scorer, prediction file with SHA-256) | `src/build_evaluation_manifest.py` | `results/evaluation_manifest.csv`, `results/predictions/` |
-| Independent captioning evaluation on reconstructed test references | `src/score_captions.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
+| Independent captioning evaluation on the officially released test captions (matched to the images) | `src/score_captions.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
 | Blinded caption review (single rater) | `src/build_caption_review.py`, `src/analyze_caption_review.py`, `src/caption_review_stats.py` | `results/caption_review/` |
 | Export to the Hub (merge in bf16, 4-bit NF4 requantization) | `src/deploy_paligemma_to_hf.py` | Hub revisions `0545d03`, `0a66cea` |
 | Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions_baseline.py` | `results/` |
+| General-domain benchmarks (VQAv2 test-standard, COCO val2014): predictions, server outputs and scores | `src/evaluate_benchmark.py`, `src/score_captions.py --dataset coco` | `results/predictions/benchmarks/` |
 | Deployment measurements | `deployment/*.py` | `deployment/records/` |
 
-The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` are unchanged since the audited commit `4f4d378`.
+The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` reproduce the scores reported at the audited commit `4f4d378`; `src/score_captions.py` now also serves the test captions. The baselines of the model-selection table are scored with `src/score_captions_baseline.py`.
 
 ---
 
