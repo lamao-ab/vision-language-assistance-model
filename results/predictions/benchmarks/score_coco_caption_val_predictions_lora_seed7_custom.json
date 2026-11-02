@@ -1,0 +1,16 @@
+{
+  "Bleu_1": 0.783,
+  "Bleu_2": 0.6228,
+  "Bleu_3": 0.4746,
+  "Bleu_4": 0.3535,
+  "METEOR": 0.3062,
+  "ROUGE_L": 0.5884,
+  "CIDEr": 1.2685,
+  "length_stats": {
+    "n_captions": 40504,
+    "avg_words": 10.94,
+    "min_words": 7,
+    "max_words": 57,
+    "median_words": 10
+  }
+}
