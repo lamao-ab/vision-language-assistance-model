@@ -1,0 +1,17 @@
+{
+  "n_images_scored": 7542,
+  "Bleu_1": 0.7195,
+  "Bleu_2": 0.5543,
+  "Bleu_3": 0.4168,
+  "Bleu_4": 0.309,
+  "METEOR": 0.2366,
+  "ROUGE_L": 0.4966,
+  "CIDEr": 0.9895,
+  "length_stats": {
+    "n_captions": 7542,
+    "avg_words": 10.39,
+    "min_words": 6,
+    "max_words": 28,
+    "median_words": 10
+  }
+}
