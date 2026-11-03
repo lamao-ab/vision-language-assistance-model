@@ -28,8 +28,8 @@ RUNS = [  # (run id, file stem, representation, checkpoint, seed, precision, pro
     ("qlora-s123", "qlora_seed123_custom", "unmerged QLoRA adapter over 4-bit NF4 backbone", EPOCH2, 123, "4-bit", "accessibility", 128, "src/evaluate_vizwiz.py", ""),
     ("qlora-s123-exported", "qlora_seed123_merged_custom", "exported model: adapter merged into BF16 weights, requantized to 4-bit", HUB, 123, "4-bit", "accessibility", 128, "src/evaluate_vizwiz.py", ""),
 ]
-CAL = ("qlora-s123-exported-calibration", "exported model: adapter merged into BF16 weights, requantized to 4-bit", HUB, 123, "4-bit", "accessibility", 32,
-       "calibration notebook (confidence extraction)", "decoding as in src/evaluate_vizwiz.py (confirmed by the authors); confidence extracted by the calibration notebook")
+CAL = ("qlora-s123-exported-calibration", "exported model: adapter merged into BF16 weights, requantized to 4-bit", HUB, 123, "4-bit", "accessibility", 128,
+       "calibration notebook (loop of src/evaluate_vizwiz.py with token log-probabilities)", "loader, prompt, processor call, batch size and decoding as in src/evaluate_vizwiz.py; answers identical to the exported-model evaluation; token log-probabilities recorded by the calibration notebook")
 
 
 
@@ -95,7 +95,7 @@ def main():
             trefs.setdefault(a["image_id"], []).append(c)
         tids = sorted(trefs); tgt = {i: _safe(v) for i, v in tok.tokenize({i: [{"caption": c} for c in trefs[i]] for i in tids}).items()}
         pre = "vizwiz_caption_test_predictions_"
-        tfile = {"base-generic": "base_generic", "base-accessibility": "base_custom", "lora-s7": "lora_seed7_custom", "lora-s42": "lora_seed42_custom", "lora-s123": "lora_seed123_custom", "qlora-s7": "qlora_seed7", "qlora-s42": "qlora_seed42", "qlora-s123": "qlora_seed123", "qlora-s123-exported": "qlora_merged_seed123"}
+        tfile = {"base-generic": "base_generic", "base-accessibility": "base_custom", "lora-s7": "lora_seed7_custom", "lora-s42": "lora_seed42_custom", "lora-s123": "lora_seed123_custom", "qlora-s7": "qlora_seed7", "qlora-s42": "qlora_seed42", "qlora-s123": "qlora_seed123", "qlora-s123-exported": "qlora_merged_seed123_custom"}
         for rid, stem, rep, ckpt, seed, prec, prompt, bs, script, note in RUNS:
             path = os.path.join(args.test_preds_dir, pre + tfile[rid] + ".json")
             if not os.path.exists(path): continue
