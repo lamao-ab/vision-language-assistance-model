@@ -220,7 +220,7 @@ Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA. Base is the off-the-shelf 
 
 Gain of the adapted models over the base **at its better prompt** (accessibility): LoRA +0.97 points (95% CI 0.46 to 1.46), QLoRA +0.88 (0.35 to 1.39). Against the generic-prompt base the gains are +1.85 and +1.76, of which +0.88 comes from the prompt alone. Excluding the 328 test images whose photograph also occurs in the training data under another file name, LoRA scores 75.56 and QLoRA 75.47.
 
-The QLoRA rows are the training-time adapter over the 4-bit backbone. The exported merged model (Hub revision `0a66cea`, adapter merged into BF16 weights and requantized) scores 75.45 under the same evaluation settings.
+The QLoRA rows are the training-time adapter over the 4-bit backbone. The exported merged model (Hub revision `0a66cea`, adapter merged into BF16 weights and requantized) scores 75.45 under the same evaluation settings. Training ran on an NVIDIA A100-SXM4-80GB. Results of 4-bit generation can differ slightly between GPU types.
 
 ### Captioning Performance (VizWiz-Caps test set, main captioning results)
 The test captions are the officially released evaluation annotations (`VizWiz_captions_project_all_metadata.csv`), matched to the test images by us (7,974 of 8,000 images, 7,807 with a valid caption); see [`results/caption_test/`](results/caption_test/). Every model was evaluated once on these images and no selection was made on them. Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA.
@@ -242,7 +242,7 @@ Gain over the base at its generic prompt: LoRA +44.20 CIDEr-D (95% CI 42.53 to 4
 | PaliGemma-3B (`mix`), accessibility prompt | 22.30      | 0.39               | 6.68               | 15.06               | 1.76        |
 | PaliGemma-3B + LoRA      | 98.08 ± 1.51        | 30.77 ± 0.36       | 23.45 ± 0.31       | 49.54 ± 0.47        | 10.30       |
 | **PaliGemma-3B + QLoRA** | **97.44 ± 1.45**    | **30.63 ± 0.29**   | **23.30 ± 0.35**   | **49.33 ± 0.38**    | **10.24**   |
-| QLoRA, exported merged model (seed 123) | 96.99            | 30.46              | 23.29              | 48.87               | 10.37       |
+| QLoRA, exported merged model (seed 123) | 97.19            | 30.43              | 23.27              | 48.91               | 10.37       |
 The validation images also selected the checkpoints (epoch 2, `checkpoint-2152`, in all six runs), so these are development-set results. On the 3,207 eligible validation images that are neither VQA photographs nor duplicates of training photographs, LoRA scores 100.45 ± 1.33 CIDEr-D against 56.65 for the base (CIDEr-D document frequencies are recomputed on each subset).
 
 
@@ -294,7 +294,7 @@ Only the 4-bit QLoRA model (the exported merged model) is deployed on-device; th
 | QLoRA tables (three-seed means, Table 20) | training-time adapter, unmerged, over the 4-bit NF4 backbone (`checkpoint-2152` of each seed) |
 | Deployment (memory, latency, energy, A100) and the confidence analysis | exported merged model: adapter merged into BF16 weights, requantized to 4 bits |
 
-Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lora-merged-v1`](https://huggingface.co/lamao-ab/paligemma-blind-assist-lora-merged-v1) at `0545d03`; QLoRA merged [`lamao-ab/paligemma-blind-assist-qlora-merged-v1`](https://huggingface.co/lamao-ab/paligemma-blind-assist-qlora-merged-v1) at `0a66cea` (load with `revision="0a66cea"` to pin it). On VizWiz-VQA, seed 123: unmerged adapter 75.86, exported model 75.45 under identical settings (same script, accessibility prompt, batch size 128, greedy decoding, 64 new tokens, 4-bit), 75.59 in the confidence analysis (batch size 32).
+Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lora-merged-v1`](https://huggingface.co/lamao-ab/paligemma-blind-assist-lora-merged-v1) at `0545d03`; QLoRA merged [`lamao-ab/paligemma-blind-assist-qlora-merged-v1`](https://huggingface.co/lamao-ab/paligemma-blind-assist-qlora-merged-v1) at `0a66cea` (load with `revision="0a66cea"` to pin it). On VizWiz-VQA, seed 123: unmerged adapter 75.86, exported model 75.45 under identical settings (same script, accessibility prompt, batch size 128, greedy decoding, 64 new tokens, 4-bit), and the confidence analysis uses the same configuration and also gives 75.45.
 
 ---
 
