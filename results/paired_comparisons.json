@@ -100,48 +100,48 @@
   "representation_qlora_seed123": {
     "adapter_to_exported_same_settings": {
       "score_a": 75.86,
-      "score_b": 75.53,
+      "score_b": 75.45,
       "b_minus_a_and_95ci": [
-        -0.33,
-        -0.68,
-        0.03
+        -0.4,
+        -0.75,
+        -0.04
       ],
-      "answers_differ": 728,
-      "b_better": 239,
-      "b_worse": 253,
-      "substantive_to_substantive": 460,
+      "answers_differ": 725,
+      "b_better": 235,
+      "b_worse": 259,
+      "substantive_to_substantive": 455,
       "abstentions_a": 3844,
-      "abstentions_b": 3736
+      "abstentions_b": 3732
     },
     "exported_to_calibration_run": {
-      "score_a": 75.53,
-      "score_b": 75.59,
+      "score_a": 75.45,
+      "score_b": 75.45,
       "b_minus_a_and_95ci": [
-        0.06,
-        -0.15,
-        0.27
+        0.0,
+        0.0,
+        0.0
       ],
-      "answers_differ": 217,
-      "b_better": 78,
-      "b_worse": 77,
-      "substantive_to_substantive": 145,
-      "abstentions_a": 3736,
-      "abstentions_b": 3746
+      "answers_differ": 0,
+      "b_better": 0,
+      "b_worse": 0,
+      "substantive_to_substantive": 0,
+      "abstentions_a": 3732,
+      "abstentions_b": 3732
     },
     "adapter_to_calibration_run": {
       "score_a": 75.86,
-      "score_b": 75.59,
+      "score_b": 75.45,
       "b_minus_a_and_95ci": [
-        -0.27,
-        -0.62,
-        0.1
+        -0.4,
+        -0.75,
+        -0.04
       ],
-      "answers_differ": 727,
-      "b_better": 243,
-      "b_worse": 253,
-      "substantive_to_substantive": 461,
+      "answers_differ": 725,
+      "b_better": 235,
+      "b_worse": 259,
+      "substantive_to_substantive": 455,
       "abstentions_a": 3844,
-      "abstentions_b": 3746
+      "abstentions_b": 3732
     }
   }
 }

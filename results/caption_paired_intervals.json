@@ -8,7 +8,13 @@
       98.84,
       99.05
     ],
-    "lora_mean": 98.08
+    "lora_mean": 98.08,
+    "qlora_per_seed": [
+      96.05,
+      97.33,
+      98.95
+    ],
+    "qlora_mean": 97.44
   },
   "mean_and_95ci": {
     "lora_minus_base_generic": [
@@ -25,6 +31,29 @@
       75.77,
       74.15,
       77.41
+    ],
+    "qlora_minus_base_generic": [
+      42.13,
+      40.51,
+      43.77
+    ],
+    "qlora_minus_lora": [
+      -0.63,
+      -1.25,
+      -0.01
     ]
+  },
+  "representation_pair": {
+    "adapter_cider_d": 98.95,
+    "exported_cider_d": 97.19,
+    "exported_minus_adapter_mean_and_95ci": [
+      -1.75,
+      -2.7,
+      -0.8
+    ],
+    "images_with_different_caption": 4266,
+    "exported_better": 2041,
+    "exported_worse": 2190,
+    "n_images": 7542
   }
 }
