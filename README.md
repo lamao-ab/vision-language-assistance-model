@@ -223,7 +223,7 @@ Gain of the adapted models over the base **at its better prompt** (accessibility
 The QLoRA rows are the training-time adapter over the 4-bit backbone. The exported merged model (Hub revision `0a66cea`, adapter merged into BF16 weights and requantized) scores 75.45 under the same evaluation settings. Training ran on an NVIDIA A100-SXM4-80GB. Results of 4-bit generation can differ slightly between GPU types.
 
 ### Captioning Performance (VizWiz-Caps test set, main captioning results)
-The test captions are the officially released evaluation annotations (`VizWiz_captions_project_all_metadata.csv`), matched to the test images by us (7,974 of 8,000 images, 7,807 with a valid caption); see [`results/caption_test/`](results/caption_test/). Every model was evaluated once on these images and no selection was made on them. Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA.
+The test captions are the officially released evaluation annotations (`VizWiz_captions_project_all_metadata.csv`), matched to the test images by us (the file provides 7,983 caption sets for the 8,000 test images, 9 of which match no image, so 7,974 images are evaluated); see [`results/caption_test/`](results/caption_test/). Checkpoint, rank and mixing ratio were selected on the validation loss, not on these images. Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA.
 
 | Model                    | CIDEr-D             | BLEU-4             | METEOR             | ROUGE-L             | Avg. Length |
 |--------------------------|---------------------|--------------------|--------------------|---------------------|-------------|
@@ -304,7 +304,7 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 |---|---|---|
 | Trainable-parameter inventory and adapter audit | `src/inventory_trainable.py`, `src/audit_adapters.py` | `results/adapters/` |
 | Completeness of prediction files | `src/check_completeness.py` | `results/completeness_report_vqa.json` |
-| Image overlap between partitions and tasks | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py` | `results/overlap/` |
+| Image overlap between partitions and tasks (VQA and captions, train/val/test), VQA and test-caption sensitivity | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py`, `src/overlap_dedup_test_captions.py` | `results/overlap/` |
 | Selective prediction (retained-set composition, cross-fitted thresholds) | `src/selective_prediction_analysis.py` | `results/selective/` |
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
 | Paired captioning comparisons (CIDEr-D gains and QLoRA against LoRA with intervals, exported model against its adapter) | `src/caption_paired_intervals.py` | `results/caption_paired_intervals.json` |
@@ -312,11 +312,11 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 | Independent captioning evaluation on the officially released test captions (matched to the images) | `src/score_captions.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
 | Blinded caption review (single rater) | `src/build_caption_review.py`, `src/analyze_caption_review.py`, `src/caption_review_stats.py` | `results/caption_review/` |
 | Export to the Hub (merge in bf16, 4-bit NF4 requantization) | `src/deploy_paligemma_to_hf.py` | Hub revisions `0545d03`, `0a66cea` |
-| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions_baseline.py` | `results/` |
+| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions.py --text_norm legacy` | `results/` |
 | General-domain benchmarks (VQAv2 test-standard, COCO val2014): predictions, server outputs and scores | `src/evaluate_benchmark.py`, `src/score_captions.py --dataset coco` | `results/predictions/benchmarks/` |
 | Deployment measurements | `deployment/*.py` | `deployment/records/` |
 
-The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` reproduce the scores reported at the audited commit `4f4d378`; `src/score_captions.py` now also serves the test captions. The baselines of the model-selection table are scored with `src/score_captions_baseline.py`.
+The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` reproduce the scores reported at the audited commit `4f4d378`; `src/score_captions.py` now also serves the test captions. The baselines of the model-selection table are scored with `src/score_captions.py --text_norm legacy` (no ASCII folding of captions; the default mode folds them).
 
 ---
 
