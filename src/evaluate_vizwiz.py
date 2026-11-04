@@ -5,7 +5,7 @@ VizWiz VQA test predictions  +  VizWiz Captions test predictions.
 
 The --model_id argument accepts EITHER:
   • A local adapter path  (e.g. outputs/run/final_adapter)
-  • A HuggingFace Hub ID  (e.g. lamao-ab/paligemma-blind-assist-jetson-ready)
+  • A HuggingFace Hub ID  (e.g. lamao-ab/paligemma-blind-assist-qlora-merged-v1)
 
 The script auto-detects which one you passed and loads accordingly.
 
@@ -587,7 +587,7 @@ def main():
         "--model_id", required=True,
         help=(
             "Local adapter path (e.g. outputs/run/final_adapter) "
-            "OR HuggingFace Hub model ID (e.g. lamao-ab/paligemma-blind-assist-jetson-ready)"
+            "OR HuggingFace Hub model ID (e.g. lamao-ab/paligemma-blind-assist-qlora-merged-v1)"
         ),
     )
     parser.add_argument("--task",          choices=["vqa", "caps", "both"], default="both")

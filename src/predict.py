@@ -10,7 +10,7 @@ Usage
 -----
 # Hub model, both tasks, default image folder
 python src/predict.py \
-    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --image_dir  /path/to/images
 
 # Local adapter, VQA only, custom output
@@ -24,7 +24,7 @@ python src/predict.py \
 
 # Hub model, captioning only
 python src/predict.py \
-    --model_id   lamao-ab/paligemma-blind-assist-jetson-ready \
+    --model_id   lamao-ab/paligemma-blind-assist-qlora-merged-v1 \
     --task       caps \
     --image_dir  /path/to/images
 """
@@ -284,7 +284,7 @@ def main():
         "--model_id", required=True,
         help=(
             "Local adapter path  (e.g. outputs/run/final_adapter)  OR  "
-            "HuggingFace Hub ID  (e.g. lamao-ab/paligemma-blind-assist-jetson-ready)"
+            "HuggingFace Hub ID  (e.g. lamao-ab/paligemma-blind-assist-qlora-merged-v1)"
         ),
     )
     parser.add_argument(

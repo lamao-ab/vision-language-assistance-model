@@ -137,6 +137,7 @@ MODELS = [
         "adapter_path": "/content/drive/MyDrive/VLMs/outputs/lora_seed_123_rank_8/final_adapter",
         "hub_repo_id": "lamao-ab/paligemma-blind-assist-lora-merged-v1",
         "quantize_4bit": False, "precision_label": "bf16", "peak_vram": "53.1 GB",
+        "card_file": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "hub_cards", "HF_LoRA_README.md"),
         "card": {"summary": LORA_SUMMARY, "training_details": LORA_TRAINING,
                  "metrics_table": LORA_METRICS, "notes": ""},
     },
@@ -145,6 +146,7 @@ MODELS = [
         "adapter_path": "/content/drive/MyDrive/VLMs/outputs/qlora_seed_123_rank_8/final_adapter",
         "hub_repo_id": "lamao-ab/paligemma-blind-assist-qlora-merged-v1",
         "quantize_4bit": True, "precision_label": "4-bit NF4 (double-quant)", "peak_vram": "64.4 GB",
+        "card_file": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "hub_cards", "HF_QLoRA_README.md"),
         "card": {"summary": QLORA_SUMMARY, "training_details": QLORA_TRAINING,
                  "metrics_table": QLORA_METRICS,
                  "notes": (
@@ -296,8 +298,12 @@ def merge_and_deploy(cfg):
 
     processor = PaliGemmaProcessor.from_pretrained(BASE["base_model_id"])
     processor.save_pretrained(temp_dir)
-    with open(os.path.join(temp_dir, "README.md"), "w") as f:
-        f.write(build_model_card(cfg, footprint_str))
+    card_file = cfg.get("card_file")
+    if card_file and os.path.exists(card_file):      # the reviewed model card kept in the repository (hub_cards/)
+        shutil.copy(card_file, os.path.join(temp_dir, "README.md"))
+    else:                                            # fallback: the card generated from the blocks above
+        with open(os.path.join(temp_dir, "README.md"), "w") as f:
+            f.write(build_model_card(cfg, footprint_str))
 
     print("📂 On-disk size:")
     total = 0

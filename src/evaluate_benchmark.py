@@ -5,7 +5,7 @@ VQA v2 test predictions  +  COCO Captions test predictions.
 
 --model_id accepts EITHER:
   - A local adapter path  : outputs/run1/final_adapter
-  - A HuggingFace Hub id  : lamao-ab/paligemma-blind-assist-jetson-ready
+  - A HuggingFace Hub id  : lamao-ab/paligemma-blind-assist-qlora-merged-v1
 
 VQAv2 and COCO are the SECONDARY preservation/benchmark check, evaluated with
 the GENERIC prompt. Data and predictions are kept in separate directories:
@@ -562,7 +562,7 @@ def main():
         "--model_id", required=True,
         help=(
             "Either a local adapter path (outputs/run1/final_adapter) "
-            "or a HuggingFace Hub model id (lamao-ab/paligemma-blind-assist-jetson-ready)"
+            "or a HuggingFace Hub model id (lamao-ab/paligemma-blind-assist-qlora-merged-v1)"
         ),
     )
     parser.add_argument("--task",           choices=["vqa", "caps", "both"], default="both")
