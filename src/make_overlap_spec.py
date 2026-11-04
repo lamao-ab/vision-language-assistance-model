@@ -14,6 +14,7 @@ Discovery follows prepare_dataset.py:
 Optional evaluation partition for VizWiz-VQA test (downloaded by data/download_eval_data.py):
   --vqa_test_json  .../vizwiz_vqa_data/VQA_test.json
   --test_images    .../vizwiz_vqa_data/test
+  --caps_test_json .../results/caption_test/test_captions_7974.json   (adds the cap_test partition)
 
 Usage
 -----
@@ -56,6 +57,9 @@ def main():
     ap.add_argument("--vw_dir", required=True)
     ap.add_argument("--vqa_test_json", default=None)
     ap.add_argument("--test_images", default=None)
+    ap.add_argument("--caps_test_json", default=None,
+                    help="COCO-style references of the VizWiz-Captions test images (results/caption_test/test_captions_7974.json); "
+                         "the captioning and VQA test images are the same files (test.zip)")
     ap.add_argument("--out", default="overlap_spec.json")
     args = ap.parse_args()
 
@@ -72,11 +76,14 @@ def main():
     if args.vqa_test_json and args.test_images:
         spec["vqa_test"] = {"annotations": args.vqa_test_json, "images": args.test_images}
         report["vqa_test"] = spec["vqa_test"]
+        if args.caps_test_json:
+            spec["cap_test"] = {"annotations": args.caps_test_json, "images": args.test_images}
+            report["cap_test"] = spec["cap_test"]
     json.dump(spec, open(args.out, "w"), indent=1)
     for k, v in report.items():
         print(f"{k:<10} annotations: {v['annotations']}\n{'':<10} images     : {v['images']}")
     print(f"\nspec written -> {args.out}")
-    print("next: python audit_overlap.py --spec", args.out, "--eval cap_val vqa_test --phash")
+    print("next: python audit_overlap.py --spec", args.out, "--eval vqa_test cap_test --phash")
 
 
 if __name__ == "__main__":
