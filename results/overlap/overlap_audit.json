@@ -34,6 +34,13 @@
       "n_hashed": 8000,
       "n_missing_files": 0,
       "n_unique_content": 7928
+    },
+    "cap_test": {
+      "n_names": 7974,
+      "n_unique_names": 7974,
+      "n_hashed": 7974,
+      "n_missing_files": 0,
+      "n_unique_content": 7902
     }
   },
   "pairwise": {
@@ -57,6 +64,11 @@
       "identical_content": 272,
       "near_duplicate_pairs": 11016
     },
+    "vqa_train & cap_test": {
+      "same_file_name": 0,
+      "identical_content": 271,
+      "near_duplicate_pairs": 10921
+    },
     "vqa_val & cap_train": {
       "same_file_name": 0,
       "identical_content": 160,
@@ -72,6 +84,11 @@
       "identical_content": 68,
       "near_duplicate_pairs": 2015
     },
+    "vqa_val & cap_test": {
+      "same_file_name": 0,
+      "identical_content": 67,
+      "near_duplicate_pairs": 1990
+    },
     "cap_train & cap_val": {
       "same_file_name": 0,
       "identical_content": 240,
@@ -82,22 +99,41 @@
       "identical_content": 295,
       "near_duplicate_pairs": 13992
     },
+    "cap_train & cap_test": {
+      "same_file_name": 0,
+      "identical_content": 294,
+      "near_duplicate_pairs": 13891
+    },
     "cap_val & vqa_test": {
       "same_file_name": 0,
       "identical_content": 86,
       "near_duplicate_pairs": 4818
+    },
+    "cap_val & cap_test": {
+      "same_file_name": 0,
+      "identical_content": 85,
+      "near_duplicate_pairs": 4785
+    },
+    "vqa_test & cap_test": {
+      "same_file_name": 7974,
+      "identical_content": 7902,
+      "near_duplicate_pairs": 11937
     }
   },
   "evaluation_leakage": {
-    "cap_val": {
-      "n_images": 7750,
-      "identical_content_in_a_non_eval_partition": 4363,
-      "near_duplicates_in_a_non_eval_partition": 4648
-    },
     "vqa_test": {
       "n_images": 8000,
-      "identical_content_in_a_non_eval_partition": 344,
-      "near_duplicates_in_a_non_eval_partition": 987
+      "identical_content_in_a_non_eval_partition": 395,
+      "  of which the same file listed in another partition": 0,
+      "  of which identical content under a different file name": 395,
+      "near_duplicates_in_a_non_eval_partition": 1012
+    },
+    "cap_test": {
+      "n_images": 7974,
+      "identical_content_in_a_non_eval_partition": 393,
+      "  of which the same file listed in another partition": 0,
+      "  of which identical content under a different file name": 393,
+      "near_duplicates_in_a_non_eval_partition": 1007
     }
   },
   "settings": {

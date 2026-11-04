@@ -18,5 +18,9 @@
  "vqa_test": {
   "annotations": "/content/eval_data/vizwiz_vqa_data/VQA_test.json",
   "images": "/content/eval_data/vizwiz_vqa_data/test"
+ },
+ "cap_test": {
+  "annotations": "/content/vision-language-assistance-model/results/caption_test/test_captions_7974.json",
+  "images": "/content/eval_data/vizwiz_vqa_data/test"
  }
 }
