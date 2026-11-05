@@ -49,7 +49,7 @@ python src/evaluate_baselines.py \
     --task       vizwiz \
     --workdir    outputs/eval_data \
     --output_dir outputs/predictions \
-    --batch_size 32 \
+    --batch_size 64 \
     --tag        smolvlm2_zeroshot \
     --brevity
 
@@ -59,7 +59,7 @@ python src/evaluate_baselines.py \
     --task       benchmark \
     --workdir    outputs/eval_data \
     --output_dir outputs/predictions \
-    --batch_size 8 \
+    --batch_size 64 \
     --tag        qwen25vl_zeroshot \
     --brevity
 
@@ -85,8 +85,7 @@ Notes
   * VALIDATE BATCHING before a full run: evaluate the same --limit N twice with
     --batch_size 1 and --batch_size 8 under different --tag values and confirm
     the answers are identical.
-  * Both models are evaluated at bf16. Qwen2.5-VL uses aspect-preserving native
-    resolution bounded to 256-1280 visual tokens; PaliGemma uses a fixed 256.
+  * Both models are evaluated at bf16. 
 """
 
 import argparse
@@ -183,8 +182,7 @@ class Qwen25VLRunner:
 
     def __init__(self, model_id, dtype=torch.bfloat16):
         from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
-        # native (aspect-preserving) resolution, bounded for reproducibility:
-        # 256 visual tokens floor (matches PaliGemma's fixed count), 1280 ceiling
+
         self.processor = AutoProcessor.from_pretrained(
             model_id,
             min_pixels=256 * 28 * 28,
