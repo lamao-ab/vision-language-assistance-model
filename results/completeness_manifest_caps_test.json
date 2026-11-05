@@ -1,0 +1,65 @@
+[
+ {
+  "name": "base (generic prompt)",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_base_generic.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "base (accessibility prompt)",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_base_custom.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "LoRA seed 7",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_lora_seed7_custom.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "LoRA seed 42",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_lora_seed42_custom.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "LoRA seed 123",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_lora_seed123_custom.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "QLoRA seed 7",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_qlora_seed7.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "QLoRA seed 42",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_qlora_seed42.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "QLoRA seed 123",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_qlora_seed123.json",
+  "expected_n": 7807
+ },
+ {
+  "name": "QLoRA seed 123, exported model",
+  "task": "caps",
+  "gt": "results/caption_test/test_captions_7974.json",
+  "pred": "results/predictions/vizwiz_caption_test_predictions_qlora_merged_seed123_custom.json",
+  "expected_n": 7807
+ }
+]
