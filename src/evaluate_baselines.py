@@ -29,7 +29,7 @@ accuracy, which measures output format rather than capability.
 Tasks
 -----
   vqa       VizWiz-VQA (test)            -> {image, answer}
-  caps      VizWiz-Caps (validation)     -> {image_id, caption}
+  caps      VizWiz-Caps (validation; the realigned test with --caps_split test) -> {image_id, caption}
   vqav2     VQAv2 (test-standard)        -> {question_id, answer}   [EvalAI submission]
   coco      COCO-Caps (validation)       -> {image_id, caption}
   vizwiz    = vqa + caps       (target domain)
@@ -325,25 +325,37 @@ def run_vqa(runner, args):
 
 def run_caps(runner, args):
     print("\n" + "=" * 70)
-    print("VizWiz-Caps (validation) — zero-shot")
+    split = args.caps_split
+    print(f"VizWiz-Caps ({'validation' if split == 'val' else 'test'}) — zero-shot")
     print("=" * 70)
     print(f"Model      : {args.model}")
     print(f"Batch size : {args.batch_size}")
     print(f"Max tokens : {args.max_tokens}")
 
     caps_root = os.path.join(args.workdir, "vizwiz_caps_data")
-    download_and_extract(CAPS_VAL_IMAGES_URL, caps_root)
-    download_and_extract(CAPS_ANNOT_URL, caps_root)
-    val_images = os.path.join(caps_root, "val")
-    val_json = os.path.join(caps_root, "annotations", "val.json")
+    if split == "val":
+        download_and_extract(CAPS_VAL_IMAGES_URL, caps_root)
+        download_and_extract(CAPS_ANNOT_URL, caps_root)
+        images_dir = os.path.join(caps_root, "val")
+        refs_json = os.path.join(caps_root, "annotations", "val.json")
+    else:
+        # test: the same test.zip as VizWiz-VQA; the realigned references (test_captions_7974.json)
+        data_root = os.path.join(args.workdir, "vizwiz_vqa_data")
+        download_and_extract(VQA_IMAGES_URL, data_root)       # no-op if the VQA test images are present
+        images_dir = args.vizwiz_test_images or os.path.join(data_root, "test")
+        refs_json = args.vizwiz_test_json or os.path.join(caps_root, "test_captions_7974.json")
+        if not os.path.exists(refs_json):
+            raise FileNotFoundError(
+                f"Test references not found: {refs_json} "
+                "(pass the realigned test_captions_7974.json via --vizwiz_test_json)")
 
-    meta = json.load(open(val_json))
+    meta = json.load(open(refs_json))
     items = [{"image_id": im["id"], "file_name": im["file_name"]} for im in meta["images"]]
     if args.limit:
         items = items[:args.limit]
     print(f"{len(items):,} images")
 
-    out_file = _pred_path(args.output_dir, "vizwiz_caption_val_predictions.json", args.tag)
+    out_file = _pred_path(args.output_dir, f"vizwiz_caption_{split}_predictions.json", args.tag)
     results = []
     if os.path.exists(out_file) and not args.preview:
         results = json.load(open(out_file))
@@ -358,7 +370,7 @@ def run_caps(runner, args):
         imgs, keep = [], []
         for it in chunk:
             try:
-                imgs.append(Image.open(os.path.join(val_images, it["file_name"])).convert("RGB"))
+                imgs.append(Image.open(os.path.join(images_dir, it["file_name"])).convert("RGB"))
                 keep.append(it)
             except Exception as e:
                 print(f"skip {it['file_name']}: {e}")
@@ -526,6 +538,12 @@ def main():
                     help="generic = each model's natural phrasing (fair zero-shot)")
     ap.add_argument("--brevity", action="store_true",
                     help="append a short-answer directive to VQA prompts")
+    ap.add_argument("--caps_split", choices=["val", "test"], default="val",
+                    help="VizWiz-Captions split for the caps task: official val, or the realigned test")
+    ap.add_argument("--vizwiz_test_images", default=None,
+                    help="folder of VizWiz test images (from test.zip; shared with VQA); default <workdir>/vizwiz_vqa_data/test")
+    ap.add_argument("--vizwiz_test_json", default=None,
+                    help="realigned COCO-format test references; default <workdir>/vizwiz_caps_data/test_captions_7974.json")
     ap.add_argument("--workdir", default="outputs/eval_data")
     ap.add_argument("--output_dir", default="outputs/predictions")
     ap.add_argument("--tag", default="")
