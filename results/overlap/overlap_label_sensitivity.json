@@ -1,0 +1,41 @@
+{
+ "all_test_items": {
+  "items_excluded": 0,
+  "accuracy": {
+   "base_gen": 73.95,
+   "base_acc": 74.83,
+   "lora": 75.8,
+   "qlora": 75.71
+  },
+  "lora_gain_over_base_gen": 1.85,
+  "lora_gain_over_base_acc": 0.97,
+  "qlora_gain_over_base_gen": 1.76,
+  "qlora_gain_over_base_acc": 0.88
+ },
+ "without_same_question_and_answer": {
+  "items_excluded": 100,
+  "accuracy": {
+   "base_gen": 73.73,
+   "base_acc": 74.62,
+   "lora": 75.61,
+   "qlora": 75.49
+  },
+  "lora_gain_over_base_gen": 1.88,
+  "lora_gain_over_base_acc": 0.99,
+  "qlora_gain_over_base_gen": 1.76,
+  "qlora_gain_over_base_acc": 0.87
+ },
+ "without_same_question": {
+  "items_excluded": 131,
+  "accuracy": {
+   "base_gen": 73.77,
+   "base_acc": 74.68,
+   "lora": 75.64,
+   "qlora": 75.56
+  },
+  "lora_gain_over_base_gen": 1.87,
+  "lora_gain_over_base_acc": 0.96,
+  "qlora_gain_over_base_gen": 1.79,
+  "qlora_gain_over_base_acc": 0.88
+ }
+}
