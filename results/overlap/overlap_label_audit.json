@@ -1,0 +1,27 @@
+{
+ "vqa_test": {
+  "evaluation_images": 8000,
+  "images_with_identical_photograph_anywhere": 395,
+  "comparison_partitions": [
+   "vqa_train",
+   "vqa_val"
+  ],
+  "images_with_a_partner_that_has_a_question": 356,
+  "questions_equal_to_a_question_of_the_other_copy": 131,
+  "of_which_same_consensus_answer": 100,
+  "base_rate_question_text_occurs_anywhere_in_other_partitions": 0.611
+ },
+ "cap_test": {
+  "evaluation_images": 7974,
+  "images_with_identical_photograph_anywhere": 393,
+  "comparison_partitions": [
+   "cap_train",
+   "cap_val"
+  ],
+  "images_with_a_partner_that_has_captions": 393,
+  "images_with_at_least_one_identical_caption": 1,
+  "captions_of_those_images": 1696,
+  "captions_identical_to_a_caption_of_the_other_copy": 1,
+  "base_rate_caption_text_occurs_anywhere_in_other_partitions": 0.0151
+ }
+}

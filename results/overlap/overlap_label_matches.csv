@@ -1,0 +1,133 @@
+partition,image,match,text
+vqa_test,VizWiz_test_00005386.jpg,question,what is this canned good
+vqa_test,VizWiz_test_00005540.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00007346.jpg,question+answer,what poster is this
+vqa_test,VizWiz_test_00000301.jpg,question+answer,what is on this page
+vqa_test,VizWiz_test_00007794.jpg,question,what is on this page
+vqa_test,VizWiz_test_00003358.jpg,question,what is the product
+vqa_test,VizWiz_test_00000125.jpg,question,what about the scenery
+vqa_test,VizWiz_test_00006912.jpg,question+answer,is this garment white
+vqa_test,VizWiz_test_00000886.jpg,question+answer,what product is this
+vqa_test,VizWiz_test_00002980.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00001048.jpg,question+answer,what flavor coffee is this
+vqa_test,VizWiz_test_00006280.jpg,question+answer,what does this card say
+vqa_test,VizWiz_test_00004211.jpg,question+answer,what is it
+vqa_test,VizWiz_test_00003501.jpg,question+answer,what color is this
+vqa_test,VizWiz_test_00001572.jpg,question+answer,what team is it
+vqa_test,VizWiz_test_00005977.jpg,question+answer,what color is this pepper
+vqa_test,VizWiz_test_00007349.jpg,question,see the expiration date on this carton of milk or if i need to rotate it thank you
+vqa_test,VizWiz_test_00001828.jpg,question+answer,what does this say
+vqa_test,VizWiz_test_00004643.jpg,question,what is this
+vqa_test,VizWiz_test_00004751.jpg,question,what is this movie
+vqa_test,VizWiz_test_00006248.jpg,question,what s in this box
+vqa_test,VizWiz_test_00005733.jpg,question+answer,what is in this tube
+vqa_test,VizWiz_test_00004765.jpg,question,what color is this shirt
+vqa_test,VizWiz_test_00005770.jpg,question+answer,what is in this jar
+vqa_test,VizWiz_test_00007413.jpg,question,can you tell me what s in that can
+vqa_test,VizWiz_test_00003186.jpg,question+answer,is the door open
+vqa_test,VizWiz_test_00006608.jpg,question+answer,what color is this yarn
+vqa_test,VizWiz_test_00006788.jpg,question,what is this bottle
+vqa_test,VizWiz_test_00002536.jpg,question+answer,what flavor of kool aid is this
+vqa_test,VizWiz_test_00003546.jpg,question,which color is this shirt please
+vqa_test,VizWiz_test_00000799.jpg,question+answer,what is in this can
+vqa_test,VizWiz_test_00005771.jpg,question+answer,what is this bottle
+vqa_test,VizWiz_test_00002194.jpg,question+answer,what color is this
+vqa_test,VizWiz_test_00002086.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00004163.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00001236.jpg,question+answer,what color are these sunglasses
+vqa_test,VizWiz_test_00003229.jpg,question+answer,this product
+vqa_test,VizWiz_test_00003223.jpg,question+answer,what is this please
+vqa_test,VizWiz_test_00006592.jpg,question+answer,what is this a box of
+vqa_test,VizWiz_test_00002298.jpg,question+answer,say anything
+vqa_test,VizWiz_test_00004824.jpg,question+answer,what color is this sock
+vqa_test,VizWiz_test_00001136.jpg,question+answer,what color is this sock
+vqa_test,VizWiz_test_00002505.jpg,question+answer,what color is that shirt
+vqa_test,VizWiz_test_00004834.jpg,question,does this say
+vqa_test,VizWiz_test_00007289.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00003183.jpg,question+answer,can you tell me the design on this t shirt
+vqa_test,VizWiz_test_00005636.jpg,question+answer,what is this product
+vqa_test,VizWiz_test_00002053.jpg,question+answer,what is on this page
+vqa_test,VizWiz_test_00003200.jpg,question+answer,when does this item expire
+vqa_test,VizWiz_test_00004229.jpg,question,what s this
+vqa_test,VizWiz_test_00001179.jpg,question,what kind of plant is this
+vqa_test,VizWiz_test_00004806.jpg,question+answer,what does this say
+vqa_test,VizWiz_test_00000464.jpg,question,what does it say
+vqa_test,VizWiz_test_00004339.jpg,question+answer,what does it say
+vqa_test,VizWiz_test_00001133.jpg,question+answer,what is the serving size for these beans
+vqa_test,VizWiz_test_00000576.jpg,question,what is on this package
+vqa_test,VizWiz_test_00000848.jpg,question+answer,what is on this side of the bottle
+vqa_test,VizWiz_test_00006484.jpg,question,what is in this bottle
+vqa_test,VizWiz_test_00003361.jpg,question+answer,what is this shirt
+vqa_test,VizWiz_test_00007830.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00005731.jpg,question,what does this can say
+vqa_test,VizWiz_test_00006783.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00000432.jpg,question+answer,what is in this can
+vqa_test,VizWiz_test_00005307.jpg,question,what is this
+vqa_test,VizWiz_test_00000683.jpg,question+answer,what is in this jar
+vqa_test,VizWiz_test_00005605.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00007020.jpg,question+answer,what kind of water is this
+vqa_test,VizWiz_test_00000599.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00000495.jpg,question+answer,what color is that please
+vqa_test,VizWiz_test_00002990.jpg,question+answer,when does this expire
+vqa_test,VizWiz_test_00007618.jpg,question+answer,when does this expire
+vqa_test,VizWiz_test_00003264.jpg,question+answer,what is in this can
+vqa_test,VizWiz_test_00002590.jpg,question+answer,what is this item
+vqa_test,VizWiz_test_00002398.jpg,question+answer,what movie is this
+vqa_test,VizWiz_test_00000360.jpg,question,what is this
+vqa_test,VizWiz_test_00003326.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00003060.jpg,question+answer,what s the color of this table cover
+vqa_test,VizWiz_test_00004377.jpg,question+answer,what s the color of this table cover
+vqa_test,VizWiz_test_00002869.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00006170.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00003937.jpg,question+answer,what is in this box
+vqa_test,VizWiz_test_00004664.jpg,question,the settings on my crock pot and which one is currently selected thanks
+vqa_test,VizWiz_test_00006439.jpg,question+answer,what s in that box
+vqa_test,VizWiz_test_00000788.jpg,question+answer,what is in this jar please
+vqa_test,VizWiz_test_00005496.jpg,question+answer,what is in this jar please
+vqa_test,VizWiz_test_00001028.jpg,question+answer,what is this bottle
+vqa_test,VizWiz_test_00002527.jpg,question,what color is my shirt
+vqa_test,VizWiz_test_00003224.jpg,question+answer,what s on the shelf
+vqa_test,VizWiz_test_00003941.jpg,question+answer,tell what this is
+vqa_test,VizWiz_test_00003811.jpg,question,what is this
+vqa_test,VizWiz_test_00003951.jpg,question+answer,what kind of cereal is this
+vqa_test,VizWiz_test_00004795.jpg,question,what is this
+vqa_test,VizWiz_test_00005680.jpg,question+answer,what is in this box
+vqa_test,VizWiz_test_00007397.jpg,question+answer,what is the title and artist of this cd
+vqa_test,VizWiz_test_00006289.jpg,question+answer,which dog product is this
+vqa_test,VizWiz_test_00000019.jpg,question,what color are these two connectors
+vqa_test,VizWiz_test_00000405.jpg,question+answer,what s this picture about
+vqa_test,VizWiz_test_00000625.jpg,question+answer,can you tell me what color this shirt is
+vqa_test,VizWiz_test_00005968.jpg,question+answer,which drink is this
+vqa_test,VizWiz_test_00000359.jpg,question+answer,what kind of exercise machine is this
+vqa_test,VizWiz_test_00000229.jpg,question+answer,what is in this box
+vqa_test,VizWiz_test_00002580.jpg,question+answer,are my clothes dirty
+vqa_test,VizWiz_test_00003389.jpg,question,what color is this
+vqa_test,VizWiz_test_00005932.jpg,question+answer,what is the name of this book
+vqa_test,VizWiz_test_00007400.jpg,question+answer,what is the name of this book
+vqa_test,VizWiz_test_00007981.jpg,question+answer,what is this can
+vqa_test,VizWiz_test_00001811.jpg,question+answer,what is the title of this book please
+vqa_test,VizWiz_test_00002290.jpg,question+answer,what dvd is this
+vqa_test,VizWiz_test_00006669.jpg,question+answer,what is this t shirt please
+vqa_test,VizWiz_test_00005643.jpg,question+answer,can you tell me what this is a picture of
+vqa_test,VizWiz_test_00006023.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00001892.jpg,question+answer,what is this
+vqa_test,VizWiz_test_00000810.jpg,question,what is it
+vqa_test,VizWiz_test_00003567.jpg,question+answer,what is this bottle
+vqa_test,VizWiz_test_00004756.jpg,question,what is this
+vqa_test,VizWiz_test_00004873.jpg,question+answer,is the glass half full
+vqa_test,VizWiz_test_00007079.jpg,question+answer,what is this please
+vqa_test,VizWiz_test_00006607.jpg,question+answer,what color is this shirt
+vqa_test,VizWiz_test_00000514.jpg,question,what does this coupon say on it
+vqa_test,VizWiz_test_00005074.jpg,question+answer,what is this logo
+vqa_test,VizWiz_test_00000772.jpg,question+answer,what is in this image
+vqa_test,VizWiz_test_00000190.jpg,question+answer,what s in this can
+vqa_test,VizWiz_test_00003587.jpg,question+answer,can you tell me what that is
+vqa_test,VizWiz_test_00006770.jpg,question+answer,can you tell me what that is
+vqa_test,VizWiz_test_00007107.jpg,question+answer,what color is this
+vqa_test,VizWiz_test_00005396.jpg,question+answer,can you tell me the order of the buttons on this remote control
+vqa_test,VizWiz_test_00007121.jpg,question,can you tell me the order of the buttons on this remote control
+vqa_test,VizWiz_test_00003885.jpg,question+answer,what is on this shirt
+vqa_test,VizWiz_test_00000694.jpg,question+answer,what does this menu say please
+vqa_test,VizWiz_test_00004933.jpg,question+answer,what is that drink
+vqa_test,VizWiz_test_00007196.jpg,question+answer,what kind of coffee is this
+cap_test,VizWiz_test_00006592.jpg,caption,a cuisinart frozen yogurt and sorbet maker in it s box
