@@ -10,7 +10,7 @@ The audited version is **v1.0 (commit `4f4d378`)**. The VQA scorer `src/score_vi
 - `inventory_trainable.py`, `audit_adapters.py`: reconstruct the trainable-parameter inventory (modules, parameters, tensors, dtypes) and audit the adapters of the six reported runs.
 - `find_reported_runs.py`: locates the six reported runs and their best validation losses.
 - `selective_prediction_analysis.py`: retained-set composition by confidence threshold, informative accepted set, cross-fitted thresholds, comparison of two prediction sets of the same model.
-- `make_overlap_spec.py`, `audit_overlap.py`, `overlap_exposure_analysis.py`, `overlap_dedup_test_captions.py`, `overlap_label_audit.py`: image-overlap audit (and a comparison of the questions, answers and captions of the shared photographs) across the training, validation and test partitions of both tasks (SHA-256 identity, optional difference hash), exposure categories and sensitivity analyses on the VQA and caption test images.
+- `make_overlap_spec.py`, `audit_overlap.py`, `overlap_exposure_analysis.py`, `overlap_dedup_test_captions.py`, `overlap_label_audit.py`, `overlap_label_sensitivity.py`: image-overlap audit (and a comparison of the questions, answers and captions of the shared photographs) across the training, validation and test partitions of both tasks (SHA-256 identity, optional difference hash), exposure categories and sensitivity analyses on the VQA and caption test images.
 - `diagnose_caption_csv.py`: checks how image names in the released VizWiz-Captions metadata CSV relate to the released splits.
 - `check_completeness.py`: asserts that a prediction file covers every eligible item.
 - `caption_test_checks.py`: validity checks of the realigned test references (neighbour-shift test, position check, duplicate sensitivity).
@@ -26,7 +26,7 @@ The audited version is **v1.0 (commit `4f4d378`)**. The VQA scorer `src/score_vi
 - Final `measure_memory.py` and `model_breakdown.py` used for the reported memory block.
 
 **Results (`results/`)**
-- `selective/`, `overlap/` (six partitions: VQA and captions, each with train, validation and test), `adapters/`, `runs/`, `completeness_report_vqa.json`, `completeness_report_caps.json`, `data_preparation_log.txt`, `caption_review/` (rated sheet, blank sheet for independent rating, key, rubric, single-rater statistics).
+- `selective/`, `overlap/` (six partitions: VQA and captions, each with train, validation and test), `adapters/`, `runs/`, `completeness_report_vqa.json`, `completeness_report_caps_test.json`, `data_preparation_log.txt`, `caption_review/` (rated sheet, blank sheet for independent rating, key, rubric, single-rater statistics).
 - `caption_test/` (the VizWiz-Captions test references aligned to the test images, their description and a worksheet for checking the alignment), `evaluation_manifest.csv`, `paired_comparisons.json`, `caption_paired_intervals.json`.
 - `predictions/` (prediction files and per-run score files of the reported runs, the zero-shot baselines and the exported models) and `predictions/benchmarks/` (VQAv2 test submissions, COCO caption predictions and the returned server outputs and score files).
 - `hub_cards/` (the reviewed Hugging Face model cards).
