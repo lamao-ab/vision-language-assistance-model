@@ -23,17 +23,6 @@ COCO-Captions (validation):
 
 Both report BLEU-1..4, METEOR, ROUGE-L, CIDEr-D (no SPICE, per paper).
 
-Text normalisation (--text_norm)
-    ascii   (default) VizWiz: references and predictions are folded to plain ASCII on one line
-            (see _clean) before the Java tokenizer and METEOR. COCO: no cleaning.
-    legacy  reproduces the scores of the zero-shot baselines of the model-selection table
-            (formerly src/score_captions_baseline.py). References are used as released; predictions
-            only have newlines, tabs and backticks collapsed to single spaces (chat models emit
-            markdown); no ASCII folding. On the released prediction files this sanitisation changes
-            no caption, so the two modes differ only for VizWiz captions that contain non-ASCII
-            characters (CIDEr-D differs by at most 0.05 for the two chat-model baselines).
-    The number of predictions affected by the legacy sanitisation is printed.
-
 Prediction format (COCO results):
     [{"image_id": <int>, "caption": "<text>"}]
 
@@ -58,7 +47,6 @@ Usage
 import argparse
 import json
 import os
-import re
 import sys
 
 # The PTB tokenizer and METEOR read Java's stdout line by line. Some hosts
@@ -84,7 +72,7 @@ def caption_length_stats(captions):
     }
 
 
-def score_coco(gt_path, pred_path, text_norm="ascii"):
+def score_coco(gt_path, pred_path):
     """Standard COCO caption scoring via pycocoevalcap (no SPICE)."""
     from pycocotools.coco import COCO
     from pycocoevalcap.bleu.bleu import Bleu
@@ -94,7 +82,7 @@ def score_coco(gt_path, pred_path, text_norm="ascii"):
     from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 
     coco = COCO(gt_path)
-    preds = load_and_clean(pred_path) if text_norm == "legacy" else json.load(open(pred_path))
+    preds = json.load(open(pred_path))
     cocoRes = coco.loadRes(preds)
 
     gts = {iid: coco.imgToAnns[iid] for iid in cocoRes.getImgIds()}
@@ -125,25 +113,6 @@ def score_coco(gt_path, pred_path, text_norm="ascii"):
 # Pre-canned caption inserted by VizWiz when image quality is too poor;
 # excluded from the reference pool per the official evaluation protocol.
 PRECANNED = "Quality issues are too severe to recognize visual content."
-
-
-def clean_caption(text: str) -> str:
-    """Legacy sanitisation (--text_norm legacy): collapse whitespace and markdown artefacts."""
-    text = text.replace("\n", " ").replace("\r", " ").replace("\t", " ")
-    text = text.replace("`", " ")
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def load_and_clean(pred_path: str):
-    """Load predictions, apply the legacy sanitisation and report how many were affected."""
-    preds = json.load(open(pred_path))
-    n_newline = sum(1 for p in preds if "\n" in p.get("caption", ""))
-    n_fence = sum(1 for p in preds if "`" in p.get("caption", ""))
-    for p in preds:
-        p["caption"] = clean_caption(p.get("caption", ""))
-    print(f"[sanitisation] {len(preds):,} predictions | "
-          f"{n_newline} contained newlines | {n_fence} contained backticks")
-    return preds
 
 
 _QUOTES = str.maketrans({"\u2018": "'", "\u2019": "'", "\u00b4": "'", "`": "'",
@@ -180,7 +149,7 @@ def _check_alignment(raw, tok, label):
             "misaligned; check `java -version` and the system locale.")
 
 
-def score_vizwiz(gt_path, pred_path, repo_path=None, text_norm="ascii"):
+def score_vizwiz(gt_path, pred_path, repo_path=None):
     """VizWiz caption scoring (validation) via the standard pycocoevalcap
     pipeline (same as COCO), with the official reference filtering:
     pre-canned and rejected captions are removed from the ground-truth pool.
@@ -195,16 +164,15 @@ def score_vizwiz(gt_path, pred_path, repo_path=None, text_norm="ascii"):
     from pycocoevalcap.cider.cider import Cider
     from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 
-    legacy = (text_norm == "legacy")
     gt = json.load(open(gt_path))
-    preds = load_and_clean(pred_path) if legacy else json.load(open(pred_path))
+    preds = json.load(open(pred_path))
 
     # Build references per image_id, applying the official filtering:
     #   - drop pre-canned "quality issues" captions
     #   - drop rejected captions (is_rejected) if the field is present
     gts_raw = {}
     for ann in gt["annotations"]:
-        cap = ann["caption"].strip() if legacy else _clean(ann["caption"])
+        cap = _clean(ann["caption"])
         if cap == PRECANNED:
             continue
         if ann.get("is_rejected", False) or ann.get("is_precanned", False):
@@ -212,8 +180,7 @@ def score_vizwiz(gt_path, pred_path, repo_path=None, text_norm="ascii"):
         gts_raw.setdefault(ann["image_id"], []).append(cap)
 
     # Only score images that have at least one valid reference AND a prediction
-    pred_by_id = ({p["image_id"]: p["caption"] for p in preds} if legacy
-                  else {p["image_id"]: _clean(p["caption"]) or "." for p in preds})
+    pred_by_id = {p["image_id"]: _clean(p["caption"]) or "." for p in preds}
     common_ids = [i for i in gts_raw if i in pred_by_id]
     missing = [i for i in gts_raw if i not in pred_by_id]
     if missing:
@@ -272,15 +239,13 @@ def main():
     ap.add_argument("--pred", required=True)
     ap.add_argument("--vizwiz_repo", default=None,
                     help="(deprecated, unused) kept for backward compatibility")
-    ap.add_argument("--text_norm", choices=["ascii", "legacy"], default="ascii",
-                    help="ascii: current default; legacy: reproduces the zero-shot baseline scores (see docstring)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     if args.dataset == "coco":
-        result = score_coco(args.gt, args.pred, text_norm=args.text_norm)
+        result = score_coco(args.gt, args.pred)
     else:
-        result = score_vizwiz(args.gt, args.pred, text_norm=args.text_norm)
+        result = score_vizwiz(args.gt, args.pred)
 
     print(json.dumps(result, indent=2))
     if args.out:
