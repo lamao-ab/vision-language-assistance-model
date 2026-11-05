@@ -304,7 +304,7 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 |---|---|---|
 | Trainable-parameter inventory and adapter audit | `src/inventory_trainable.py`, `src/audit_adapters.py` | `results/adapters/` |
 | Completeness of prediction files | `src/check_completeness.py` | `results/completeness_report_vqa.json` |
-| Image overlap between partitions and tasks (VQA and captions, train/val/test), VQA and test-caption sensitivity | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py`, `src/overlap_dedup_test_captions.py` | `results/overlap/` |
+| Image overlap between partitions and tasks (VQA and captions, train/val/test), VQA and test-caption sensitivity | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py`, `src/overlap_dedup_test_captions.py`, `src/overlap_label_audit.py` | `results/overlap/` |
 | Selective prediction (retained-set composition, cross-fitted thresholds) | `src/selective_prediction_analysis.py` | `results/selective/` |
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
 | Paired captioning comparisons (CIDEr-D gains and QLoRA against LoRA with intervals, exported model against its adapter) | `src/caption_paired_intervals.py` | `results/caption_paired_intervals.json` |

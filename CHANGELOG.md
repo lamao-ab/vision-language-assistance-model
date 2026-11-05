@@ -10,7 +10,7 @@ The audited version is **v1.0 (commit `4f4d378`)**. The VQA scorer `src/score_vi
 - `inventory_trainable.py`, `audit_adapters.py`: reconstruct the trainable-parameter inventory (modules, parameters, tensors, dtypes) and audit the adapters of the six reported runs.
 - `find_reported_runs.py`: locates the six reported runs and their best validation losses.
 - `selective_prediction_analysis.py`: retained-set composition by confidence threshold, informative accepted set, cross-fitted thresholds, comparison of two prediction sets of the same model.
-- `make_overlap_spec.py`, `audit_overlap.py`, `overlap_exposure_analysis.py`, `overlap_dedup_test_captions.py`: image-overlap audit across the training, validation and test partitions of both tasks (SHA-256 identity, optional difference hash), exposure categories and sensitivity analyses on the VQA and caption test images.
+- `make_overlap_spec.py`, `audit_overlap.py`, `overlap_exposure_analysis.py`, `overlap_dedup_test_captions.py`, `overlap_label_audit.py`: image-overlap audit (and a comparison of the questions, answers and captions of the shared photographs) across the training, validation and test partitions of both tasks (SHA-256 identity, optional difference hash), exposure categories and sensitivity analyses on the VQA and caption test images.
 - `diagnose_caption_csv.py`: checks how image names in the released VizWiz-Captions metadata CSV relate to the released splits.
 - `check_completeness.py`: asserts that a prediction file covers every eligible item.
 - `caption_test_checks.py`: validity checks of the realigned test references (neighbour-shift test, position check, duplicate sensitivity).
