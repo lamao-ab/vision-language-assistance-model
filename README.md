@@ -312,11 +312,11 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 | Independent captioning evaluation on the officially released test captions (matched to the images) | `src/score_captions.py`, `src/caption_test_checks.py`, `src/caption_paired_intervals.py --clean` | `results/caption_test/`, `results/caption_test_checks.json` |
 | Blinded caption review (single rater) | `src/build_caption_review.py`, `src/analyze_caption_review.py`, `src/caption_review_stats.py` | `results/caption_review/` |
 | Export to the Hub (merge in bf16, 4-bit NF4 requantization) | `src/deploy_paligemma_to_hf.py` | Hub revisions `0545d03`, `0a66cea` |
-| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions.py --text_norm legacy` | `results/` |
+| Baseline checkpoints (native resolution) | `src/evaluate_baselines.py`, `src/score_captions.py` | `results/` |
 | General-domain benchmarks (VQAv2 test-standard, COCO val2014): predictions, server outputs and scores | `src/evaluate_benchmark.py`, `src/score_captions.py --dataset coco` | `results/predictions/benchmarks/` |
 | Deployment measurements | `deployment/*.py` | `deployment/records/` |
 
-The scorers `src/score_vizwiz_vqa.py` and `src/score_captions.py` reproduce the scores reported at the audited commit `4f4d378`; `src/score_captions.py` now also serves the test captions. The baselines of the model-selection table are scored with `src/score_captions.py --text_norm legacy` (no ASCII folding of captions; the default mode folds them).
+The scorer `src/score_vizwiz_vqa.py` is unchanged since the audited commit `4f4d378`. `src/score_captions.py` now also serves the test captions and folds non-ASCII characters to ASCII; compared with no folding it changes the CIDEr-D of the PaliGemma runs by at most 0.01 on validation and by 0.01 to 0.06 on test. All captions of all models, including the zero-shot baselines, are scored with this one script.
 
 ---
 
