@@ -223,7 +223,7 @@ Gain of the adapted models over the base **at its better prompt** (accessibility
 The QLoRA rows are the training-time adapter over the 4-bit backbone. The exported merged model (Hub revision `0a66cea`, adapter merged into BF16 weights and requantized) scores 75.45 under the same evaluation settings. Training ran on an NVIDIA A100-SXM4-80GB. Results of 4-bit generation can differ slightly between GPU types.
 
 ### Captioning Performance (VizWiz-Caps test set, main captioning results)
-The test captions are the officially released evaluation annotations (`VizWiz_captions_project_all_metadata.csv`), matched to the test images by us (the file provides 7,983 caption sets for the 8,000 test images, 9 of which match no image, so 7,974 images are evaluated); see [`results/caption_test/`](results/caption_test/). Checkpoint, rank and mixing ratio were selected on the validation loss, not on these images. Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA.
+The test captions are the officially released evaluation annotations (`VizWiz_captions_project_all_metadata.csv`), matched to the test images by us (the file has 7,983 caption sets, of which 7,974 match a test image and 9 match none; 26 test images have no caption set, so 7,974 images are evaluated); see [`results/caption_test/`](results/caption_test/). Checkpoint, rank and mixing ratio were selected on the validation loss, not on these images. Mean ± std over 3 seeds (42, 123, 7) for LoRA/QLoRA.
 
 | Model                    | CIDEr-D             | BLEU-4             | METEOR             | ROUGE-L             | Avg. Length |
 |--------------------------|---------------------|--------------------|--------------------|---------------------|-------------|
