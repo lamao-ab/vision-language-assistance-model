@@ -304,7 +304,7 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 |---|---|---|
 | Trainable-parameter inventory and adapter audit | `src/inventory_trainable.py`, `src/audit_adapters.py` | `results/adapters/` |
 | Completeness of prediction files | `src/check_completeness.py` | `results/completeness_report_vqa.json` |
-| Image overlap between partitions and tasks (VQA and captions, train/val/test), VQA and test-caption sensitivity | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py`, `src/overlap_dedup_test_captions.py`, `src/overlap_label_audit.py` | `results/overlap/` |
+| Image overlap between partitions and tasks (VQA and captions, train/val/test), VQA and test-caption sensitivity | `src/make_overlap_spec.py`, `src/audit_overlap.py`, `src/overlap_exposure_analysis.py`, `src/overlap_dedup_test_captions.py`, `src/overlap_label_audit.py`, `src/overlap_label_sensitivity.py` | `results/overlap/` |
 | Selective prediction (retained-set composition, cross-fitted thresholds) | `src/selective_prediction_analysis.py` | `results/selective/` |
 | Paired VQA comparisons (gains, prompt and adaptation decomposition, adapter against exported model) | `src/paired_comparisons.py` | `results/paired_comparisons.json` |
 | Paired captioning comparisons (CIDEr-D gains and QLoRA against LoRA with intervals, exported model against its adapter) | `src/caption_paired_intervals.py` | `results/caption_paired_intervals.json` |
@@ -316,7 +316,7 @@ Hub repositories and pinned revisions: LoRA [`lamao-ab/paligemma-blind-assist-lo
 | General-domain benchmarks (VQAv2 test-standard, COCO val2014): predictions, server outputs and scores | `src/evaluate_benchmark.py`, `src/score_captions.py --dataset coco` | `results/predictions/benchmarks/` |
 | Deployment measurements | `deployment/*.py` | `deployment/records/` |
 
-The scorer `src/score_vizwiz_vqa.py` is unchanged since the audited commit `4f4d378`. `src/score_captions.py` now also serves the test captions and folds non-ASCII characters to ASCII; compared with no folding it changes the CIDEr-D of the PaliGemma runs by at most 0.01 on validation and by 0.01 to 0.06 on test. All captions of all models, including the zero-shot baselines, are scored with this one script.
+The scorer `src/score_vizwiz_vqa.py` is unchanged since the audited commit `4f4d378`. `src/score_captions.py` now also serves the test captions and folds non-ASCII characters to ASCII; compared with no folding it changes the CIDEr-D of the PaliGemma runs by at most 0.01 on validation and by 0.01 to 0.06 on test. All captions of all models, including the off-the-shelf baselines (their file names keep the historical tag `zeroshot`), are scored with this one script.
 
 ---
 

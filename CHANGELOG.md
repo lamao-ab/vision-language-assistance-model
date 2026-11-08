@@ -28,14 +28,14 @@ The audited version is **v1.0 (commit `4f4d378`)**. The VQA scorer `src/score_vi
 **Results (`results/`)**
 - `selective/`, `overlap/` (six partitions: VQA and captions, each with train, validation and test), `adapters/`, `runs/`, `completeness_report_vqa.json`, `completeness_report_caps_test.json`, `data_preparation_log.txt`, `caption_review/` (rated sheet, blank sheet for independent rating, key, rubric, single-rater statistics).
 - `caption_test/` (the VizWiz-Captions test references aligned to the test images, their description and a worksheet for checking the alignment), `evaluation_manifest.csv`, `paired_comparisons.json`, `caption_paired_intervals.json`.
-- `predictions/` (prediction files and per-run score files of the reported runs, the zero-shot baselines and the exported models) and `predictions/benchmarks/` (VQAv2 test submissions, COCO caption predictions and the returned server outputs and score files).
+- `predictions/` (prediction files and per-run score files of the reported runs, the off-the-shelf baselines (file names keep the historical tag `zeroshot`) and the exported models) and `predictions/benchmarks/` (VQAv2 test submissions, COCO caption predictions and the returned server outputs and score files).
 - `hub_cards/` (the reviewed Hugging Face model cards).
 
 **Documentation**
 - README: evaluation representations, reproduction table, updated results.
 
 ### Changed
-- `src/score_captions.py`: scores VizWiz-Captions validation and test references (the realigned `test_captions_7974.json`) and COCO with the same metrics and reference filtering as in v1.0. Non-ASCII characters are folded to ASCII before scoring; compared with no folding, the test CIDEr-D of the PaliGemma runs changes by 0.01 to 0.06 and the validation CIDEr-D by at most 0.01. The script scores all models, including the zero-shot baselines.
+- `src/score_captions.py`: scores VizWiz-Captions validation and test references (the realigned `test_captions_7974.json`) and COCO with the same metrics and reference filtering as in v1.0. Non-ASCII characters are folded to ASCII before scoring; compared with no folding, the test CIDEr-D of the PaliGemma runs changes by 0.01 to 0.06 and the validation CIDEr-D by at most 0.01. The script scores all models, including the off-the-shelf baselines.
 - `src/evaluate_vizwiz.py`, `src/evaluate_baselines.py`: caption test mode (`--caps_split test`, with `--vizwiz_test_json` and `--vizwiz_test_images`). The VQA path, the caption-validation path (including its output file names) and the decoding are unchanged.
 - `README.md`: results restated. Added the base model under the accessibility prompt, the gain over the base at its better prompt, captioning results on the test captions, exported-model results, and the restated deployment metrics (memory 2.14 GB static and 4.10 of 7.44 GB used; energy 16.62 J per caption query over the generation window; battery life marked illustrative; A100 comparison limited to power).
 - `requirements.txt`: removed an outdated note stating that caption metrics came from a non-official scorer. The reported values are reproduced by the official COCO pipeline (`pycocoevalcap` 1.2 with PTBTokenizer).
