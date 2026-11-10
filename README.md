@@ -276,7 +276,6 @@ Only the 4-bit QLoRA model (the exported merged model) is deployed on-device; th
 ├── src/               # training, evaluation, scoring and analysis scripts
 ├── deployment/        # Jetson application, benchmarks, A100 measurement; records/ holds raw logs and checksums
 ├── results/           # outputs behind the reported tables (see below)
-├── notebooks/         # all-in-one Colab notebooks with their outputs
 ├── requirements.txt   # environment that trained the published models
 └── CHANGELOG.md       # changes since the audited commit 4f4d378 (tag v1.0)
 ```

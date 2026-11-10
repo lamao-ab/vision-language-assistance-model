@@ -42,7 +42,6 @@ The audited version is **v1.0 (commit `4f4d378`)**. The VQA scorer `src/score_vi
 - `deployment/requirements.txt`: header states the measured JetPack, PyTorch and CUDA versions and no longer refers to files that are not in the repository.
 
 ### Moved
-- `notebooks ` (folder name with a trailing space) to `notebooks/`.
 - `configs/training_config.yaml` to `archive/training_config_stale.yaml`. No script reads it, and its values (learning rate 2e-5, warmup ratio 0.05, maximum length 256) differ from the settings of the training scripts (learning rate 2e-4, warmup ratio 0.03, maximum length 512).
 
 ### Corrections to the documentation (code and reported scores unchanged)
