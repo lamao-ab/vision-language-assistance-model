@@ -106,7 +106,7 @@ under its generic prompt and, for VizWiz, also under the accessibility prompt.
 
 | | VizWiz-VQA test | Captions test CIDEr-D | Captions val CIDEr-D |
 |---|:---:|:---:|:---:|
-| This checkpoint | 75.75 | 105.37 | 99.16 |
+| This checkpoint | 76.05 | 105.37 | 99.16 |
 | Unmerged seed-123 adapter | 75.91 | 105.65 | 99.05 |
 
 On this checkpoint: VizWiz-VQA yes/no 85.44, number 65.77, other 66.89, unanswerable 98.05;
