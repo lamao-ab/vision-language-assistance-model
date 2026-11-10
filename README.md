@@ -271,7 +271,6 @@ Only the 4-bit QLoRA model (the exported merged model) is deployed on-device; th
 ## 🛠️ Repository Structure
 
 ```
-├── archive/           # superseded files kept for provenance (stale training config)
 ├── data/              # dataset download and preprocessing
 ├── src/               # training, evaluation, scoring and analysis scripts
 ├── deployment/        # Jetson application, benchmarks, A100 measurement; records/ holds raw logs and checksums

@@ -41,8 +41,8 @@ The audited version is **v1.0 (commit `4f4d378`)**. The VQA scorer `src/score_vi
 - `requirements.txt`: removed an outdated note stating that caption metrics came from a non-official scorer. The reported values are reproduced by the official COCO pipeline (`pycocoevalcap` 1.2 with PTBTokenizer).
 - `deployment/requirements.txt`: header states the measured JetPack, PyTorch and CUDA versions and no longer refers to files that are not in the repository.
 
-### Moved
-- `configs/training_config.yaml` to `archive/training_config_stale.yaml`. No script reads it, and its values (learning rate 2e-5, warmup ratio 0.05, maximum length 256) differ from the settings of the training scripts (learning rate 2e-4, warmup ratio 0.03, maximum length 512).
+### Removed
+- `configs/training_config.yaml`, which remains available in the v1.0 release. No script reads it, and its values (learning rate 2e-5, warmup ratio 0.05, maximum length 256) differ from the settings of the training scripts (learning rate 2e-4, warmup ratio 0.03, maximum length 512).
 
 ### Corrections to the documentation (code and reported scores unchanged)
 - Hub model ID: the docstrings and help texts of `src/evaluate_vizwiz.py`, `src/evaluate_benchmark.py` and `src/predict.py` named `lamao-ab/paligemma-blind-assist-jetson-ready`, which is not among the public models. They now name `lamao-ab/paligemma-blind-assist-qlora-merged-v1` (7 lines, no code changed). The README links the correct GitHub repository for issues, and states the Hub repositories and pinned revisions: LoRA `lamao-ab/paligemma-blind-assist-lora-merged-v1` at `0545d03`, QLoRA merged `lamao-ab/paligemma-blind-assist-qlora-merged-v1` at `0a66cea`.
