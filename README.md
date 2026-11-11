@@ -138,7 +138,7 @@ python src/evaluate_vizwiz.py \
     --precision    4bit \                       # or bf16
     --workdir      eval_data \
     --output_dir outputs/predictions \
-    --batch_size 32 \
+    --batch_size 128 \
     --max_tokens 64 \
     --tag  qlora_seed123_custom
 
@@ -148,9 +148,10 @@ python src/score_vizwiz_vqa.py \
     --out outputs/predictions/score_vizwiz_vqa_test_predictions_base_custom.json
 
 python src/score_captions.py --dataset vizwiz \
-    --gt   eval_data/vizwiz_caps_data/annotations/val.json \
-    --pred outputs/predictions/vizwiz_caption_val_predictions_base_custom.json \
-    --out  outputs/predictions/score_vizwiz_caption_val_predictions_base_custom.json
+    --gt   vision-language-assistance-model/results/caption_test/test_captions_7974.json \
+    --pred outputs/predictions/vizwiz_caption_test_predictions_qlora_merged_seed123_test.json \
+    --out  outputs/predictions/score_vizwiz_caption_test_predictions_qlora_merged_seed123_test.json
+
 ```
 
 ```bash
@@ -161,9 +162,8 @@ python src/evaluate_benchmark.py \
     --prompt_style generic \
     --precision    bf16 \
     --workdir      eval_data \
-    --batch_size  32 \
+    --batch_size  128 \
     --output_dir outputs/predictions \
-    --batch_size 32 \
     --max_tokens 64 \
     --tag base_generic
 
@@ -181,7 +181,7 @@ python src/predict.py \
     --task       vqa \
     --image_dir  /content/vision-language-assistance-model/data/images \
     --output     results/vqa_only.json
-    --batch_size 32 \
+    --batch_size 128 \
     --max_tokens 64
 
 # Option B — Hub model 
@@ -190,7 +190,7 @@ python src/predict.py \
     --task       caps \
     --image_dir  /content/vision-language-assistance-model/data/images \
     --output     results/caps_results.json \
-    --batch_size 32 \
+    --batch_size 128 \
     --max_tokens 64
 ```
 
